@@ -47,7 +47,7 @@ ifeq ($(PURIFY),YES)
 ifeq ($(OS_CLASS),solaris)
 PURIFY_FLAGS = -first-only -chain-length=26 -max_threads=256
 # Put the cache files in the appropriate bin directory
-PURIFY_FLAGS += -always-use-cache-dir -cache-dir=$(shell $(PERL) $(TOP)/config/fullPathName.pl .)
+PURIFY_FLAGS += -always-use-cache-dir -cache-dir=$(shell $(PERL) $(TOOLS)/fullPathName.pl .)
 DEBUGCMD = purify $(PURIFY_FLAGS)
 endif
 endif
@@ -84,6 +84,8 @@ USR_CXXFLAGS += -DSTAT_PVS
 USR_CXXFLAGS += -DRATE_STATS
 # Use control PV's
 USR_CXXFLAGS += -DCONTROL_PVS
+# Use heartbeat PV
+#USR_CXXFLAGS += -DHEARTBEAT_PV
 # Use CAS diagnostics statistics
 USR_CXXFLAGS += -DCAS_DIAGNOSTICS
 # Install exception handler and print exceptions to log file
@@ -122,7 +124,7 @@ endif
 endif
 endif
 
-USR_LIBS_DEFAULT += ca cas asHost Com gdd
+USR_LIBS_DEFAULT += ca cas asHost gdd Com
 ca_DIR = $(EPICS_BASE_LIB)
 cas_DIR = $(EPICS_BASE_LIB)
 asHost_DIR = $(EPICS_BASE_LIB)
