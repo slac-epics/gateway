@@ -25,7 +25,6 @@
 
 #include "tsDLList.h"
 #include "casdef.h"
-#include "smartGDDPointer.h"
 
 class gateVcData;
 
@@ -78,39 +77,40 @@ private:
 class gateAsyncW : public casAsyncWriteIO, public tsDLNode<gateAsyncW>
 {
 public:
-	gateAsyncW (const casCtx &ctx, 
-		const gdd& wdd, bool isPutNotify ) :
-	  casAsyncWriteIO(ctx),
-	  _pList(0),
-	  _pDD(wdd),
-	  _isPutNotify(isPutNotify) {} 
-	
+	gateAsyncW(const casCtx &ctx, const gdd& ddIn, tsDLList<gateAsyncW> *wioIn) :
+	  casAsyncWriteIO(ctx),dd(ddIn),wio(wioIn)
+	  { dd.reference(); }
+
 	virtual ~gateAsyncW(void);
-	
-	smartConstGDDPointer extractDD (); 
-	bool isPutNotify () const { return _isPutNotify; }
-	void listAdd ( tsDLList<gateAsyncW> & list );
-	void listRemove ();
+
+	const gdd& DD(void) const { return dd; }
+	void removeFromQueue(void) {
+		if(wio) {
+			wio->remove(*this);
+			wio=NULL;
+		}
+	}
 private:
-	tsDLList<gateAsyncW> * _pList;
-	smartConstGDDPointer _pDD;
-	bool _isPutNotify;
+	const gdd& dd;
+	tsDLList<gateAsyncW> *wio;
 };
 
-inline void gateAsyncW :: listAdd ( tsDLList<gateAsyncW> & list )
+class gatePendingWrite : public casAsyncWriteIO
 {
-    assert ( _pList == 0 );
-    _pList = &list;
-    list.add ( *this );
-}
-
-inline void gateAsyncW :: listRemove ()
-{
-    if ( _pList ) {
-	_pList->remove ( *this );
-        _pList = 0;
-    }
-}
+public:
+	gatePendingWrite(gateVcData &wowner, const casCtx &ctx, const gdd& wdd) :
+	  casAsyncWriteIO(ctx),
+	  owner(wowner),
+	  dd(wdd)
+	  { dd.reference(); }
+	
+	virtual ~gatePendingWrite(void);
+	
+	const gdd &DD(void) const { return dd; }
+private:
+	gateVcData &owner;
+	const gdd &dd;
+};
 
 #endif
 

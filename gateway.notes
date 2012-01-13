@@ -96,16 +96,4 @@ Mon Jan 14 09:25:27 CST 2008   Gateway2-0-3-0
 	Restored gateway default behavior. Now if "-archive" is not used gateway 
 	will post log events along with value change events. - Gasper Jansa
 
-Tue Aug  4 10:43:32 MDT 2009
-	I updated the PCAS/casdef.h to add a new backwards compatiible virtual 
-	writeNotify interface in casChannel and casPV. This is important
-	for the GW so that it can execute the proper form of ca_put or
-	ca_put_callback in its implementation of write, or writeNotify,
-	and so I did also install the necessary changes in the GW so that 
-	it will benefit from the new writeNotify interface. - Jeff Hill
 
-Wed Aug 26 09:45:19 CDT 2009
-        Added a build optional heartbeat pv, <suffix>:heartbeat, with val 0.
-
-Thu Sep 17 10:22:51 CDT 2009   Gateway2-0-4-0
-	Modified release number and tagged files.

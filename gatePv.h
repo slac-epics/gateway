@@ -83,16 +83,13 @@ class gateAsEntry;
 class gatePvCallbackId : public tsDLNode<gatePvCallbackId>
 {
 public:
-	gatePvCallbackId(unsigned long idIn, 
-	    gatePvData *pvIn, void * pPrivateIn=0 ) :
-	id(idIn),pv(pvIn),pPrivate(pPrivateIn) {};
+	gatePvCallbackId(unsigned long idIn, gatePvData *pvIn) :
+	  id(idIn),pv(pvIn) {};
 	unsigned long getID(void) const { return id; }
 	gatePvData *getPV(void) const { return pv; }
-	void * getPrivatePtr () const { return pPrivate; }
 private:
 	unsigned long id;
 	gatePvData *pv;
-	void * pPrivate;
 };
 
 // This class is used to manage one process variable (channel) on the
@@ -153,7 +150,7 @@ public:
 	int alhMonitor(void);           // add alh info monitor
 	int alhUnmonitor(void);         // delete alh info monitor
 	int get(readType read_type);                  // get callback
-	int put(const gdd &, class gateAsyncW * );  // put
+	int put(const gdd*, int docallback);  // put
 	
 	time_t timeAlive(void) const;
 	time_t timeActive(void) const;
