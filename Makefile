@@ -144,6 +144,14 @@ gateway_SRCS += gateStat.cc
 # need access to casCtx.h
 USR_INCLUDES += -I$(EPICS_BASE)/src/cas/generic
 
+# To compile in caPutLog functionality, define the location of the caPutLog
+# module as 'CAPUTLOG' in the appropriate extensions configure/RELEASE* file
+ifdef CAPUTLOG
+  USR_LIBS_DEFAULT += caPutLog dbIoc
+  USR_CXXFLAGS_DEFAULT += -DWITH_CAPUTLOG
+  USR_CFLAGS_DEFAULT += -DWITH_CAPUTLOG
+endif
+
 PROD_HOST = gateway
 
 
