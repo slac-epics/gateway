@@ -187,6 +187,7 @@ xxxx:
 	@echo ACC_SFLAGS_NO: $(ACC_SFLAGS_NO)
 	@echo SHARED_LIBRARIES: $(SHARED_LIBRARIES)
 	@echo DEBUGCMD: $(DEBUGCMD)
+	@echo CAPUTLOG: $(CAPUTLOG)
 
 # **************************** Emacs Editing Sequences *****************
 # Local Variables:
