@@ -144,6 +144,14 @@ gateway_SRCS += gateStat.cc
 # need access to casCtx.h
 USR_INCLUDES += -I$(EPICS_BASE)/src/cas/generic
 
+# To compile in caPutLog functionality, define the location of the caPutLog
+# module as 'CAPUTLOG' in the appropriate extensions configure/RELEASE* file
+ifdef CAPUTLOG
+  USR_LIBS += caPutLog dbIoc
+  USR_CXXFLAGS += -DWITH_CAPUTLOG
+  USR_CFLAGS += -DWITH_CAPUTLOG
+endif
+
 PROD_HOST = gateway
 
 
@@ -179,6 +187,7 @@ xxxx:
 	@echo ACC_SFLAGS_NO: $(ACC_SFLAGS_NO)
 	@echo SHARED_LIBRARIES: $(SHARED_LIBRARIES)
 	@echo DEBUGCMD: $(DEBUGCMD)
+	@echo CAPUTLOG: $(CAPUTLOG)
 
 # **************************** Emacs Editing Sequences *****************
 # Local Variables:
