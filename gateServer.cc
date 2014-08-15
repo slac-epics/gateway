@@ -46,6 +46,9 @@
 #undef USE_LINUX_PROC_FOR_CPU
 #endif
 
+// Posix
+#define NO_OF_CPUS sysconf(_SC_NPROCESSORS_ONLN)
+
 // DEBUG_TIMES prints a message every minute, which helps determine
 // when things happen.
 #define DEBUG_TIMES 0
@@ -2243,11 +2246,11 @@ gateRateStatsTimer::expire(const epicsTime &curTime)
 		// Error
 		cpuFract=-1.0;
 	} else {
-		cpuFract=(delTime > 0)?timeDiff/delTime:0.0;
+        cpuFract=(delTime > 0)?timeDiff/(delTime*NO_OF_CPUS):0.0;
 	}
 #else
 	cpuFract=(delTime > 0)?(double)(ULONG_DIFF(cpuCurCount,cpuPrevCount))/
-	  delTime/CLOCKS_PER_SEC:0.0;
+      (delTime*CLOCKS_PER_SEC*NO_OF_CPUS):0.0;
 #endif
 	mrg->setStat(statCPUFract,cpuFract);
 
