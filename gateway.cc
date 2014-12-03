@@ -44,6 +44,7 @@
 # include <direct.h>
 # include <process.h>
 # define WIN32_MAXSTDIO 2048
+# define strcasecmp _stricmp
 #else
 # include <sys/wait.h>
 # include <unistd.h>
