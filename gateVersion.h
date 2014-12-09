@@ -27,12 +27,12 @@
 #define GATEWAY_VERSION       2
 #define GATEWAY_REVISION      0
 #define GATEWAY_MODIFICATION  5
-#define GATEWAY_UPDATE_LEVEL  0
+#define GATEWAY_UPDATE_LEVEL  1
 
-#define GATEWAY_VERSION_STRING "PV Gateway Version 2.0.5.0"
+#define GATEWAY_VERSION_STRING "PV Gateway Version 2.0.5.1"
 
 #define GATEWAY_CREDITS_STRING  \
-          "Developed at Argonne National Laboratory and BESSY\n\n" \
+          "Originally developed at Argonne National Laboratory and BESSY\n\n" \
           "Authors: Jim Kowalkowski, Janet Anderson, Kenneth Evans, Jr. (APS),\n" \
           "   Ralph Lange (ITER), Gasper Jansa (cosylab), and Dirk Zimoch (PSI)\n\n"
 #endif
