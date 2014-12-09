@@ -226,7 +226,8 @@ aitBool gateAsEntry::compilePattern(int line) {
                 fprintf(stderr,"%*c\n", erroffset+1, '^');
 		return aitFalse;
 	}
-        ovecsize = (pcre_info(pat_buff, NULL, NULL)+1)*3;
+        pcre_fullinfo(pat_buff, NULL, PCRE_INFO_CAPTURECOUNT, &ovecsize);
+        ovecsize = (ovecsize+1)*3;
         ovector = (int*) pcre_malloc (sizeof(int)*ovecsize);
 #else
 	pat_buff.translate=0; pat_buff.fastmap=0;
