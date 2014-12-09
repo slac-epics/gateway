@@ -5,22 +5,20 @@
 # Strahlung mbH (BESSY).
 # Copyright (c) 2002 The Regents of the University of California, as
 # Operator of Los Alamos National Laboratory.
+# Copyright (c) 2014 ITER Organization.
 # This file is distributed subject to a Software License Agreement found
 # in the file LICENSE that is included with this distribution. 
 #*************************************************************************
 
-# 3.14 Makefile for Gateway
+# 3.14/3.15 Makefile for Gateway
 
 TOP = ../..
 include $(TOP)/configure/CONFIG
 
-# Use of GNU regex library (version 0.12) for patterns and aliasing
-# (These should be defined in extensions/config/CONFIG_SITE.Host.xxx)
-# GNU_REGEX_INC = ../../../../regex-0.12
-# GNU_REGEX_LIB = ../../../../regex-0.12
-
-# use Perl compatible regular expressions
+# Use Perl compatible regular expressions (instead of standard regex)
 #USE_PCRE=YES
+# Set location for Windows builds (system lib on Linux)
+#PCRE_DIR=C:\Pcre
 
 # Negative regexp matching: !pattern matches when pattern does not match
 #USE_NEG_REGEXP=YES
@@ -34,44 +32,37 @@ USE_DENY_FROM=YES
 # Compiler options
 #USR_CXXFLAGS += -xsb
 
-# Patches for HPUX / aCC
-# NORMAL to suppress "future errors", needs immediate binding as using shared libs produces core dumps
-ifeq ($(OS_CLASS),hp700)
-  CXXCMPLR=NORMAL
-  USR_LDFLAGS += -Wl,-Bimmediate
-endif
-
 # Purify
 #PURIFY=YES
 ifeq ($(PURIFY),YES)
-ifeq ($(OS_CLASS),solaris)
-PURIFY_FLAGS = -first-only -chain-length=26 -max_threads=256
-# Put the cache files in the appropriate bin directory
-PURIFY_FLAGS += -always-use-cache-dir -cache-dir=$(shell $(PERL) $(TOOLS)/fullPathName.pl .)
-DEBUGCMD = purify $(PURIFY_FLAGS)
-endif
+  ifeq ($(OS_CLASS),solaris)
+    PURIFY_FLAGS = -first-only -chain-length=26 -max_threads=256
+    # Put the cache files in the appropriate bin directory
+    PURIFY_FLAGS += -always-use-cache-dir -cache-dir=$(shell $(PERL) $(TOOLS)/fullPathName.pl .)
+    DEBUGCMD = purify $(PURIFY_FLAGS)
+  endif
 endif
 
 # Quantify
 #QUANTIFY=YES
 ifeq ($(QUANTIFY),YES)
-ifeq ($(OS_CLASS),solaris)
-#QUANTIFY_FLAGS += -measure-timed-calls=user+system
-QUANTIFY_FLAGS += -collection-granularity=function
-QUANTIFY_FLAGS += -use-machine=UltraSparcIII:1002MHz
-QUANTIFY_FLAGS += -max_threads=160
+  ifeq ($(OS_CLASS),solaris)
+    #QUANTIFY_FLAGS += -measure-timed-calls=user+system
+    QUANTIFY_FLAGS += -collection-granularity=function
+    QUANTIFY_FLAGS += -use-machine=UltraSparcIII:1002MHz
+    QUANTIFY_FLAGS += -max_threads=160
 
-# QUANTIFY_FLAGS += -record-system-calls=no
+    #QUANTIFY_FLAGS += -record-system-calls=no
 
-# -measure-timed-calls=elapsed-time (default) gives wall clock time
-#   for system calls
-# -measure-timed-calls=user+system gives user+system time
-# -record-system-calls=no gives 0 time for system calls
-# -collection-granularity=function runs faster than default=line
-# -use-machine=UltraSparc:168MHz timing for Nike
-# -use-machine=UltraSparcIII:1002MHz timing for Ctlapps1
-DEBUGCMD = quantify $(QUANTIFY_FLAGS)
-endif
+    # -measure-timed-calls=elapsed-time (default) gives wall clock time
+    #   for system calls
+    # -measure-timed-calls=user+system gives user+system time
+    # -record-system-calls=no gives 0 time for system calls
+    # -collection-granularity=function runs faster than default=line
+    # -use-machine=UltraSparc:168MHz timing for Nike
+    # -use-machine=UltraSparcIII:1002MHz timing for Ctlapps1
+    DEBUGCMD = quantify $(QUANTIFY_FLAGS)
+  endif
 endif
 
 # Turn on debug mode
@@ -102,34 +93,44 @@ endif
 # Reserve file descriptor for fopen to avoid fd limit of 256 on Solaris
 USR_CXXFLAGS_solaris += -DRESERVE_FOPEN_FD
 
-# USR_INCLUDES += -I$(GNU_REGEX_INC)
-
-WIN32_RUNTIME=MD
-USR_CXXFLAGS_WIN32 += /DWIN32 /D_WINDOWS
-USR_LDFLAGS_WIN32 += /SUBSYSTEM:CONSOLE
+ifeq ($(CMPLR_CLASS),msvc)
+  USR_CXXFLAGS_WIN32 += /DWIN32 /D_WINDOWS
+  USR_LDFLAGS_WIN32 += /SUBSYSTEM:CONSOLE
+else
+  USR_CXXFLAGS_WIN32 += -DWIN32 -D_WINDOWS
+endif
 
 ifeq ($(USE_PCRE),YES)
   USR_CXXFLAGS += -DUSE_PCRE
-  USR_SYS_LIBS_DEFAULT += pcre
+  ifeq ($(OS_CLASS),WIN32)
+    USR_INCLUDES += -I$(PCRE_DIR)\inc
+    PROD_LIBS += pcre3
+    ifeq ($(CMPLR_CLASS),msvc)
+      ifeq ($(T_A),windows-x64)
+        pcre3_DIR = $(PCRE_DIR)\lib\x64
+      else
+        pcre3_DIR = $(PCRE_DIR)\lib
+      endif
+    else
+    pcre3_DIR = $(PCRE_DIR)\bin
+    endif
+  else
+  USR_SYS_LIBS += pcre
+  endif
 else
-ifeq ($(OS_CLASS),WIN32)
-# Use Obj for object libraries and no Obj for import libraries
-  PROD_LIBS = regexObj
-  regexObj_DIR = $(EPICS_EXTENSIONS_LIB)
-else
-ifneq ($(OS_CLASS),Linux) 
-  PROD_LIBS = regex
-  regex_DIR = $(EPICS_EXTENSIONS_LIB)
-endif
-endif
+  ifeq ($(OS_CLASS),WIN32)
+    # Use Obj for object libraries and no Obj for import libraries
+    PROD_LIBS += regexObj
+    regexObj_DIR = $(EPICS_EXTENSIONS_LIB)
+  else
+    ifneq ($(OS_CLASS),Linux)
+      PROD_LIBS += regex
+      regex_DIR = $(EPICS_EXTENSIONS_LIB)
+    endif
+  endif
 endif
 
-USR_LIBS_DEFAULT += $(EPICS_BASE_HOST_LIBS)
-ca_DIR = $(EPICS_BASE_LIB)
-cas_DIR = $(EPICS_BASE_LIB)
-asHost_DIR = $(EPICS_BASE_LIB)
-Com_DIR = $(EPICS_BASE_LIB)
-gdd_DIR = $(EPICS_BASE_LIB)
+PROD_LIBS += $(EPICS_BASE_HOST_LIBS)
 
 gateway_SRCS += gateway.cc
 gateway_SRCS += gatePv.cc
@@ -141,7 +142,7 @@ gateway_SRCS += gateAsyncIO.cc
 gateway_SRCS += gateAsCa.cc
 gateway_SRCS += gateStat.cc
 
-# need access to casCtx.h
+# HACK: Needs access to private CAS header casCtx.h
 USR_INCLUDES += -I$(EPICS_BASE)/src/cas/generic
 USR_INCLUDES += -I$(EPICS_BASE)/src/ca/legacy/pcas/generic
 
@@ -154,9 +155,6 @@ ifdef CAPUTLOG
 endif
 
 PROD_HOST = gateway
-
-
-
 
 include $(TOP)/configure/RULES
 
@@ -189,8 +187,4 @@ xxxx:
 	@echo SHARED_LIBRARIES: $(SHARED_LIBRARIES)
 	@echo DEBUGCMD: $(DEBUGCMD)
 	@echo CAPUTLOG: $(CAPUTLOG)
-
-# **************************** Emacs Editing Sequences *****************
-# Local Variables:
-# mode: makefile
-# End:
+	@echo EPICS_BASE_HOST_LIBS: $(EPICS_BASE_HOST_LIBS)
