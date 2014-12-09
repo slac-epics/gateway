@@ -46,8 +46,16 @@
 #undef USE_LINUX_PROC_FOR_CPU
 #endif
 
-// Posix
-#define NO_OF_CPUS sysconf(_SC_NPROCESSORS_ONLN)
+#ifdef WIN32
+  #ifdef _WIN64
+    #define NO_OF_CPUS GetMaximumProcessorCount(ALL_PROCESSOR_GROUPS)
+  #else
+    #define NO_OF_CPUS strtol(getenv("NUMBER_OF_PROCESSORS"),NULL,10)
+  #endif
+#else
+  // Posix
+  #define NO_OF_CPUS sysconf(_SC_NPROCESSORS_ONLN)
+#endif
 
 // DEBUG_TIMES prints a message every minute, which helps determine
 // when things happen.
