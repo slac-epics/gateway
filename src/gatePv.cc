@@ -972,8 +972,7 @@ int gatePvData::get(readType read_type)
 						gateDebug0(3,"gatePvData::get() doing ca_array_get_callback of type CTRL\n");
 						setTransTime();
 						markCtrlGetPending();				
-						rc=ca_array_get_callback(dataType(),totalElements(),
-							chID,::getCB,this);
+                        rc = ca_array_get_callback(dataType(), 0, chID, ::getCB, this);
 						if(rc != ECA_NORMAL) {
 							fprintf(stderr,"%s gatePvData::get: ca_array_get_callback "
 							  "failed for %s:\n"
@@ -997,8 +996,7 @@ int gatePvData::get(readType read_type)
 						gateDebug0(3,"gatePvData::get() doing ca_array_get_callback of type TIME\n");
 						setTransTime();
 						markTimeGetPending();	
-						rc=ca_array_get_callback(eventType(),totalElements(),
-							chID,::getTimeCB,this);
+                        rc = ca_array_get_callback(eventType(), 0, chID, ::getTimeCB, this);
 						if(rc != ECA_NORMAL) {
 							fprintf(stderr,"%s gatePvData::get: ca_array_get_callback for DBR_TIME "
 							  "failed for %s:\n"
