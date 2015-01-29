@@ -1130,19 +1130,18 @@ gateServer::~gateServer(void)
 	// remove all PVs from my lists
 	gateVcData *vc,*old_vc;
 	gatePvNode *old_pv,*pv_node;
-	gatePvData *pv;
 
 	while((pv_node=pv_list.first()))
 	{
 		pv_list.remove(pv_node->getData()->name(),old_pv);
-		pv=old_pv->getData();     // KE: pv not used?
+        old_pv->getData();
 		pv_node->destroy();
 	}
 
 	while((pv_node=pv_con_list.first()))
 	{
 		pv_con_list.remove(pv_node->getData()->name(),old_pv);
-		pv=old_pv->getData();     // KE: pv not used?
+        old_pv->getData();
 		pv_node->destroy();
 	}
 
@@ -2266,8 +2265,8 @@ gateRateStatsTimer::expire(const epicsTime &curTime)
 	// Calculate the load using average over last minute.  Does not
 	// exist for WIN32.
 	double load[N_LOAD];
-	int nProcesses;
-	nProcesses=getloadavg(load,N_LOAD);	  
+
+    getloadavg(load,N_LOAD);
 	mrg->setStat(statLoad,load[N_LOAD-1]);
 #endif
 #endif

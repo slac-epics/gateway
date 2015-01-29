@@ -334,7 +334,7 @@ gateAs::~gateAs(void)
 // Probably OK but not checked for reinitializing all of access
 // security including the pvlist.
 	tsSLIter<gateAsHost> pi = host_list.firstIter();
-	gateAsList* l;
+    gateAsList * l = NULL;
 	
 	gateAsHost *pNode;
 	while(pi.pointer())	{
@@ -697,8 +697,8 @@ long gateAs::reInitialize(const char* afile, const char* lfile)
 	// Cleanup
 #ifdef USE_DENYFROM
 	tsSLIter<gateAsHost> pi = host_list.firstIter();
-	gateAsList* l;
-	
+    gateAsList *l = NULL;
+
 	gateAsHost *pNode;
 	while(pi.pointer())	{
 		pNode=pi.pointer();

@@ -360,20 +360,19 @@ static int startEverything(char *prefix)
 #endif
 
 	if(client_ip_addr) {
-		int status=setEnv("EPICS_CA_ADDR_LIST",client_ip_addr,
-		  &gate_ca_list);
+        setEnv("EPICS_CA_ADDR_LIST", client_ip_addr, &gate_ca_list);
 		// In addition, make EPICS_CA_AUTO_LIST=NO to avoid sending
 		// search requests to ourself.  Note that if
 		// EPICS_CA_ADDR_LIST is specified instead of -cip, then
 		// EPICS_CA_AUTO_ADDR_LIST=NO must be set also as this branch
 		// will not be taken.
-		status=setEnv("EPICS_CA_AUTO_ADDR_LIST","NO",&gate_ca_auto_list);
+        setEnv("EPICS_CA_AUTO_ADDR_LIST", "NO", &gate_ca_auto_list);
 		/*gjansa: for beacons*/
 		char *tempBuff;
 		tempBuff = getenv("EPICS_CAS_AUTO_BEACON_ADDR_LIST");
 		if(tempBuff != NULL){
 			if(strcasecmp(tempBuff,"NO")){
-				status=setEnv("EPICS_CAS_AUTO_BEACON_ADDR_LIST","YES",&gate_beacon_ca_auto_list);
+                setEnv("EPICS_CAS_AUTO_BEACON_ADDR_LIST","YES",&gate_beacon_ca_auto_list);
 			}
 		}
 		gateDebug1(15,"gateway setting <%s>\n",gate_ca_auto_list);
