@@ -124,7 +124,7 @@ endif
 endif
 endif
 
-USR_LIBS_DEFAULT += ca cas asHost gdd Com
+USR_LIBS_DEFAULT += $(EPICS_BASE_HOST_LIBS)
 ca_DIR = $(EPICS_BASE_LIB)
 cas_DIR = $(EPICS_BASE_LIB)
 asHost_DIR = $(EPICS_BASE_LIB)
@@ -143,6 +143,7 @@ gateway_SRCS += gateStat.cc
 
 # need access to casCtx.h
 USR_INCLUDES += -I$(EPICS_BASE)/src/cas/generic
+USR_INCLUDES += -I$(EPICS_BASE)/src/ca/legacy/pcas/generic
 
 # To compile in caPutLog functionality, define the location of the caPutLog
 # module as 'CAPUTLOG' in the appropriate extensions configure/RELEASE* file
