@@ -7,3 +7,6 @@
 ./templates
 **/O.*
 ./QtC-*
+testTop/pyTestsApp/gateway.killer
+testTop/pyTestsApp/gateway.killer
+testTop/pyTestsApp/gateway.restart

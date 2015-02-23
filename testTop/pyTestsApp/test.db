@@ -1,0 +1,77 @@
+record(calcout, "gateway:auto:cnt") {
+  field(SCAN, "1 second")
+  field(CALC, "A+B")
+  field(INPA, "gateway:auto:cnt.VAL NPP")
+  field(INPB, "0.01")
+  field(OCAL, "sin(A)")
+  field(DOPT, "Use OCAL")
+  field(OUT , "gateway:auto PP")
+}
+
+record(ai, "gateway:auto") {
+  field(PREC , 10)
+  field(DESC , "A PV that changes once a second")
+}
+
+record(ai, "gateway:passive0") {
+  field(DESC , "No MDEL/ADEL + passive")
+  field(SCAN, "Passive")
+}
+
+record(ai, "gateway:passiveADEL") {
+  field(DESC , "ADEL + passive")
+  field(ADEL , "10.0")
+  field(SCAN, "Passive")
+}
+
+record(ai, "gateway:passiveALRM") {
+  field(DESC , "Alarm + passive")
+  field(SCAN, "Passive")
+  field(HIGH, "5.0")
+  field(HIHI, "10.0")
+  field(HSV, MINOR)
+  field(HHSV, MAJOR)
+}
+
+record(ai, "gateway:passiveADELALRM") {
+  field(DESC , "ADEL, Alarm + passive")
+  field(SCAN, "Passive")
+  field(ADEL , "0.5")
+  field(HIGH, "5.0")
+  field(HIHI, "10.0")
+  field(HSV, MINOR)
+  field(HHSV, MAJOR)
+}
+
+
+record(mbbi, "gateway:passiveMBBI") {
+  field(DESC , "Passive mbbi")
+  field(SCAN, "Passive")
+}
+
+record(longin, "gateway:passivelongin") {
+  field(DESC , "Passive longin")
+  field(SCAN, "Passive")
+}
+
+record(waveform, "gateway:passivewaveform") {
+  field(DESC , "Passive waveform")
+  field(SCAN, "Passive")
+  field(NELM, "1000")
+  field(FTVL, "DOUBLE")
+}
+
+record(ai, "gateway:gwcachetest") {
+  field(PREC, "3")
+  field(EGU, "wobbles")
+  field(HIGH, "10")
+  field(HIHI, "100")
+  field(HSV , "MINOR")
+  field(HHSV , "MAJOR")
+  field(LOW , "-10")
+  field(LOLO , "-100")
+  field(LSV , "MINOR")
+  field(LLSV , "MAJOR")
+}
+
+

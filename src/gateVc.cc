@@ -357,7 +357,8 @@ gateVcData::gateVcData(gateServer* m,const char* name) :
 
 	select_mask|=(mrg->alarmEventMask()|
 	  mrg->valueEventMask()|
-	  mrg->logEventMask());
+	  mrg->logEventMask()|
+      mrg->propertyEventMask());
 	alh_mask|=mrg->alarmEventMask();
 	client_mask=0u;
 
@@ -1084,6 +1085,9 @@ caStatus gateVcData::read(const casCtx& ctx, gdd& dd)
 		if (caProtoMask & DBE_LOG) {
 			client_mask = DBE_LOG;
 		}
+		if (caProtoMask & DBE_PROPERTY) {
+			client_mask = DBE_PROPERTY;
+		}
 	}
 
 #if DEBUG_GDD || DEBUG_ENUM
@@ -1222,6 +1226,15 @@ caStatus gateVcData::read(const casCtx& ctx, gdd& dd)
 			return S_casApp_asyncCompletion;
 		}
 		else{
+            
+		    if ((client_mask == DBE_PROPERTY)) { 
+                if (!pv->propMonitored()) {
+			        // Kick off the property monitors
+	                gateDebug0(10,"gateVcData::Kicking off a property monitor\n");
+			        pv->propMonitor();
+		        } 
+            }
+			
 			// Copy the current state into the dd
 			copyState(dd);
 #if DEBUG_GDD
