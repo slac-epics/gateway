@@ -1,0 +1,4 @@
+# Set local environment
+-include $(TOP)/../../RELEASE_SITE
+-include $(TOP)/../../../RELEASE_SITE
+EPICS_BASE=$(EPICS_SITE_TOP)/base/R3.14.12-0.4.0
