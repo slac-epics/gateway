@@ -10,22 +10,30 @@ import gwtests
 
 class GatewayControl:
     gatewayProcess = None
+    DEVNULL = None
     def startGateway(self, gatewaySIPPort, iocPort):
         '''Starts the gateway'''
         gateway_executable = "../../bin/{0}/gateway".format(os.environ['EPICS_HOST_ARCH'])
-        print "Testing the gateway executable at", gateway_executable
+        if gwtests.verbose:
+            print "Testing the gateway executable at", gateway_executable
         gateway_commands = [gateway_executable]
         # -debug 10 -archive -sip 127.0.0.1 -sport 12001 -cip 127.0.0.1 -cport 5066
         gateway_commands.extend(["-sip", "127.0.0.1", "-sport", gatewaySIPPort, "-cip", "127.0.0.1", "-cport", iocPort])
         gateway_commands.extend(["-access", "access.txt"])
         gateway_commands.extend(["-archive"])
-        if gwtests.verbose:
+        if gwtests.verboseGateway:
             gateway_commands.extend(["-debug", "10"]);
-        print "Starting the gateway using", gateway_commands
-        self.gatewayProcess = subprocess.Popen(gateway_commands)
+        if gwtests.verbose:
+            print "Starting the gateway using", gateway_commands
+        else:
+            self.DEVNULL = open(os.devnull, 'wb')
+        self.gatewayProcess = subprocess.Popen(gateway_commands, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
 
     def stop(self):
         self.gatewayProcess.terminate()
+        if self.DEVNULL:
+            self.DEVNULL.close()
+            
 
 if __name__ == "__main__":
     siocControl = SIOCControl.SIOCControl()

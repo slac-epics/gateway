@@ -31,8 +31,7 @@ class GatewayPropCacheTest(unittest.TestCase):
         
     def testGatewayPropCache(self):
         '''Establish no monitors - make a change to the HIGH outside of the gateway; then ca_get the value of the PV's HIGH from the gateway; received changed value'''
-        if gwtests.verbose:
-                print "Running GatewayPropCacheTest.testGatewayPropCache"
+        print "Running GatewayPropCacheTest.testGatewayPropCache"
         pvHIGH = epics.PV("gateway:gwcachetest.HIGH", auto_monitor=None)
         time.sleep(1)
         highVal = pvHIGH.get()
@@ -44,11 +43,17 @@ class GatewayPropCacheTest(unittest.TestCase):
         caputEnv = os.environ.copy()
         caputEnv['EPICS_CA_SERVER_PORT'] = "12782"
         caputEnv['EPICS_CA_ADDR_LIST'] = "localhost"
+        DEVNULL = None
+        if not gwtests.verbose:
+            DEVNULL = open(os.devnull, 'wb')
         for val in range(10, 100, 10):
-            subprocess.Popen(['caput', 'gateway:gwcachetest.HIGH', str(val)], env=caputEnv)
+            subprocess.Popen(['caput', 'gateway:gwcachetest.HIGH', str(val)], env=caputEnv, stdout=DEVNULL, stderr=subprocess.STDOUT)
             time.sleep(1)
             highVal = pvHIGH.get()
             time.sleep(1)
             self.assertTrue(highVal == val, "We expect the HIGH to be " + str(val) + " Instead it is " + str(highVal))
+
+        if DEVNULL:
+            DEVNULL.close()
         
         

@@ -30,13 +30,13 @@ class DBEValueTest(unittest.TestCase):
         self.gatewayControl.stop()
         
     def onChange(self, pvname=None, **kws):
-        print pvname, " changed to ", kws['value']
+        if gwtests.verbose:
+            print pvname, " changed to ", kws['value']
         self.eventsReceived = self.eventsReceived + 1
         
     def testDBEValue(self):
         '''Establish a DBE_VALUE monitor on an ai - caput 10 changes; get 10 monitor events.'''
-        if gwtests.verbose:
-                print "Running DBEValueTest.testDBEValue"
+        print "Running DBEValueTest.testDBEValue"
         pv = epics.PV("gateway:passive0", auto_monitor=epics.dbr.DBE_VALUE)
         pv.add_callback(self.onChange)
         time.sleep(1)

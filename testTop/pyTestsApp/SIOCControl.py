@@ -3,19 +3,25 @@
 import os
 import subprocess
 import time
+import gwtests
 
 class SIOCControl:
     siocProcess = None
+    DEVNULL = None
 
     def startSIOCWithDefaultDB(self, iocPort):
         '''Starts the SIOC using the default test.db'''
         childEnviron = os.environ.copy()
         childEnviron['EPICS_CA_SERVER_PORT'] = iocPort
         childEnviron['EPICS_CA_ADDR_LIST'] = "localhost"
-        self.siocProcess = subprocess.Popen(['softIoc', '-d', 'test.db'], env=childEnviron)
+        if not gwtests.verbose:
+            self.DEVNULL = open(os.devnull, 'wb')
+        self.siocProcess = subprocess.Popen(['softIoc', '-d', 'test.db'], env=childEnviron, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
 
     def stop(self):
         self.siocProcess.terminate()
+        if self.DEVNULL:
+            self.DEVNULL.close()
 
 
 if __name__ == "__main__":

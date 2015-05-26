@@ -15,9 +15,11 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose logging')
+    parser.add_argument('--verbose_gateway', action='store_true', help='Enable verbose logging for the gateway. Starts the gateway in debug mode')
     parser.add_argument('-t', '--tests', help='Specify the tests that need to be run.')
     args = parser.parse_args()
     gwtests.verbose = args.verbose
+    gwtests.verboseGateway = args.verbose_gateway
 
     if 'EPICS_HOST_ARCH' not in os.environ:
         print "Please set the EPICS_HOST_ARCH environment variable to the appropriate value. These unit tests will test the gateway in ../../bin/${EPICS_HOST_ARCH}/gateway folder"

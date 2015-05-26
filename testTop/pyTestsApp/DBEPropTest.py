@@ -34,8 +34,7 @@ class DBEPropTest(unittest.TestCase):
         
     def testDBEProp(self):
         '''Establish DBE_PROPERTY monitor on an ai - caput 10 changes; get 0 monitor events; caput on the HIHI; get 1 monitor event'''
-        if gwtests.verbose:
-                print "Running DBEPropTest.testDBEProp"
+        print "Running DBEPropTest.testDBEProp"
         pv = epics.PV("gateway:passive0", auto_monitor=epics.dbr.DBE_PROPERTY)
         pv.add_callback(self.onChange)
         pvhihi = epics.PV("gateway:passive0.HIHI", auto_monitor=None)
