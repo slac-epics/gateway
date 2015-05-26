@@ -18,6 +18,15 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--tests', help='Specify the tests that need to be run.')
     args = parser.parse_args()
     gwtests.verbose = args.verbose
+
+    if 'EPICS_HOST_ARCH' not in os.environ:
+        print "Please set the EPICS_HOST_ARCH environment variable to the appropriate value. These unit tests will test the gateway in ../../bin/${EPICS_HOST_ARCH}/gateway folder"
+        sys.exit(1)
+
+    gatewayExecutable = os.path.join('..', '..', 'bin', os.environ['EPICS_HOST_ARCH'], 'gateway')
+    if not os.path.exists(gatewayExecutable):
+        print "Cannot find the gateway executable to test", gatewayExecutable
+        sys.exit(1)
     
     
     if args.tests:

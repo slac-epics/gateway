@@ -31,7 +31,7 @@ if __name__ == "__main__":
     siocControl = SIOCControl.SIOCControl()
     siocControl.startSIOCWithDefaultDB("12782")
     gatewayControl = GatewayControl()
-    gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'], "12782")
+    gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'] if 'EPICS_CA_SERVER_PORT' in os.environ else "5064", "12782")
     time.sleep(10)
     epics.ca.initialize_libca()
     print epics.caget('gateway:auto')

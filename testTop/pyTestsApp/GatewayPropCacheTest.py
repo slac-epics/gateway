@@ -17,7 +17,7 @@ class GatewayPropCacheTest(unittest.TestCase):
         self.siocControl = SIOCControl.SIOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
         self.siocControl.startSIOCWithDefaultDB("12782")
-        self.gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'], "12782")
+        self.gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'] if 'EPICS_CA_SERVER_PORT' in os.environ else "5064", "12782")
         time.sleep(2)
         epics.ca.initialize_libca()
 
