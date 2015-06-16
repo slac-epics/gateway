@@ -16,35 +16,42 @@ class DBEPropTest(unittest.TestCase):
         self.eventsReceived = 0
         self.siocControl.startSIOCWithDefaultDB("12782")
         self.gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'] if 'EPICS_CA_SERVER_PORT' in os.environ else "5064", "12782")
-        time.sleep(2)
         os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
         os.environ["EPICS_CA_ADDR_LIST"] = "localhost"
         epics.ca.initialize_libca()
-
         
     def tearDown(self):
-        time.sleep(1)
         epics.ca.finalize_libca()
         self.siocControl.stop()
-        time.sleep(1)
         self.gatewayControl.stop()
         
     def onChange(self, pvname=None, **kws):
+        self.eventsReceived += 1
         if gwtests.verbose:
             print pvname, " changed to ", kws['value']
-        self.eventsReceived = self.eventsReceived + 1
         
-    def testDBEProp(self):
-        '''Establish DBE_PROPERTY monitor on an ai - caput 10 changes; get 0 monitor events; caput on the HIHI; get 1 monitor event'''
+    def testPropAlarmLevels(self):
+        '''DBE_PROPERTY monitor on an ai - value changes generate no events; property changes generate events.'''
+        # gateway:passive0 is a blank ai record
         pv = epics.PV("gateway:passive0", auto_monitor=epics.dbr.DBE_PROPERTY)
         pv.add_callback(self.onChange)
         pvhihi = epics.PV("gateway:passive0.HIHI", auto_monitor=None)
-        time.sleep(1)
-        for val in range(0,10):
+        pvlolo = epics.PV("gateway:passive0.LOLO", auto_monitor=None)
+        pvhigh = epics.PV("gateway:passive0.HIGH", auto_monitor=None)
+        pvlow  = epics.PV("gateway:passive0.LOW",  auto_monitor=None)
+
+        for val in range(10):
             pv.put(val)
-            time.sleep(1)
-        self.assertTrue(self.eventsReceived == 1, 'We should have received only the initial event; instead we received ' + str(self.eventsReceived))
+            time.sleep(.001)
+        time.sleep(.01)
+        # We get 1 event: at connection
+        self.assertTrue(self.eventsReceived == 1, 'events expected: 1; events received: ' + str(self.eventsReceived))
+
+        self.eventsReceived = 0
         pvhihi.put(20.0)
-        time.sleep(1)
-        self.assertTrue(self.eventsReceived == 2, 'We should have received an additional event for the property change ' + str(self.eventsReceived))
-        
+        pvhigh.put(18.0)
+        pvlolo.put(10.0)
+        pvlow.put(12.0)
+        time.sleep(.1)
+        # We get 4 events: properties of four alarm levels changed
+        self.assertTrue(self.eventsReceived == 4, 'events expected: 4; events received: ' + str(self.eventsReceived))
