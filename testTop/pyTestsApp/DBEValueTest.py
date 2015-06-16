@@ -18,35 +18,28 @@ class DBEValueTest(unittest.TestCase):
         self.eventsReceived = 0
         self.siocControl.startSIOCWithDefaultDB("12782")
         self.gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'] if 'EPICS_CA_SERVER_PORT' in os.environ else "5064", "12782")
-        time.sleep(2)
         os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
         os.environ["EPICS_CA_ADDR_LIST"] = "localhost"
         epics.ca.initialize_libca()
 
-        
     def tearDown(self):
-        time.sleep(1)
         epics.ca.finalize_libca()
         self.siocControl.stop()
-        time.sleep(1)
         self.gatewayControl.stop()
         
     def onChange(self, pvname=None, **kws):
+        self.eventsReceived += 1
         if gwtests.verbose:
             print pvname, " changed to ", kws['value']
-        self.eventsReceived = self.eventsReceived + 1
         
-    def testDBEValue(self):
-        '''Establish a DBE_VALUE monitor on an ai - caput 10 changes; get 10 monitor events.'''
+    def testValueNoDeadband(self):
+        '''DBE_VALUE monitor on an ai - value changes generate events.'''
+        # gateway:passive0 is a blank ai record
         pv = epics.PV("gateway:passive0", auto_monitor=epics.dbr.DBE_VALUE)
         pv.add_callback(self.onChange)
-        time.sleep(1)
-        pv.put(-1)
-        time.sleep(5)
-        # Reset events received
-        self.eventsReceived = 0
-        for val in range(0,10):
+        for val in range(10):
             pv.put(val)
-            time.sleep(1)
-        self.assertTrue(self.eventsReceived == 10, 'We should have received 10 events; instead we received ' + str(self.eventsReceived))
-        
+            time.sleep(.001)
+        time.sleep(.05)
+        # We get 11 events: at connection, then at 10 value changes (puts)
+        self.assertTrue(self.eventsReceived == 11, 'events expected: 11; events received: ' + str(self.eventsReceived))
