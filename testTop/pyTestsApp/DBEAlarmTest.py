@@ -14,34 +14,37 @@ class DBEAlarmTest(unittest.TestCase):
         self.siocControl = SIOCControl.SIOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
         self.eventsReceived = 0
+        self.severityUnchanged = 0
+        self.lastSeverity = 4
         self.siocControl.startSIOCWithDefaultDB("12782")
         self.gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'] if 'EPICS_CA_SERVER_PORT' in os.environ else "5064", "12782")
-        time.sleep(2)
         os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
         os.environ["EPICS_CA_ADDR_LIST"] = "localhost"
         epics.ca.initialize_libca()
 
-        
     def tearDown(self):
-        time.sleep(1)
         epics.ca.finalize_libca()
         self.siocControl.stop()
-        time.sleep(1)
         self.gatewayControl.stop()
         
     def onChange(self, pvname=None, **kws):
+        self.eventsReceived += 1
         if gwtests.verbose:
-            print pvname, " changed to ", kws['value']
-        self.eventsReceived = self.eventsReceived + 1
+            print pvname, " changed to ", kws['value'], kws['severity']
+        if self.lastSeverity == kws['severity']:
+            self.severityUnchanged += 1
+        self.lastSeverity = kws['severity']
         
-    def testDBELog(self):
-        ''' Establish DBE_ALARM monitor on an ai with an ADEL - caput changes of which none are more than the ADEL; however, few changes generates alarm changes'''
+    def testAlarmLevel(self):
+        '''DBE_ALARM monitor on an ai with two alarm levels - crossing the level generates updates'''
+        # gateway:passiveALRM has HIGH=5 (MINOR) and HIHI=10 (MAJOR)
         pv = epics.PV("gateway:passiveALRM", auto_monitor=epics.dbr.DBE_ALARM)
         pv.add_callback(self.onChange)
-        time.sleep(1)
-        for val in [0,1,2,3,4,5,6,5,4,3,2,1,0]:
+        for val in [0,1,2,3,4,5,6,7,8,9,10,9,8,7,6,5,4,3,2,1,0]:
             pv.put(val)
-            time.sleep(1)
-        # We actually get 4 events as the value crosses the alarm three times; once during the initial set to 0. 
-        self.assertTrue(self.eventsReceived == 4, 'We should have received 4 events; instead we received ' + str(self.eventsReceived))
-        
+            time.sleep(.001)
+        # We get 6 events: at connection (INVALID), at first write (NO_ALARM),
+        # and at the level crossings MINOR-MAJOR-MINOR-NO_ALARM.
+        self.assertTrue(self.eventsReceived == 6, 'events expected: 6; events received: ' + str(self.eventsReceived))
+        # Any updates with unchanged severity are an error
+        self.assertTrue(self.severityUnchanged == 0, str(self.severityUnchanged) + ' events with no severity changes received')
