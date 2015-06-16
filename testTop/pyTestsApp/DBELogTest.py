@@ -14,38 +14,37 @@ class DBELogTest(unittest.TestCase):
         self.siocControl = SIOCControl.SIOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
         self.eventsReceived = 0
+        self.diffInsideDeadband = 0
+        self.lastValue = -99.9
         self.siocControl.startSIOCWithDefaultDB("12782")
         self.gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'] if 'EPICS_CA_SERVER_PORT' in os.environ else "5064", "12782")
-        time.sleep(2)
         os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
         os.environ["EPICS_CA_ADDR_LIST"] = "localhost"
         epics.ca.initialize_libca()
-
         
     def tearDown(self):
-        time.sleep(1)
         epics.ca.finalize_libca()
         self.siocControl.stop()
-        time.sleep(1)
         self.gatewayControl.stop()
         
     def onChange(self, pvname=None, **kws):
+        self.eventsReceived += 1
         if gwtests.verbose:
-            print pvname, " changed to ", kws['value']
-        self.eventsReceived = self.eventsReceived + 1
+            print pvname, " changed to ", kws['value'], kws['severity']
+        if (kws['value'] != 0.0) and (abs(self.lastValue - kws['value']) <= 10.0):
+            self.diffInsideDeadband += 1
+        self.lastValue = kws['value']
         
-    def testDBELog(self):
-        '''Establish DBE_LOG monitor on an ai with an ADEL - caput changes of which only 2 should be more than the ADEL ; get 2 monitor events.'''
+    def testLogDeadband(self):
+        '''DBE_LOG monitor on an ai with an ADEL - leaving the deadband generates events.'''
+        # gateway:passiveADEL has ADEL=10
         pv = epics.PV("gateway:passiveADEL", auto_monitor=epics.dbr.DBE_LOG)
         pv.add_callback(self.onChange)
-        time.sleep(1)
-        pv.put(-1)
-        time.sleep(5)
-        # Reset events received
-        self.eventsReceived = 0
-        
-        for val in range(1,30,2):
+        for val in range(35):
             pv.put(val)
-            time.sleep(1)
-        self.assertTrue(self.eventsReceived == 2, 'We should have received 2 events; instead we received ' + str(self.eventsReceived))
-        
+            time.sleep(.001)
+        time.sleep(.01)
+        # We get 5 events: at connection, first put, then at 11 22 33
+        self.assertTrue(self.eventsReceived == 5, 'events expected: 5; events received: ' + str(self.eventsReceived))
+        # Any updates inside deadband are an error
+        self.assertTrue(self.diffInsideDeadband == 0, str(self.diffInsideDeadband) + ' events with change <= deadband received')
