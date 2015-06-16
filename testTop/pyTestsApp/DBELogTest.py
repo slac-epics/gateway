@@ -13,15 +13,15 @@ class DBELogTest(unittest.TestCase):
     def setUp(self):
         self.siocControl = SIOCControl.SIOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
+        self.siocControl.startSIOCWithDefaultDB()
+        self.gatewayControl.startGateway()
+        os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+        os.environ["EPICS_CA_ADDR_LIST"] = "localhost:{} localhost:{}".format(gwtests.iocPort,gwtests.gwPort)
+        epics.ca.initialize_libca()
         self.eventsReceived = 0
         self.diffInsideDeadband = 0
         self.lastValue = -99.9
-        self.siocControl.startSIOCWithDefaultDB("12782")
-        self.gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'] if 'EPICS_CA_SERVER_PORT' in os.environ else "5064", "12782")
-        os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-        os.environ["EPICS_CA_ADDR_LIST"] = "localhost"
-        epics.ca.initialize_libca()
-        
+
     def tearDown(self):
         epics.ca.finalize_libca()
         self.siocControl.stop()
@@ -43,7 +43,7 @@ class DBELogTest(unittest.TestCase):
         for val in range(35):
             pv.put(val)
             time.sleep(.001)
-        time.sleep(.01)
+        time.sleep(.05)
         # We get 5 events: at connection, first put, then at 11 22 33
         self.assertTrue(self.eventsReceived == 5, 'events expected: 5; events received: ' + str(self.eventsReceived))
         # Any updates inside deadband are an error

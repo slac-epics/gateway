@@ -5,3 +5,9 @@ verbose = False
 # Do we want debug logging from the gateway
 verboseGateway = False
 
+# CA ports to use
+iocPort = 12782
+gwPort = 12783
+
+# Duration of Gateway standalong run
+gwRunDuration = 300

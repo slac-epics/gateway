@@ -13,13 +13,13 @@ class DBEPropTest(unittest.TestCase):
     def setUp(self):
         self.siocControl = SIOCControl.SIOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
-        self.eventsReceived = 0
-        self.siocControl.startSIOCWithDefaultDB("12782")
-        self.gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'] if 'EPICS_CA_SERVER_PORT' in os.environ else "5064", "12782")
+        self.siocControl.startSIOCWithDefaultDB()
+        self.gatewayControl.startGateway()
         os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-        os.environ["EPICS_CA_ADDR_LIST"] = "localhost"
+        os.environ["EPICS_CA_ADDR_LIST"] = "localhost:{} localhost:{}".format(gwtests.iocPort,gwtests.gwPort)
         epics.ca.initialize_libca()
-        
+        self.eventsReceived = 0
+
     def tearDown(self):
         epics.ca.finalize_libca()
         self.siocControl.stop()
@@ -43,7 +43,7 @@ class DBEPropTest(unittest.TestCase):
         for val in range(10):
             pv.put(val)
             time.sleep(.001)
-        time.sleep(.01)
+        time.sleep(.05)
         # We get 1 event: at connection
         self.assertTrue(self.eventsReceived == 1, 'events expected: 1; events received: ' + str(self.eventsReceived))
 

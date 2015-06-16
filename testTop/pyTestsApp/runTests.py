@@ -8,7 +8,7 @@ import platform
 import gwtests
 
 def suite():
-    suite = unittest.TestLoader().loadTestsFromNames(['DBEValueTest', 'DBELogTest', 'DBEAlarmTest', 'DBEPropTest', 'GatewayPropCacheTest'])
+    suite = unittest.TestLoader().loadTestsFromNames(['DBEValueTest', 'DBELogTest', 'DBEAlarmTest', 'DBEPropTest', 'PropertyCacheTest'])
     return suite
 
 if __name__ == '__main__':
@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose logging')
     parser.add_argument('--verbose_gateway', action='store_true', help='Enable verbose logging for the gateway. Starts the gateway in debug mode')
-    parser.add_argument('-t', '--tests', help='Specify the tests that need to be run.')
+    parser.add_argument('-t', '--tests', nargs='*', help='Specify the tests that need to be run.')
     args = parser.parse_args()
     gwtests.verbose = args.verbose
     gwtests.verboseGateway = args.verbose_gateway
@@ -36,7 +36,7 @@ if __name__ == '__main__':
         verb = 1
 
     if args.tests:
-        test_suite = unittest.TestLoader().loadTestsFromNames([args.tests])
+        test_suite = unittest.TestLoader().loadTestsFromNames(args.tests)
     else:
         test_suite = suite()
 
