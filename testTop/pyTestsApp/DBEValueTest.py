@@ -19,6 +19,8 @@ class DBEValueTest(unittest.TestCase):
         self.siocControl.startSIOCWithDefaultDB("12782")
         self.gatewayControl.startGateway(os.environ['EPICS_CA_SERVER_PORT'] if 'EPICS_CA_SERVER_PORT' in os.environ else "5064", "12782")
         time.sleep(2)
+        os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+        os.environ["EPICS_CA_ADDR_LIST"] = "localhost"
         epics.ca.initialize_libca()
 
         

@@ -14,6 +14,7 @@ class SIOCControl:
         childEnviron = os.environ.copy()
         childEnviron['EPICS_CA_SERVER_PORT'] = iocPort
         childEnviron['EPICS_CA_ADDR_LIST'] = "localhost"
+        childEnviron['EPICS_CA_AUTO_ADDR_LIST'] = "NO"
         if not gwtests.verbose:
             self.DEVNULL = open(os.devnull, 'wb')
         self.siocProcess = subprocess.Popen(['softIoc', '-d', 'test.db'], env=childEnviron, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
