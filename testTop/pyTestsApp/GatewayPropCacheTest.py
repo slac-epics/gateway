@@ -31,7 +31,6 @@ class GatewayPropCacheTest(unittest.TestCase):
         
     def testGatewayPropCache(self):
         '''Establish no monitors - make a change to the HIGH outside of the gateway; then ca_get the value of the PV's HIGH from the gateway; received changed value'''
-        print "Running GatewayPropCacheTest.testGatewayPropCache"
         pvHIGH = epics.PV("gateway:gwcachetest.HIGH", auto_monitor=None)
         time.sleep(1)
         highVal = pvHIGH.get()

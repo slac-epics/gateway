@@ -30,12 +30,14 @@ if __name__ == '__main__':
         print "Cannot find the gateway executable to test", gatewayExecutable
         sys.exit(1)
     
-    
-    if args.tests:
-        runner = unittest.TextTestRunner()
-        test_suite = unittest.TestLoader().loadTestsFromNames([args.tests])
-        runner.run (test_suite)
+    if gwtests.verbose:
+        verb = 2
     else:
-        runner = unittest.TextTestRunner()
+        verb = 1
+
+    if args.tests:
+        test_suite = unittest.TestLoader().loadTestsFromNames([args.tests])
+    else:
         test_suite = suite()
-        runner.run (test_suite)
+
+    unittest.TextTestRunner(verbosity=verb).run(test_suite)

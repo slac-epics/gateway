@@ -38,7 +38,6 @@ class DBEValueTest(unittest.TestCase):
         
     def testDBEValue(self):
         '''Establish a DBE_VALUE monitor on an ai - caput 10 changes; get 10 monitor events.'''
-        print "Running DBEValueTest.testDBEValue"
         pv = epics.PV("gateway:passive0", auto_monitor=epics.dbr.DBE_VALUE)
         pv.add_callback(self.onChange)
         time.sleep(1)

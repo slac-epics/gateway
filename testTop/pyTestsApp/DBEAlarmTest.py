@@ -36,7 +36,6 @@ class DBEAlarmTest(unittest.TestCase):
         
     def testDBELog(self):
         ''' Establish DBE_ALARM monitor on an ai with an ADEL - caput changes of which none are more than the ADEL; however, few changes generates alarm changes'''
-        print "Running DBEAlarmTest.testDBELog"
         pv = epics.PV("gateway:passiveALRM", auto_monitor=epics.dbr.DBE_ALARM)
         pv.add_callback(self.onChange)
         time.sleep(1)

@@ -36,7 +36,6 @@ class DBELogTest(unittest.TestCase):
         
     def testDBELog(self):
         '''Establish DBE_LOG monitor on an ai with an ADEL - caput changes of which only 2 should be more than the ADEL ; get 2 monitor events.'''
-        print "Running DBELogTest.testDBELog"
         pv = epics.PV("gateway:passiveADEL", auto_monitor=epics.dbr.DBE_LOG)
         pv.add_callback(self.onChange)
         time.sleep(1)
