@@ -16,7 +16,7 @@ class GatewayControl:
         gateway_commands.extend(["-sip", "localhost", "-sport", str(gwtests.gwPort)])
         gateway_commands.extend(["-cip", "localhost", "-cport", str(gwtests.iocPort)])
         gateway_commands.extend(["-access", "access.txt", "-pvlist", "pvlist.txt"])
-        gateway_commands.extend(["-archive"])
+        gateway_commands.extend(["-archive", "-prefix", gwtests.gwStatsPrefix])
         if gwtests.verboseGateway:
             gateway_commands.extend(["-debug", "10"]);
         if gwtests.verbose:

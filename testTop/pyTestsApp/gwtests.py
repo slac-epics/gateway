@@ -9,5 +9,9 @@ verboseGateway = False
 iocPort = 12782
 gwPort = 12783
 
-# Duration of Gateway standalong run
+# Duration of standalong runs
 gwRunDuration = 300
+iocRunDuration = 300
+
+# Gateway attributes
+gwStatsPrefix= "gwtest"

@@ -18,6 +18,7 @@ class SIOCControl:
         if not gwtests.verbose:
             self.DEVNULL = open(os.devnull, 'wb')
         self.siocProcess = subprocess.Popen(['softIoc', '-d', 'test.db'], env=childEnviron, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
+        time.sleep(.5)
 
     def stop(self):
         self.siocProcess.terminate()
@@ -27,6 +28,6 @@ class SIOCControl:
 
 if __name__ == "__main__":
     siocControl = SIOCControl()
-    siocControl.startSIOCWithDefaultDB('12782')
-    time.sleep(60)
+    siocControl.startSIOCWithDefaultDB()
+    time.sleep(gwtests.iocRunDuration)
     siocControl.stop()
