@@ -406,16 +406,26 @@ inline int gateServer::pvDelete(const char* name, gatePvData*& pv)
 {
 	gatePvNode* n;
 	int rc;
-	if((rc=pvFind(name,n))==0) { pv=n->getData(); delete n; }
-	else pv=NULL;
+    if ((rc = pvFind(name,n)) == 0) {
+        pv_list.remove(name, n);
+        pv = n->getData();
+        delete n;
+    }
+    else
+        pv = NULL;
 	return rc;
 }
 inline int gateServer::conDelete(const char* name, gatePvData*& pv)
 {
 	gatePvNode* n;
 	int rc;
-	if((rc=conFind(name,n))==0) { pv=n->getData(); delete n; }
-	else pv=NULL;
+    if ((rc = conFind(name,n)) == 0) {
+        pv_con_list.remove(name, n);
+        pv = n->getData();
+        delete n;
+    }
+    else
+        pv = NULL;
 	return rc;
 }
 
