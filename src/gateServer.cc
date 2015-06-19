@@ -1134,14 +1134,12 @@ gateServer::~gateServer(void)
 	while((pv_node=pv_list.first()))
 	{
 		pv_list.remove(pv_node->getData()->name(),old_pv);
-        old_pv->getData();
 		pv_node->destroy();
 	}
 
 	while((pv_node=pv_con_list.first()))
 	{
 		pv_con_list.remove(pv_node->getData()->name(),old_pv);
-        old_pv->getData();
 		pv_node->destroy();
 	}
 

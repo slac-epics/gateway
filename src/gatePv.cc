@@ -1444,6 +1444,7 @@ void gatePvData::connectCB(CONNECT_ARGS args)
 		gateDebug0(9,"gatePvData::connectCB() connection dead\n");
 		pv->death();
 	}
+    pv->mrg->conDelete(pv->name(), pv);
 }
 
 // This is the callback that is called when ca_array_put_callback is
