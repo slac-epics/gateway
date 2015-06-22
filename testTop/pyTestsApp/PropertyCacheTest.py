@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 import os
 import unittest
-import epics
-from epics import ca
+from epics import ca, dbr
 import SIOCControl
 import GatewayControl
 import gwtests
@@ -25,23 +24,43 @@ class PropertyCacheTest(unittest.TestCase):
 
     def tearDown(self):
         ca.finalize_libca()
-        self.siocControl.stop()
         self.gatewayControl.stop()
-        
+        self.siocControl.stop()
+
     def onChange(self, pvname=None, **kws):
         a = 1
 
-    def testPropCache_ValueMonitorFullPV(self):
+    def testPropCache_ValueMonitorCTRLget(self):
         '''Monitor PV (value events) through GW - change HIGH directly - get the DBR_CTRL of the PV through GW'''
+        gw_vctotal = ca.create_channel("gwtest:vctotal")
+        gw_pvtotal = ca.create_channel("gwtest:pvtotal")
+        gw_connected = ca.create_channel("gwtest:connected")
+
+        # gateway should show no vc (client side connection) and no connected pv (IOC side connection)
+        count = ca.get(gw_vctotal)
+        self.assertTrue(count == 0, "Expected GW VC total count: 0, actual: " + str(count))
+        count = ca.get(gw_pvtotal)
+        self.assertTrue(count == 0, "Expected GW PV total count: 0, actual: " + str(count))
+        count = ca.get(gw_connected)
+        self.assertTrue(count == 0, "Expected GW connected PV count: 0, actual: " + str(count))
+
         # gwcachetest is an ai record with full set of alarm limits: -100 -10 10 100
         gw = ca.create_channel("gateway:gwcachetest")
         connected = ca.connect_channel(gw, timeout=.5)
         self.assertTrue(connected, "Could not connect to gateway channel " + ca.name(gw))
-        (gw_cbref, gw_uaref, gw_eventid) = ca.create_subscription(gw, mask=epics.dbr.DBE_VALUE, callback=self.onChange)
+        (gw_cbref, gw_uaref, gw_eventid) = ca.create_subscription(gw, mask=dbr.DBE_VALUE, callback=self.onChange)
         ioc = ca.create_channel("ioc:gwcachetest")
         connected = ca.connect_channel(ioc, timeout=.5)
         self.assertTrue(connected, "Could not connect to ioc channel " + ca.name(gw))
-        (ioc_cbref, ioc_uaref, ioc_eventid) = ca.create_subscription(ioc, mask=epics.dbr.DBE_VALUE, callback=self.onChange)
+        (ioc_cbref, ioc_uaref, ioc_eventid) = ca.create_subscription(ioc, mask=dbr.DBE_VALUE, callback=self.onChange)
+
+        # gateway should show one vc (client side connection) and one connected pv (IOC side connection)
+        count = ca.get(gw_vctotal)
+        self.assertTrue(count == 1, "Expected GW VC total count: 1, actual: " + str(count))
+        count = ca.get(gw_pvtotal)
+        self.assertTrue(count == 1, "Expected GW PV total count: 1, actual: " + str(count))
+        count = ca.get(gw_connected)
+        self.assertTrue(count == 1, "Expected GW connected PV count: 1, actual: " + str(count))
 
         # limit should not have been updated
         ioc_ctrl = ca.get_ctrlvars(ioc)
@@ -51,7 +70,59 @@ class PropertyCacheTest(unittest.TestCase):
         highVal = gw_ctrl['upper_warning_limit']
         self.assertTrue(highVal == 10.0, "Expected GW warning_limit: 10; actual limit: "+ str(highVal))
 
-        epics.caput("ioc:gwcachetest.HIGH", 20, wait=True)
+        # set warning limit on IOC
+        ioc_high = ca.create_channel("ioc:gwcachetest.HIGH")
+        ca.put(ioc_high, 20.0, wait=True)
+
+        # now the limit should have been updated
+        ioc_ctrl = ca.get_ctrlvars(ioc)
+        highVal = ioc_ctrl['upper_warning_limit']
+        self.assertTrue(highVal == 20.0, "Expected IOC warning_limit: 20; actual limit: "+ str(highVal))
+        gw_ctrl = ca.get_ctrlvars(gw)
+        highVal = gw_ctrl['upper_warning_limit']
+        self.assertTrue(highVal == 20.0, "Expected GW warning_limit: 20; actual limit: "+ str(highVal))
+
+    def testPropCache_ValueGetCTRLGet(self):
+        '''Get PV (value) through GW - change HIGH directly - get the DBR_CTRL of the PV through GW'''
+        gw_vctotal = ca.create_channel("gwtest:vctotal")
+        gw_pvtotal = ca.create_channel("gwtest:pvtotal")
+        gw_connected = ca.create_channel("gwtest:connected")
+
+        # gateway should show no vc (client side connection) and no connected pv (IOC side connection)
+        count = ca.get(gw_vctotal)
+        self.assertTrue(count == 0, "Expected GW VC total count: 0, actual: " + str(count))
+        count = ca.get(gw_pvtotal)
+        self.assertTrue(count == 0, "Expected GW PV total count: 0, actual: " + str(count))
+        count = ca.get(gw_connected)
+        self.assertTrue(count == 0, "Expected GW connected PV count: 0, actual: " + str(count))
+
+        # gwcachetest is an ai record with full set of alarm limits: -100 -10 10 100
+        gw = ca.create_channel("gateway:gwcachetest")
+        connected = ca.connect_channel(gw, timeout=.5)
+        self.assertTrue(connected, "Could not connect to gateway channel " + ca.name(gw))
+        ioc = ca.create_channel("ioc:gwcachetest")
+        connected = ca.connect_channel(ioc, timeout=.5)
+        self.assertTrue(connected, "Could not connect to ioc channel " + ca.name(gw))
+
+        # gateway should show one vc (client side connection) and one connected pv (IOC side connection)
+        count = ca.get(gw_vctotal)
+        self.assertTrue(count == 1, "Expected GW VC total count: 0, actual: " + str(count))
+        count = ca.get(gw_pvtotal)
+        self.assertTrue(count == 1, "Expected GW PV total count: 1, actual: " + str(count))
+        count = ca.get(gw_connected)
+        self.assertTrue(count == 1, "Expected GW connected PV count: 1, actual: " + str(count))
+
+        # limit should not have been updated
+        ioc_ctrl = ca.get_ctrlvars(ioc)
+        highVal = ioc_ctrl['upper_warning_limit']
+        self.assertTrue(highVal == 10.0, "Expected IOC warning_limit: 10; actual limit: "+ str(highVal))
+        gw_ctrl = ca.get_ctrlvars(gw)
+        highVal = gw_ctrl['upper_warning_limit']
+        self.assertTrue(highVal == 10.0, "Expected GW warning_limit: 10; actual limit: "+ str(highVal))
+
+        # set warning limit on IOC
+        ioc_high = ca.create_channel("ioc:gwcachetest.HIGH")
+        ca.put(ioc_high, 20.0, wait=True)
 
         # now the limit should have been updated
         ioc_ctrl = ca.get_ctrlvars(ioc)
