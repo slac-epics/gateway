@@ -2,6 +2,7 @@
 import os
 import unittest
 import epics
+from epics import ca
 import SIOCControl
 import GatewayControl
 import gwtests
@@ -20,36 +21,42 @@ class PropertyCacheTest(unittest.TestCase):
         self.gatewayControl.startGateway()
         os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
         os.environ["EPICS_CA_ADDR_LIST"] = "localhost:{} localhost:{}".format(gwtests.iocPort,gwtests.gwPort)
-        epics.ca.initialize_libca()
+        ca.initialize_libca()
 
     def tearDown(self):
-        epics.ca.finalize_libca()
+        ca.finalize_libca()
         self.siocControl.stop()
         self.gatewayControl.stop()
         
-    def onChange(self, gwname=None, **kws):
+    def onChange(self, pvname=None, **kws):
         a = 1
 
     def testPropCache_ValueMonitorFullPV(self):
         '''Monitor PV (value events) through GW - change HIGH directly - get the DBR_CTRL of the PV through GW'''
         # gwcachetest is an ai record with full set of alarm limits: -100 -10 10 100
-        gw = epics.PV("gateway:gwcachetest", form='ctrl', auto_monitor=epics.dbr.DBE_VALUE)
-        gw.add_callback(self.onChange)
-        ioc = epics.PV("ioc:gwcachetest", form='ctrl', auto_monitor=epics.dbr.DBE_VALUE)
-        ioc.add_callback(self.onChange)
+        gw = ca.create_channel("gateway:gwcachetest")
+        connected = ca.connect_channel(gw, timeout=.5)
+        self.assertTrue(connected, "Could not connect to gateway channel " + ca.name(gw))
+        (gw_cbref, gw_uaref, gw_eventid) = ca.create_subscription(gw, mask=epics.dbr.DBE_VALUE, callback=self.onChange)
+        ioc = ca.create_channel("ioc:gwcachetest")
+        connected = ca.connect_channel(ioc, timeout=.5)
+        self.assertTrue(connected, "Could not connect to ioc channel " + ca.name(gw))
+        (ioc_cbref, ioc_uaref, ioc_eventid) = ca.create_subscription(ioc, mask=epics.dbr.DBE_VALUE, callback=self.onChange)
+
+        # limit should not have been updated
+        ioc_ctrl = ca.get_ctrlvars(ioc)
+        highVal = ioc_ctrl['upper_warning_limit']
+        self.assertTrue(highVal == 10.0, "Expected IOC warning_limit: 10; actual limit: "+ str(highVal))
+        gw_ctrl = ca.get_ctrlvars(gw)
+        highVal = gw_ctrl['upper_warning_limit']
+        self.assertTrue(highVal == 10.0, "Expected GW warning_limit: 10; actual limit: "+ str(highVal))
 
         epics.caput("ioc:gwcachetest.HIGH", 20, wait=True)
 
-        # limit should not have been updated (value monitor)
-        highVal = ioc.upper_warning_limit
-        self.assertTrue(highVal == 10.0, "Expected IOC warning_limit: 10; actual limit: "+ str(highVal))
-        highVal = gw.upper_warning_limit
-        self.assertTrue(highVal == 10.0, "Expected GW warning_limit: 10; actual limit: "+ str(highVal))
-        # do an explicit get
-        gw.get(use_monitor=False)
-        ioc.get(use_monitor=False)
         # now the limit should have been updated
-        highVal = ioc.upper_warning_limit
+        ioc_ctrl = ca.get_ctrlvars(ioc)
+        highVal = ioc_ctrl['upper_warning_limit']
         self.assertTrue(highVal == 20.0, "Expected IOC warning_limit: 20; actual limit: "+ str(highVal))
-        highVal = gw.upper_warning_limit
+        gw_ctrl = ca.get_ctrlvars(gw)
+        highVal = gw_ctrl['upper_warning_limit']
         self.assertTrue(highVal == 20.0, "Expected GW warning_limit: 20; actual limit: "+ str(highVal))
