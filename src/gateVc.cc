@@ -563,7 +563,7 @@ int gateVcData::setEventData(gdd* dd)
 
 #if DEBUG_GDD
 	heading("gateVcData::setEventData",name());
-	dumpdd(1,"dd (incoming)",name(),dd);
+    dumpdd(1,"dd (new value data)",name(),dd);
 #endif
 
 #if DEBUG_DELAY
@@ -751,6 +751,11 @@ void gateVcData::setPvData(gdd* dd)
 	// this is the PV atttributes, which come in during the connect state
 	// currently
 	gateDebug2(2,"gateVcData::setPvData(gdd=%p) name=%s\n",(void *)dd,name());
+
+#if DEBUG_GDD
+    heading("gateVcData::setPvData",name());
+    dumpdd(1,"dd (new property data)",name(),dd);
+#endif
 
 	if(pv_data) pv_data->unreference();
 	pv_data=dd;
@@ -1172,7 +1177,8 @@ caStatus gateVcData::read(const casCtx& ctx, gdd& dd)
 			return S_casApp_postponeAsyncIO;
 		} else {
 			// Copy the current state into the dd
-			copyState(dd);
+            gateDebug1(10,"gateVcData::read() %s using cached pv data for reply\n",name());
+            copyState(dd);
 		}
 		return S_casApp_success;
 	case gddAppType_value: if(!global_resources->getCacheMode()) read_type = timeType;
@@ -1226,15 +1232,6 @@ caStatus gateVcData::read(const casCtx& ctx, gdd& dd)
 			return S_casApp_asyncCompletion;
 		}
 		else{
-            
-		    if ((client_mask == DBE_PROPERTY)) { 
-                if (!pv->propMonitored()) {
-			        // Kick off the property monitors
-	                gateDebug0(10,"gateVcData::Kicking off a property monitor\n");
-			        pv->propMonitor();
-		        } 
-            }
-			
 			// Copy the current state into the dd
 			copyState(dd);
 #if DEBUG_GDD
