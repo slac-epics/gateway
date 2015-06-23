@@ -73,6 +73,7 @@ class PropertyCacheTest(unittest.TestCase):
         # set warning limit on IOC
         ioc_high = ca.create_channel("ioc:gwcachetest.HIGH")
         ca.put(ioc_high, 20.0, wait=True)
+        time.sleep(.1)
 
         # now the limit should have been updated
         ioc_ctrl = ca.get_ctrlvars(ioc)
@@ -123,6 +124,7 @@ class PropertyCacheTest(unittest.TestCase):
         # set warning limit on IOC
         ioc_high = ca.create_channel("ioc:gwcachetest.HIGH")
         ca.put(ioc_high, 20.0, wait=True)
+        time.sleep(.1)
 
         # now the limit should have been updated
         ioc_ctrl = ca.get_ctrlvars(ioc)
