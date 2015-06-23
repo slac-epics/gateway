@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''Controls the gateway'''
+'''Controls the CA Gateway'''
 import subprocess
 import time
 import os
@@ -20,7 +20,7 @@ class GatewayControl:
         if gwtests.verboseGateway:
             gateway_commands.extend(["-debug", "10"]);
         if gwtests.verbose:
-            print "Starting the gateway using\n", " ".join(gateway_commands)
+            print "Starting the CA Gateway using\n", " ".join(gateway_commands)
         else:
             self.DEVNULL = open(os.devnull, 'wb')
         self.gatewayProcess = subprocess.Popen(gateway_commands, stdout=self.DEVNULL, stderr=subprocess.STDOUT)

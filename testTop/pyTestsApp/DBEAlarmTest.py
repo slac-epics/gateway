@@ -8,7 +8,7 @@ import gwtests
 import time
 
 class DBEAlarmTest(unittest.TestCase):
-    '''3) Establish DBE_ALARM monitor on an ai with an ADEL - caput changes of which none are more than the ADEL; however, few changes generates alarm changes'''
+    '''Test alarm updates (client using DBE_ALARM flag) through the Gateway'''
 
     def setUp(self):
         self.siocControl = SIOCControl.SIOCControl()

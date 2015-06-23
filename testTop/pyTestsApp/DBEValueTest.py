@@ -8,9 +8,7 @@ import gwtests
 import time
 
 class DBEValueTest(unittest.TestCase):
-    '''A "hello world" test. We start a IOC, gateway and then set up a monitor and make sure we receive the appropriate number of events.
-    1) Establish a DBE_VALUE monitor on an ai - caput 10 changes; get 10 monitor events
-    '''
+    '''Test value updates (client using DBE_VALUE flag) through the Gateway'''
 
     def setUp(self):
         self.siocControl = SIOCControl.SIOCControl()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''Starts/stops the SIOC used in the tests'''
+'''Starts/stops the IOC used in the tests'''
 import os
 import subprocess
 import time
@@ -10,7 +10,7 @@ class SIOCControl:
     DEVNULL = None
 
     def startSIOCWithDefaultDB(self):
-        '''Start the SIOC using the default test.db'''
+        '''Start the IOC using the default test.db'''
         childEnviron = os.environ.copy()
         childEnviron['EPICS_CA_SERVER_PORT'] = str(gwtests.iocPort)
         childEnviron['EPICS_CA_ADDR_LIST'] = "localhost"

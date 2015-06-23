@@ -8,7 +8,7 @@ import gwtests
 import time
 
 class DBELogTest(unittest.TestCase):
-    '''2) Establish DBE_LOG monitor on an ai with an ADEL - caput changes of which only 2 should be more than the ADEL ; get 2 monitor events. '''
+    '''Test log/archive updates (client using DBE_LOG flag) through the Gateway'''
 
     def setUp(self):
         self.siocControl = SIOCControl.SIOCControl()

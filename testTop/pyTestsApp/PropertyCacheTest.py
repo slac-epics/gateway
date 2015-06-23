@@ -9,8 +9,8 @@ import time
 import subprocess
 
 class PropertyCacheTest(unittest.TestCase):
-    '''The gateway caches the properties; we want it to establish a DBE_PROP monitor no matter what and update its internal property cache
-    Establish no monitors - make a change to the HIGH outside of the gateway; then ca_get the value of the PV's HIGH from the gateway; received changed value
+    '''Testing the Gateway PV property cache
+    Set up a connection through the Gateway - change a property externally - check if Gateway cache was updated
     '''
 
     def setUp(self):

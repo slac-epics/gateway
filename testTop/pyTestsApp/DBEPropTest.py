@@ -8,7 +8,7 @@ import gwtests
 import time
 
 class DBEPropTest(unittest.TestCase):
-    '''DBE_PROPERTY monitor on an ai - caput 10 changes; get 0 monitor events; caput on the alarm levels; get 1 monitor event'''
+    '''Test property updates (client using DBE_PROPERTY flag) through the Gateway'''
 
     def setUp(self):
         self.siocControl = SIOCControl.SIOCControl()
