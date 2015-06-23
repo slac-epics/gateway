@@ -21,7 +21,7 @@ class GatewayControl:
             gateway_commands.extend(["-debug", "10"]);
         if gwtests.verbose:
             print "Starting the CA Gateway using\n", " ".join(gateway_commands)
-        else:
+        if not gwtests.verboseGateway and not gwtests.verbose:
             self.DEVNULL = open(os.devnull, 'wb')
         self.gatewayProcess = subprocess.Popen(gateway_commands, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
 
