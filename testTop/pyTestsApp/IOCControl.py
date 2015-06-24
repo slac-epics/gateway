@@ -20,10 +20,7 @@ class IOCControl:
 
         iocExe = 'softIoc'
         if 'EPICS_BASE' in os.environ:
-            if 'EPICS_HOST_ARCH' not in os.environ:
-                print "Please set the EPICS_HOST_ARCH environment variable to the appropriate value."
-                sys.exit(1)
-            iocExe = "{0}/bin/{1}/softIoc".format(os.environ['EPICS_BASE'],os.environ['EPICS_HOST_ARCH'])
+            iocExe = "{0}/bin/{1}/softIoc".format(os.environ['EPICS_BASE'],gwtests.hostArch)
 
         if arglist is None:
             iocCommand = [iocExe, '-d', 'test.db']

@@ -16,5 +16,6 @@ iocRunDuration = 300
 # Gateway attributes
 gwStatsPrefix = "gwtest"
 
-# Location of CA Gateway module
+# Defaults for EPICS properties:
 gwLocation = "../.."
+hostArch = "linux-x86_64"

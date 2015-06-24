@@ -22,12 +22,18 @@ if __name__ == '__main__':
     gwtests.verbose = args.verbose
     gwtests.verboseGateway = args.verbose_gateway
 
-    if 'EPICS_HOST_ARCH' not in os.environ or 'TOP' not in os.environ:
-        print "Please set the EPICS_HOST_ARCH and TOP environment variables."
-        sys.exit(1)
+    if 'EPICS_HOST_ARCH' in os.environ:
+        gwtests.hostArch = os.environ['EPICS_HOST_ARCH']
+    elif 'T_A' in os.environ:
+        gwtests.hostArch = os.environ['T_A']
+    else:
+        print "Warning: EPICS_HOST_ARCH not set. Using default value of 'linux-x86_64'"
+    if 'TOP' in os.environ:
+        gwtests.gwLocation = os.path.join(os.environ['TOP'], '..')
+    else:
+        print "Warning: TOP not set. Using default value of '..'"
 
-    gwtests.gwLocation = os.path.join(os.environ['TOP'], '..')
-    gatewayExecutable = os.path.join(gwtests.gwLocation, 'bin', os.environ['EPICS_HOST_ARCH'], 'gateway')
+    gatewayExecutable = os.path.join(gwtests.gwLocation, 'bin', gwtests.hostArch, 'gateway')
     if not os.path.exists(gatewayExecutable):
         print "Cannot find the gateway executable to test", gatewayExecutable
         sys.exit(1)
