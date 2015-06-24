@@ -2,7 +2,7 @@
 import os
 import unittest
 from epics import ca, dbr
-import SIOCControl
+import IOCControl
 import GatewayControl
 import gwtests
 import time
@@ -14,9 +14,9 @@ class PropertyCacheTest(unittest.TestCase):
     '''
 
     def setUp(self):
-        self.siocControl = SIOCControl.SIOCControl()
+        self.iocControl = IOCControl.IOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
-        self.siocControl.startSIOCWithDefaultDB()
+        self.iocControl.startIOC()
         self.gatewayControl.startGateway()
         os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
         os.environ["EPICS_CA_ADDR_LIST"] = "localhost:{} localhost:{}".format(gwtests.iocPort,gwtests.gwPort)
@@ -25,7 +25,7 @@ class PropertyCacheTest(unittest.TestCase):
     def tearDown(self):
         ca.finalize_libca()
         self.gatewayControl.stop()
-        self.siocControl.stop()
+        self.iocControl.stop()
 
     def onChange(self, pvname=None, **kws):
         a = 1
@@ -205,7 +205,7 @@ class PropertyCacheTest(unittest.TestCase):
         highVal = gw_ctrl['upper_warning_limit']
         self.assertTrue(highVal == 10.0, "Expected GW warning_limit: 10; actual limit: "+ str(highVal))
 
-        # disconnect gateway channel
+        # disconnect Channel Access, reconnect Gateway stats
         ca.finalize_libca()
         ca.initialize_libca()
         gw_vctotal = ca.create_channel("gwtest:vctotal")
@@ -231,10 +231,13 @@ class PropertyCacheTest(unittest.TestCase):
         ca.put(ioc_high, 20.0, wait=True)
         time.sleep(.1)
 
-        # reconnect gateway
+        # reconnect Gateway and IOC
         gw = ca.create_channel("gateway:gwcachetest")
         connected = ca.connect_channel(gw, timeout=.5)
         self.assertTrue(connected, "Could not connect to gateway channel " + ca.name(gw))
+        ioc = ca.create_channel("ioc:gwcachetest")
+        connected = ca.connect_channel(ioc, timeout=.5)
+        self.assertTrue(connected, "Could not connect to ioc channel " + ca.name(gw))
 
         # gateway should show one VC and one connected active PV
         count = ca.get(gw_vctotal)

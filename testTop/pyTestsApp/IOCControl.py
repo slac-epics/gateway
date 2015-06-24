@@ -5,11 +5,11 @@ import subprocess
 import time
 import gwtests
 
-class SIOCControl:
-    siocProcess = None
+class IOCControl:
+    iocProcess = None
     DEVNULL = None
 
-    def startSIOCWithDefaultDB(self):
+    def startIOC(self, arglist=None):
         '''Start the IOC using the default test.db'''
         childEnviron = os.environ.copy()
         childEnviron['EPICS_CA_SERVER_PORT'] = str(gwtests.iocPort)
@@ -18,27 +18,32 @@ class SIOCControl:
         if not gwtests.verbose:
             self.DEVNULL = open(os.devnull, 'wb')
 
-        siocExe = 'softIoc'
+        iocExe = 'softIoc'
         if 'EPICS_BASE' in os.environ:
             if 'EPICS_HOST_ARCH' not in os.environ:
                 print "Please set the EPICS_HOST_ARCH environment variable to the appropriate value."
                 sys.exit(1)
-            siocExe = "{0}/bin/{1}/softIoc".format(os.environ['EPICS_BASE'],os.environ['EPICS_HOST_ARCH'])
-        siocCommand = [siocExe, '-d', 'test.db']
+            iocExe = "{0}/bin/{1}/softIoc".format(os.environ['EPICS_BASE'],os.environ['EPICS_HOST_ARCH'])
+
+        if arglist is None:
+            iocCommand = [iocExe, '-d', 'test.db']
+        else:
+            iocCommand = [iocExe]
+            iocCommand.extend(arglist)
 
         if gwtests.verbose:
-            print "Starting the IOC using\n", " ".join(siocCommand)
-        self.siocProcess = subprocess.Popen(siocCommand, env=childEnviron, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
+            print "Starting the IOC using\n", " ".join(iocCommand)
+        self.iocProcess = subprocess.Popen(iocCommand, env=childEnviron, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
         time.sleep(.5)
 
     def stop(self):
-        self.siocProcess.terminate()
+        self.iocProcess.terminate()
         if self.DEVNULL:
             self.DEVNULL.close()
 
 
 if __name__ == "__main__":
-    siocControl = SIOCControl()
-    siocControl.startSIOCWithDefaultDB()
+    iocControl = IOCControl()
+    iocControl.startIOCWithDefaultDB()
     time.sleep(gwtests.iocRunDuration)
-    siocControl.stop()
+    iocControl.stop()

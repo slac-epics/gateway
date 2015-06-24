@@ -2,7 +2,7 @@
 import os
 import unittest
 import epics
-import SIOCControl
+import IOCControl
 import GatewayControl
 import gwtests
 import time
@@ -11,9 +11,9 @@ class DBELogTest(unittest.TestCase):
     '''Test log/archive updates (client using DBE_LOG flag) through the Gateway'''
 
     def setUp(self):
-        self.siocControl = SIOCControl.SIOCControl()
+        self.iocControl = IOCControl.IOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
-        self.siocControl.startSIOCWithDefaultDB()
+        self.iocControl.startIOC()
         self.gatewayControl.startGateway()
         os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
         os.environ["EPICS_CA_ADDR_LIST"] = "localhost:{} localhost:{}".format(gwtests.iocPort,gwtests.gwPort)
@@ -24,8 +24,8 @@ class DBELogTest(unittest.TestCase):
 
     def tearDown(self):
         epics.ca.finalize_libca()
-        self.siocControl.stop()
         self.gatewayControl.stop()
+        self.iocControl.stop()
         
     def onChange(self, pvname=None, **kws):
         self.eventsReceived += 1
