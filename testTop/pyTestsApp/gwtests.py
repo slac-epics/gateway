@@ -14,4 +14,7 @@ gwRunDuration = 300
 iocRunDuration = 300
 
 # Gateway attributes
-gwStatsPrefix= "gwtest"
+gwStatsPrefix = "gwtest"
+
+# Location of CA Gateway module
+gwLocation = "../.."

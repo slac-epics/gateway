@@ -5,6 +5,7 @@ import argparse
 import os
 import subprocess
 import platform
+from tap import TAPTestRunner
 import gwtests
 
 def suite():
@@ -21,11 +22,12 @@ if __name__ == '__main__':
     gwtests.verbose = args.verbose
     gwtests.verboseGateway = args.verbose_gateway
 
-    if 'EPICS_HOST_ARCH' not in os.environ:
-        print "Please set the EPICS_HOST_ARCH environment variable to the appropriate value. These unit tests will test the gateway in ../../bin/${EPICS_HOST_ARCH}/gateway folder"
+    if 'EPICS_HOST_ARCH' not in os.environ or 'TOP' not in os.environ:
+        print "Please set the EPICS_HOST_ARCH and TOP environment variables."
         sys.exit(1)
 
-    gatewayExecutable = os.path.join('..', '..', 'bin', os.environ['EPICS_HOST_ARCH'], 'gateway')
+    gwtests.gwLocation = os.path.join(os.environ['TOP'], '..')
+    gatewayExecutable = os.path.join(gwtests.gwLocation, 'bin', os.environ['EPICS_HOST_ARCH'], 'gateway')
     if not os.path.exists(gatewayExecutable):
         print "Cannot find the gateway executable to test", gatewayExecutable
         sys.exit(1)
@@ -40,4 +42,7 @@ if __name__ == '__main__':
     else:
         test_suite = suite()
 
-    unittest.TextTestRunner(verbosity=verb).run(test_suite)
+    runner = TAPTestRunner(verbosity=verb)
+    if 'HARNESS_ACTIVE' in os.environ:
+        runner.set_stream(True)
+    runner.run(test_suite)
