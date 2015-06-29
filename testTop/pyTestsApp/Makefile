@@ -18,13 +18,13 @@ include $(TOP)/configure/RULES
 %.py: ../%.py
 	install -m755 $< $@
 
-%.txt: ../%.txt
-	install -m755 $< $@
+# Workaround for 3.14 make rules: go through common dir
+$(COMMON_DIR)/%: ../%
+	install -m644 $< $@
+runTests.py: testfiles
+testfiles: $(TESTFILES:../%=$(COMMON_DIR)/%)
+	install -m644 $^ .
 
-%.db: ../%.db
-	install -m755 $< $@
-
-runTests.py: IOCControl.py test.db
 runTests.py: gwtests.py DBEValueTest.py DBEAlarmTest.py DBELogTest.py DBEPropTest.py
 runTests.py: PropertyCacheTest.py
-runTests.py: GatewayControl.py pvlist.txt access.txt
+runTests.py: IOCControl.py GatewayControl.py
