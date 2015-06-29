@@ -1,0 +1,38 @@
+README for CA Gateway Tests
+===========================
+
+This is an embedded TOP structure.
+By default, it is being used as part of the CA Gateway sources.
+You can also copy it out of the CA Gateway source tree and use it
+separately. In that case, you will have to set the pointers in
+.../configure/RELEASE appropriately.
+
+pyTestsApp
+----------
+
+Python unit tests.
+Default settings are in the gwtests.py configuration file.
+
+Most of the tests start an EPICS (soft) IOC and a CA Gateway,
+working on different non-standard ports on the 'localhost' loopback interface,
+The Gateway uses an ALIAS directive to export the channels on the IOC using
+a different prefix.
+The test routines, using the pyepics binding, have access to both the IOC and
+the Gateway channels to set up subscriptions, trigger events on the IOC and
+check the resulting event streams through the Gateway.
+
+There are two main ways to run the tests:
+1. As part of the EPICS Build system 'make runtests' and 'make tapfiles'
+   targets:
+   Test files are copied to the O.<arch> directory and run there.
+   The build system sets all necessary environment variables.
+   For 'make tapfiles' the tap.py module is used to create TAP output.
+2. Manually:
+   Test can be run in the pyTestApp directory using the 'runTests.py' wrapper.
+   You have to set EPICS_HOST_ARCH and TOP (to find the gateway executable
+   under test).
+   
+Prerequisite python packages:
+argparse      - command line argument parser
+tap.py        - Test runner creating TAP output
+pyepics (v3)  - Python CA client library
