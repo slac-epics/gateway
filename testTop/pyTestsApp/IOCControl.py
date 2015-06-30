@@ -27,12 +27,13 @@ class IOCControl:
 
         if gwtests.verbose:
             print "Starting the IOC using\n", " ".join(iocCommand)
-        self.iocProcess = subprocess.Popen(iocCommand, env=childEnviron, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
+        self.iocProcess = subprocess.Popen(iocCommand, env=childEnviron,
+                stdin=subprocess.PIPE, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
         time.sleep(.5)
 
     def stop(self):
         '''Stops the test IOC'''
-        self.iocProcess.terminate()
+        self.iocProcess.stdin.close()
         if self.DEVNULL:
             self.DEVNULL.close()
 
