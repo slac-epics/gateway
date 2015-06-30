@@ -11,6 +11,7 @@ class TestDBELog(unittest.TestCase):
     '''Test log/archive updates (client using DBE_LOG flag) through the Gateway'''
 
     def setUp(self):
+        gwtests.setup()
         self.iocControl = IOCControl.IOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
         self.iocControl.startIOC()
@@ -48,3 +49,7 @@ class TestDBELog(unittest.TestCase):
         self.assertTrue(self.eventsReceived == 5, 'events expected: 5; events received: ' + str(self.eventsReceived))
         # Any updates inside deadband are an error
         self.assertTrue(self.diffInsideDeadband == 0, str(self.diffInsideDeadband) + ' events with change <= deadband received')
+
+
+        if __name__ == '__main__':
+            unittest.main(verbosity=2)

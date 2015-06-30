@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+'''CA Gateway test configuration'''
+
+import os
+import sys
 
 # Do we want verbose logging
 verbose = False
@@ -19,3 +23,43 @@ gwStatsPrefix = "gwtest"
 # Defaults for EPICS properties:
 gwLocation = "../.."
 hostArch = "linux-x86_64"
+
+iocExecutable = "softIoc"
+gwExecutable = ""
+gwDebug = 10
+
+def setup():
+    '''Sets up test parameters for CA Gateway tests
+    '''
+    global verbose, verboseGateway, gwLocation, hostArch
+    global iocExecutable, gwExecutable, gwDebug
+
+    if 'VERBOSE' in os.environ and os.environ['VERBOSE'].lower().startswith('y'):
+        verbose = True
+
+    if 'VERBOSE_GATEWAY' in os.environ:
+        verboseGateway = True
+        if os.environ['VERBOSE_GATEWAY'].isdigit():
+            gwDebug = os.environ['VERBOSE_GATEWAY']
+
+    if 'EPICS_HOST_ARCH' in os.environ:
+        hostArch = os.environ['EPICS_HOST_ARCH']
+    elif 'T_A' in os.environ:
+        hostArch = os.environ['T_A']
+    else:
+        print "Warning: EPICS_HOST_ARCH not set. Using default value of '{}'".format(hostArch)
+
+    if 'TOP' in os.environ:
+        gwLocation = os.path.join(os.environ['TOP'], '..')
+    else:
+        print "Warning: TOP not set. Using default value of '..'"
+
+    gwExecutable = os.path.join(gwLocation, 'bin', hostArch, 'gateway')
+    if not os.path.exists(gwExecutable):
+        print "Cannot find the gateway executable at", gwExecutable
+        sys.exit(1)
+
+    if 'EPICS_BASE' in os.environ:
+        iocExecutable = os.path.join(os.environ['EPICS_BASE'], 'bin', hostArch, 'softIoc')
+    else:
+        print "Warning: EPICS_BASE not set. Running 'softIoc' executable in PATH"

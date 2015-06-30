@@ -11,6 +11,7 @@ class TestDBEAlarm(unittest.TestCase):
     '''Test alarm updates (client using DBE_ALARM flag) through the Gateway'''
 
     def setUp(self):
+        gwtests.setup()
         self.iocControl = IOCControl.IOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
         self.iocControl.startIOC()
@@ -49,3 +50,7 @@ class TestDBEAlarm(unittest.TestCase):
         self.assertTrue(self.eventsReceived == 6, 'events expected: 6; events received: ' + str(self.eventsReceived))
         # Any updates with unchanged severity are an error
         self.assertTrue(self.severityUnchanged == 0, str(self.severityUnchanged) + ' events with no severity changes received')
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

@@ -11,14 +11,14 @@ class GatewayControl:
 
     def startGateway(self):
         '''Starts the CA Gateway'''
-        gateway_commands = ["{0}/bin/{1}/gateway".format(gwtests.gwLocation, gwtests.hostArch)]
+        gateway_commands = [gwtests.gwExecutable]
         gateway_commands.extend(["-sip", "localhost", "-sport", str(gwtests.gwPort)])
         gateway_commands.extend(["-cip", "localhost", "-cport", str(gwtests.iocPort)])
         gateway_commands.extend(["-access", "access.txt", "-pvlist", "pvlist.txt"])
         gateway_commands.extend(["-archive", "-prefix", gwtests.gwStatsPrefix])
 
         if gwtests.verboseGateway:
-            gateway_commands.extend(["-debug", "10"]);
+            gateway_commands.extend(["-debug", str(gwtests.gwDebug)]);
         if gwtests.verbose:
             print "Starting the CA Gateway using\n", " ".join(gateway_commands)
         if not gwtests.verboseGateway and not gwtests.verbose:
@@ -33,6 +33,7 @@ class GatewayControl:
 
 
 if __name__ == "__main__":
+    gwtests.setup()
     print "Running the test CA Gateway in verbose mode for {} seconds".format(gwtests.gwRunDuration)
     gwtests.verbose = True
     gwtests.verboseGateway = True

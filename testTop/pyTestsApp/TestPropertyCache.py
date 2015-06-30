@@ -14,6 +14,7 @@ class TestPropertyCache(unittest.TestCase):
     '''
 
     def setUp(self):
+        gwtests.setup()
         self.iocControl = IOCControl.IOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
         self.iocControl.startIOC()
@@ -258,3 +259,7 @@ class TestPropertyCache(unittest.TestCase):
         gw_ctrl = ca.get_ctrlvars(gw)
         highVal = gw_ctrl['upper_warning_limit']
         self.assertTrue(highVal == 20.0, "Expected GW warning_limit: 20; actual limit: "+ str(highVal))
+
+
+        if __name__ == '__main__':
+            unittest.main(verbosity=2)

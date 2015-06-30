@@ -11,6 +11,7 @@ class TestDBEValue(unittest.TestCase):
     '''Test value updates (client using DBE_VALUE flag) through the Gateway'''
 
     def setUp(self):
+        gwtests.setup()
         self.iocControl = IOCControl.IOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
         self.iocControl.startIOC()
@@ -41,3 +42,7 @@ class TestDBEValue(unittest.TestCase):
         time.sleep(.05)
         # We get 11 events: at connection, then at 10 value changes (puts)
         self.assertTrue(self.eventsReceived == 11, 'events expected: 11; events received: ' + str(self.eventsReceived))
+
+
+        if __name__ == '__main__':
+            unittest.main(verbosity=2)

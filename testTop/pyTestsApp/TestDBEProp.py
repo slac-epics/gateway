@@ -11,6 +11,7 @@ class TestDBEProp(unittest.TestCase):
     '''Test property updates (client using DBE_PROPERTY flag) through the Gateway'''
 
     def setUp(self):
+        gwtests.setup()
         self.iocControl = IOCControl.IOCControl()
         self.gatewayControl = GatewayControl.GatewayControl()
         self.iocControl.startIOC()
@@ -57,3 +58,7 @@ class TestDBEProp(unittest.TestCase):
 
         # We get 4 events: properties of four alarm levels changed
         self.assertTrue(self.eventsReceived == 4, 'events expected: 4; events received: ' + str(self.eventsReceived))
+
+
+        if __name__ == '__main__':
+            unittest.main(verbosity=2)
