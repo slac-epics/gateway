@@ -261,5 +261,5 @@ class TestPropertyCache(unittest.TestCase):
         self.assertTrue(highVal == 20.0, "Expected GW warning_limit: 20; actual limit: "+ str(highVal))
 
 
-        if __name__ == '__main__':
-            unittest.main(verbosity=2)
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

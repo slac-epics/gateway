@@ -51,5 +51,5 @@ class TestDBELog(unittest.TestCase):
         self.assertTrue(self.diffInsideDeadband == 0, str(self.diffInsideDeadband) + ' events with change <= deadband received')
 
 
-        if __name__ == '__main__':
-            unittest.main(verbosity=2)
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

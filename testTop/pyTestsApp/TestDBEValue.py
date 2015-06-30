@@ -44,5 +44,5 @@ class TestDBEValue(unittest.TestCase):
         self.assertTrue(self.eventsReceived == 11, 'events expected: 11; events received: ' + str(self.eventsReceived))
 
 
-        if __name__ == '__main__':
-            unittest.main(verbosity=2)
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

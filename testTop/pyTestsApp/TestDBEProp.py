@@ -60,5 +60,5 @@ class TestDBEProp(unittest.TestCase):
         self.assertTrue(self.eventsReceived == 4, 'events expected: 4; events received: ' + str(self.eventsReceived))
 
 
-        if __name__ == '__main__':
-            unittest.main(verbosity=2)
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
