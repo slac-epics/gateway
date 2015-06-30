@@ -7,7 +7,7 @@ import GatewayControl
 import gwtests
 import time
 
-class DBEAlarmTest(unittest.TestCase):
+class TestDBEAlarm(unittest.TestCase):
     '''Test alarm updates (client using DBE_ALARM flag) through the Gateway'''
 
     def setUp(self):

@@ -7,7 +7,7 @@ import GatewayControl
 import gwtests
 import time
 
-class DBEValueTest(unittest.TestCase):
+class TestDBEValue(unittest.TestCase):
     '''Test value updates (client using DBE_VALUE flag) through the Gateway'''
 
     def setUp(self):

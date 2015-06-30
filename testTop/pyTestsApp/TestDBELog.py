@@ -7,7 +7,7 @@ import GatewayControl
 import gwtests
 import time
 
-class DBELogTest(unittest.TestCase):
+class TestDBELog(unittest.TestCase):
     '''Test log/archive updates (client using DBE_LOG flag) through the Gateway'''
 
     def setUp(self):

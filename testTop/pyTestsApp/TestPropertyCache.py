@@ -8,7 +8,7 @@ import gwtests
 import time
 import subprocess
 
-class PropertyCacheTest(unittest.TestCase):
+class TestPropertyCache(unittest.TestCase):
     '''Testing the Gateway PV property cache
     Set up a connection through the Gateway - change a property externally - check if Gateway cache was updated
     '''

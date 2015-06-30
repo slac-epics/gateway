@@ -7,7 +7,7 @@ import GatewayControl
 import gwtests
 import time
 
-class DBEPropTest(unittest.TestCase):
+class TestDBEProp(unittest.TestCase):
     '''Test property updates (client using DBE_PROPERTY flag) through the Gateway'''
 
     def setUp(self):
