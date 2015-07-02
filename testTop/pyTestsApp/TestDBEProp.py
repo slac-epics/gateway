@@ -8,7 +8,7 @@ import gwtests
 import time
 
 class TestDBEProp(unittest.TestCase):
-    '''Test property updates (client using DBE_PROPERTY flag) through the Gateway'''
+    '''Test property updates (client using DBE_PROPERTY flag) direct and through the Gateway'''
 
     def setUp(self):
         gwtests.setup()
@@ -19,24 +19,31 @@ class TestDBEProp(unittest.TestCase):
         os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
         os.environ["EPICS_CA_ADDR_LIST"] = "localhost:{0} localhost:{1}".format(gwtests.iocPort,gwtests.gwPort)
         epics.ca.initialize_libca()
-        self.eventsReceived = 0
+        self.eventsReceivedGW = 0
+        self.eventsReceivedIOC = 0
 
     def tearDown(self):
         epics.ca.finalize_libca()
         self.gatewayControl.stop()
         self.iocControl.stop()
         
-    def onChange(self, pvname=None, **kws):
-        self.eventsReceived += 1
+    def onChangeGW(self, pvname=None, **kws):
+        self.eventsReceivedGW += 1
         if gwtests.verbose:
-            print pvname, " changed to ", kws['value']
+            print " GW update: ", pvname, " changed to ", kws['value']
         
+    def onChangeIOC(self, pvname=None, **kws):
+        self.eventsReceivedIOC += 1
+        if gwtests.verbose:
+            print "IOC update: ", pvname, " changed to ", kws['value']
+
     def testPropAlarmLevels(self):
         '''DBE_PROPERTY monitor on an ai - value changes generate no events; property changes generate events.'''
         # gateway:passive0 is a blank ai record
         ioc = epics.PV("ioc:passive0", auto_monitor=epics.dbr.DBE_PROPERTY)
+        ioc.add_callback(self.onChangeIOC)
         gw = epics.PV("gateway:passive0", auto_monitor=epics.dbr.DBE_PROPERTY)
-        gw.add_callback(self.onChange)
+        gw.add_callback(self.onChangeGW)
         pvhihi = epics.PV("ioc:passive0.HIHI", auto_monitor=None)
         pvlolo = epics.PV("ioc:passive0.LOLO", auto_monitor=None)
         pvhigh = epics.PV("ioc:passive0.HIGH", auto_monitor=None)
@@ -48,7 +55,8 @@ class TestDBEProp(unittest.TestCase):
             ioc.put(val, wait=True)
         time.sleep(.05)
         # We get 1 event: at connection
-        self.assertTrue(self.eventsReceived == 1, 'events expected: 1; events received: ' + str(self.eventsReceived))
+        self.assertTrue(self.eventsReceivedGW == 1, 'GW events expected: 1; received: ' + str(self.eventsReceivedGW))
+        self.assertTrue(self.eventsReceivedIOC == 1, 'IOC events expected: 1; received: ' + str(self.eventsReceivedIOC))
 
         self.eventsReceived = 0
         pvhihi.put(20.0, wait=True)
@@ -57,8 +65,10 @@ class TestDBEProp(unittest.TestCase):
         pvlow.put(12.0, wait=True)
         time.sleep(.05)
 
-        # We get 4 events: properties of four alarm levels changed
-        self.assertTrue(self.eventsReceived == 4, 'events expected: 4; events received: ' + str(self.eventsReceived))
+        # Depending on the IOC (supporting PROPERTY changes on limits or not) we get 0 or 4 events.
+        # Pass test if updates from IOC act the same as updates from GW
+        self.assertTrue(self.eventsReceivedGW == self.eventsReceivedIOC,
+            "Expected equal number of updates; received {0} from GW and {1} from IOC".format(self.eventsReceivedGW, self.eventsReceivedIOC))
 
 
 if __name__ == '__main__':
