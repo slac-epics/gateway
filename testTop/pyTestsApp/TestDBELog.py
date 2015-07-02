@@ -39,11 +39,13 @@ class TestDBELog(unittest.TestCase):
     def testLogDeadband(self):
         '''DBE_LOG monitor on an ai with an ADEL - leaving the deadband generates events.'''
         # gateway:passiveADEL has ADEL=10
-        pv = epics.PV("gateway:passiveADEL", auto_monitor=epics.dbr.DBE_LOG)
-        pv.add_callback(self.onChange)
+        ioc = epics.PV("ioc:passiveADEL", auto_monitor=epics.dbr.DBE_LOG)
+        gw = epics.PV("gateway:passiveADEL", auto_monitor=epics.dbr.DBE_LOG)
+        gw.add_callback(self.onChange)
+        ioc.get()
+        gw.get()
         for val in range(35):
-            pv.put(val)
-            time.sleep(.001)
+            ioc.put(val, wait=True)
         time.sleep(.05)
         # We get 5 events: at connection, first put, then at 11 22 33
         self.assertTrue(self.eventsReceived == 5, 'events expected: 5; events received: ' + str(self.eventsReceived))

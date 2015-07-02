@@ -39,11 +39,13 @@ class TestDBEAlarm(unittest.TestCase):
     def testAlarmLevel(self):
         '''DBE_ALARM monitor on an ai with two alarm levels - crossing the level generates updates'''
         # gateway:passiveALRM has HIGH=5 (MINOR) and HIHI=10 (MAJOR)
-        pv = epics.PV("gateway:passiveALRM", auto_monitor=epics.dbr.DBE_ALARM)
-        pv.add_callback(self.onChange)
+        ioc = epics.PV("ioc:passiveALRM", auto_monitor=epics.dbr.DBE_ALARM)
+        gw = epics.PV("gateway:passiveALRM", auto_monitor=epics.dbr.DBE_ALARM)
+        gw.add_callback(self.onChange)
+        ioc.get()
+        gw.get()
         for val in [0,1,2,3,4,5,6,7,8,9,10,9,8,7,6,5,4,3,2,1,0]:
-            pv.put(val)
-            time.sleep(.001)
+            ioc.put(val, wait=True)
         time.sleep(.05)
         # We get 6 events: at connection (INVALID), at first write (NO_ALARM),
         # and at the level crossings MINOR-MAJOR-MINOR-NO_ALARM.

@@ -34,27 +34,28 @@ class TestDBEProp(unittest.TestCase):
     def testPropAlarmLevels(self):
         '''DBE_PROPERTY monitor on an ai - value changes generate no events; property changes generate events.'''
         # gateway:passive0 is a blank ai record
-        pv = epics.PV("gateway:passive0", auto_monitor=epics.dbr.DBE_PROPERTY)
-        pv.add_callback(self.onChange)
+        ioc = epics.PV("ioc:passive0", auto_monitor=epics.dbr.DBE_PROPERTY)
+        gw = epics.PV("gateway:passive0", auto_monitor=epics.dbr.DBE_PROPERTY)
+        gw.add_callback(self.onChange)
         pvhihi = epics.PV("ioc:passive0.HIHI", auto_monitor=None)
         pvlolo = epics.PV("ioc:passive0.LOLO", auto_monitor=None)
         pvhigh = epics.PV("ioc:passive0.HIGH", auto_monitor=None)
         pvlow  = epics.PV("ioc:passive0.LOW",  auto_monitor=None)
-        time.sleep(.2)
+        ioc.get()
+        gw.get()
 
         for val in range(10):
-            pv.put(val)
-            time.sleep(.01)
+            ioc.put(val, wait=True)
         time.sleep(.05)
         # We get 1 event: at connection
         self.assertTrue(self.eventsReceived == 1, 'events expected: 1; events received: ' + str(self.eventsReceived))
 
         self.eventsReceived = 0
-        pvhihi.put(20.0)
-        pvhigh.put(18.0)
-        pvlolo.put(10.0)
-        pvlow.put(12.0)
-        time.sleep(.2)
+        pvhihi.put(20.0, wait=True)
+        pvhigh.put(18.0, wait=True)
+        pvlolo.put(10.0, wait=True)
+        pvlow.put(12.0, wait=True)
+        time.sleep(.05)
 
         # We get 4 events: properties of four alarm levels changed
         self.assertTrue(self.eventsReceived == 4, 'events expected: 4; events received: ' + str(self.eventsReceived))
