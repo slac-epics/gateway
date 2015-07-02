@@ -59,7 +59,9 @@ def setup():
         print "Cannot find the gateway executable at", gwExecutable
         sys.exit(1)
 
-    if 'EPICS_BASE' in os.environ:
+    if 'IOC_EPICS_BASE' in os.environ:
+        iocExecutable = os.path.join(os.environ['IOC_EPICS_BASE'], 'bin', hostArch, 'softIoc')
+    elif 'EPICS_BASE' in os.environ:
         iocExecutable = os.path.join(os.environ['EPICS_BASE'], 'bin', hostArch, 'softIoc')
     else:
-        print "Warning: EPICS_BASE not set. Running 'softIoc' executable in PATH"
+        print "Warning: IOC_EPICS_BASE or EPICS_BASE not set. Running 'softIoc' executable in PATH"

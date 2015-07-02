@@ -15,6 +15,10 @@ class IOCControl:
         childEnviron['EPICS_CA_SERVER_PORT'] = str(gwtests.iocPort)
         childEnviron['EPICS_CA_ADDR_LIST'] = "localhost"
         childEnviron['EPICS_CA_AUTO_ADDR_LIST'] = "NO"
+        # IOC_ environment overrides
+        for v in os.environ.keys():
+            if v.startswith("IOC_"):
+                childEnviron[v.replace("IOC_", "", 1)] = os.environ[v]
 
         if not gwtests.verbose:
             self.DEVNULL = open(os.devnull, 'wb')

@@ -33,14 +33,23 @@ There are two main ways to run the tests:
    Test can be run in the pyTestApp directory using the unittest or nosetests
    wrapper. (E.g. run 'nosetests --exe'.)
    These wrappers also allow selecting specific tests to run.
-   You might have to set EPICS_HOST_ARCH and TOP (to find the gateway
-   executable under test).
+   You might have to set EPICS_BASE, EPICS_HOST_ARCH and TOP (to find the
+   gateway executable under test and the CA libraries).
 
 Environment variables
 VERBOSE          - YES to make tests more verbose
 VERBOSE_GATEWAY  - YES to run the gateway with default debuglevel 10
                    <debuglevel> for setting a specific debuglevel
-   
+
+IOC environment overrides
+To allow control over the IOC that is being used independently from any
+settings for the Gateway under test, you can specify environment variables
+with an "IOC_" prefix that will be set for the IOC (with the prefix removed).
+E.g.
+IOC_EPICS_BASE=<location> will set EPICS_BASE=<location> for the IOC.
+As this setting is also used to determine the location of the 'softIoc'
+executable, it allows testing against IOCs from different versions of base.
+
 Prerequisite python packages:
 
 tap.py        - Creating TAP output (for 'make tapfiles')
