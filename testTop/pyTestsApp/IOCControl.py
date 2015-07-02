@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''Starts/stops the test IOC'''
+'''Controls the test IOC'''
 import os
 import subprocess
 import time
@@ -40,7 +40,7 @@ class IOCControl:
 
 if __name__ == "__main__":
     gwtests.setup()
-    print "Running the test IOC in verbose mode for {} seconds".format(gwtests.gwRunDuration)
+    print "Running the test IOC in verbose mode for {0} seconds".format(gwtests.gwRunDuration)
     gwtests.verbose = True
     iocControl = IOCControl()
     iocControl.startIOC()

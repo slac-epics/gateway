@@ -34,7 +34,7 @@ class GatewayControl:
 
 if __name__ == "__main__":
     gwtests.setup()
-    print "Running the test CA Gateway in verbose mode for {} seconds".format(gwtests.gwRunDuration)
+    print "Running the test CA Gateway in verbose mode for {0} seconds".format(gwtests.gwRunDuration)
     gwtests.verbose = True
     gwtests.verboseGateway = True
     gatewayControl = GatewayControl()

@@ -47,7 +47,7 @@ def setup():
     elif 'T_A' in os.environ:
         hostArch = os.environ['T_A']
     else:
-        print "Warning: EPICS_HOST_ARCH not set. Using default value of '{}'".format(hostArch)
+        print "Warning: EPICS_HOST_ARCH not set. Using default value of '{0}'".format(hostArch)
 
     if 'TOP' in os.environ:
         gwLocation = os.path.join(os.environ['TOP'], '..')
