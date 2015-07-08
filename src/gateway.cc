@@ -760,6 +760,10 @@ int main(int argc, char** argv)
 								case 'L' :
 									mask |= DBE_LOG;
 									break;
+								case 'p' :
+								case 'P' :
+									mask |= DBE_PROPERTY;
+									break;
 								default :
 									break;
 								}

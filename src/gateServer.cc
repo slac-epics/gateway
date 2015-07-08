@@ -1098,7 +1098,7 @@ gateServer::gateServer(char *prefix ) :
 		  " %s\n",timeStamp(),ca_message(status));
 	}
 
-	select_mask|=(alarmEventMask()|valueEventMask()|logEventMask());
+	select_mask|=(alarmEventMask()|valueEventMask()|logEventMask()|propertyEventMask());
 	alh_mask|=alarmEventMask();
 
 	exist_count=0;

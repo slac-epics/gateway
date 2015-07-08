@@ -7,3 +7,6 @@
 ./templates
 **/O.*
 ./QtC-*
+# Gateway generated scriptlets
+gateway.killer
+gateway.restart
