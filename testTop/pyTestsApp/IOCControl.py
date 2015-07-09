@@ -23,10 +23,14 @@ class IOCControl:
         if not gwtests.verbose:
             self.DEVNULL = open(os.devnull, 'wb')
 
-        if arglist is None:
-            iocCommand = [gwtests.iocExecutable, '-d', 'test.db']
+        if 'IOC_EPICS_BASE' in os.environ:
+            iocCommand = [gwtests.iocExecutable, '-D', os.path.join(os.environ['IOC_EPICS_BASE'], 'dbd', 'softIoc.dbd')]
         else:
             iocCommand = [gwtests.iocExecutable]
+
+        if arglist is None:
+            iocCommand.extend(['-d', 'test.db'])
+        else:
             iocCommand.extend(arglist)
 
         if gwtests.verbose:
