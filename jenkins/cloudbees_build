@@ -11,7 +11,7 @@
 ###########################################
 # Determine EPICS Base version
 
-DEFAULT_BASE=3.14.12.4
+DEFAULT_BASE=3.14.12.5
 
 BASE=${1:-${DEFAULT_BASE}}
 if [ "${1}" = "${DEFAULT_BASE}" -o -z "${1}" ]; then
@@ -38,7 +38,7 @@ cd ${WORKSPACE}
 export EPICS_BASE=${STUFF}
 export EPICS_HOST_ARCH=$(${EPICS_BASE}/startup/EpicsHostArch)
 export LD_LIBRARY_PATH=${EPICS_BASE}/lib/${EPICS_HOST_ARCH}
-export PATH=${STUFF}/bin:${PATH}
+export PATH=${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${STUFF}/bin:${PATH}
 
 cat > configure/RELEASE.local << EOF
 EPICS_BASE=${EPICS_BASE}
