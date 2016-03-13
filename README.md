@@ -11,4 +11,12 @@ to needed process variables.
 The Gateway typically runs on a machine with multiple network cards,
 and the clients and the server may be on different subnets.
 
-More details are available on the [CA Gateway main web page](http://www.aps.anl.gov/epics/extensions/gateway/).
+## Continuous Integration
+
+The [CA Gateway CI](https://openepics.ci.cloudbees.com/job/CA_Gateway/)
+is hosted on [CloudBees](https://www.cloudbees.com/).
+
+## Links
+
+More details are available on the
+[CA Gateway main web page](http://www.aps.anl.gov/epics/extensions/gateway/).
