@@ -192,7 +192,7 @@ class gateAsLine : public tsSLNode<gateAsLine>
 {
 public:
 	gateAsLine(void) : buf(NULL) { }
-	gateAsLine(const char* line, int len, tsSLList<gateAsLine>& n) :
+    gateAsLine(const char* line, size_t len, tsSLList<gateAsLine>& n) :
 		buf(new char[len+1])
 	{
 		strncpy(buf,line,len+1);

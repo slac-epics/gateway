@@ -235,7 +235,7 @@ public:
 	void clearStat(int type, gateStatType statType);
 	void initStats(char *prefix);
 	char* stat_prefix;
-	int stat_prefix_len;	
+    size_t stat_prefix_len;
 	gateServerStats stat_table[statCount];
 #endif	
 #ifdef STAT_PVS

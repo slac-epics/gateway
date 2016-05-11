@@ -1575,7 +1575,7 @@ static int manage_gateway(void)
 
 static int setEnv(const char *var, const char *val, char **envString)
 {
-	int len=strlen(var)+strlen(val)+2;
+    size_t len=strlen(var)+strlen(val)+2;
 
 	*envString=(char *)malloc(len);
 	if(!*envString) {
@@ -1598,7 +1598,7 @@ static int setEnv(const char *var, const char *val, char **envString)
 static int setEnv(const char *var, int ival, char **envString)
 {
 	// Allow 40 for size of ival
-	int len=strlen(var)+40+2;
+    size_t len=strlen(var)+40+2;
 
 	*envString=(char *)malloc(len);
 	if(!*envString) {

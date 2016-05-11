@@ -388,10 +388,10 @@ gateAsEntry* gateAs::findEntryInList(const char* pv, gateAsList& list) const
 	tsSLIter<gateAsEntry> pi = list.firstIter();
 	
 	while(pi.pointer()) {
-		int len = strlen(pv);
+        size_t len = strlen(pv);
 #ifdef USE_PCRE
 		pi->substrings=pcre_exec(pi->pat_buff, NULL,
-                    pv, len, 0, PCRE_ANCHORED, pi->ovector, 30);
+                    pv, (int) len, 0, PCRE_ANCHORED, pi->ovector, 30);
 		if((pi->substrings>=0 && pi->ovector[1] == len)
 #ifdef USE_NEG_REGEXP                
 		    ^ pi->negate_pattern
@@ -737,7 +737,8 @@ long gateAs::reInitialize(const char* afile, const char* lfile)
 
 int gateAs::readFunc(char* buf, int max)
 {
-	int l,n;
+    size_t l;
+    int n;
 	static aitBool one_pass=aitFalse;
 	static char rbuf[150];
 	static char* rptr=NULL;
@@ -759,7 +760,7 @@ int gateAs::readFunc(char* buf, int max)
     }
 	
 	l=strlen(rptr);
-	n=(l<=max)?l:max;
+    n = (l <= max) ? (int) l : max;
 	if(n) {
 		memcpy(buf,rptr,n);
 		rptr+=n;
