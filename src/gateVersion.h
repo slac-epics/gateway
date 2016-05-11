@@ -27,9 +27,9 @@
 #define GATEWAY_VERSION       2
 #define GATEWAY_REVISION      1
 #define GATEWAY_MODIFICATION  0
-#define GATEWAY_UPDATE_LEVEL  DEV
+#define GATEWAY_UPDATE_LEVEL  0
 
-#define GATEWAY_VERSION_STRING "PV Gateway Version 2.1.0.DEV"
+#define GATEWAY_VERSION_STRING "PV Gateway Version 2.1.0"
 
 #define GATEWAY_CREDITS_STRING  \
           "Originally developed at Argonne National Laboratory and BESSY\n\n" \

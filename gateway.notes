@@ -126,3 +126,9 @@ Fri Jan 30 16:25:29 CET 2015   Gateway2-0-6-0   Ralph Lange
     Add Jenkins job for CloudBees CI.
     Fix crashes when forwarding empty arrays (bug lp:1415938).
     Use variable length arrays for CAC (IOC side) subscriptions.
+
+Wed May 11 16:00:52 CEST 2016   Gateway 2.1.0   Ralph Lange
+    Full support for DBE_PROPERTY event flag.
+    Add unit test framework (as embedded TOP).
+    And tests for event flag support, including DBE_PROPERTY.
+    Fix many small bugs and compiler warnings.
