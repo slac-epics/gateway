@@ -31,7 +31,7 @@
 
 #include <sys/types.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #else
 # include <unistd.h>
 # include <sys/time.h>
@@ -330,7 +330,7 @@ private:
 	static volatile unsigned long quitserver_flag;
 	
 public:
-#ifndef WIN32
+#ifndef _WIN32
 	static void sig_usr1(int);
 	static void sig_usr2(int);
 #endif

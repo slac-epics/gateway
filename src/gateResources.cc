@@ -22,7 +22,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 /* WIN32 does not have unistd.h and does not define the following constants */
 # define F_OK 00
 # define W_OK 02
@@ -91,7 +91,7 @@ char *getComputerName(void)
 {
 	char*name=NULL;
 
-#ifdef WIN32
+#ifdef _WIN32
 	TCHAR computerName[MAX_COMPUTERNAME_LENGTH+1];
 	DWORD size=MAX_COMPUTERNAME_LENGTH+1;
 	// Will probably be uppercase

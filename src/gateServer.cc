@@ -46,7 +46,7 @@
 #undef USE_LINUX_PROC_FOR_CPU
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
   #ifdef _WIN64
     #define NO_OF_CPUS GetMaximumProcessorCount(ALL_PROCESSOR_GROUPS)
   #else
@@ -95,7 +95,7 @@
 #include <sys/loadavg.h>
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #else
 # include <unistd.h>
 #endif
@@ -141,7 +141,7 @@ extern "C" {
 
 // ---------------------------- general main processing function -------------
 
-#ifndef WIN32
+#ifndef _WIN32
 extern "C" {
 
 typedef void (*SigFunc)(int);
@@ -220,7 +220,7 @@ void gateServer::mainLoop(void)
 	gateAsCa();
 	// as->report(stdout);
 
-#ifndef WIN32
+#ifndef _WIN32
 	save_usr1=signal(SIGUSR1,::sig_usr1);
 	save_usr2=signal(SIGUSR2,::sig_usr2);
 #if 0
@@ -372,7 +372,7 @@ void gateServer::mainLoop(void)
 			setStat(statQuitServerFlag,0ul);
 			if(global_resources->getServerMode()) {
 				// Has a server
-#ifndef WIN32
+#ifndef _WIN32
 				pid_t parentPid=getppid();
 				if(parentPid >= 0) {
 					kill(parentPid,SIGTERM);
@@ -2259,7 +2259,7 @@ gateRateStatsTimer::expire(const epicsTime &curTime)
 #endif
 	mrg->setStat(statCPUFract,cpuFract);
 
-#ifndef WIN32
+#ifndef _WIN32
 	// Calculate the load using average over last minute.  Does not
 	// exist for WIN32.
 	double load[N_LOAD];
@@ -2429,7 +2429,7 @@ static double linuxCpuTimeDiff(void)
 }
 #endif
 
-#ifndef WIN32
+#ifndef _WIN32
 void gateServer::sig_usr1(int /*x*/)
 {
 	gateServer::command_flag=1;

@@ -50,7 +50,7 @@
 #include <time.h>
 #include <sys/types.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #else
 # include <unistd.h>
 # include <sys/time.h>

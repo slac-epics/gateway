@@ -43,7 +43,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #else
 # include <unistd.h>
 #endif
