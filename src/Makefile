@@ -14,7 +14,7 @@ TOP = ..
 include $(TOP)/configure/CONFIG
 
 # Use Perl compatible regular expressions (PCRE) instead of standard regex
-USE_PCRE=YES
+#USE_PCRE=YES
 
 # For PCRE on Linux
 #    requires package pcre-devel (or libpcre3-dev) for compiling the Gateway
