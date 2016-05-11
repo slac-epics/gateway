@@ -251,7 +251,7 @@ private:
 	static FILE* rules_fd;
 
 public:
-	static int readFunc(char* buf, int max_size);
+    static int readFunc(char* buf, size_t max_size);
 };
 
 #ifdef USE_DENYFROM

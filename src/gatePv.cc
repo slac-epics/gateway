@@ -1090,8 +1090,9 @@ int gatePvData::get(readType read_type)
 					{
                       fprintf(stderr,"%s gatePvData::get: EPICS_CA_MAX_ARRAY_BYTES too small "
 					  	"for %s.\n"
-                        "Set EPICS_CA_MAX_ARRAY_BYTES to at least %zu\n",
-					  	timeStamp(),name()?name():"Unknown",bytes*totalElements()+sizeof(caHdr) + 2 * sizeof ( ca_uint32_t ));
+                        "Set EPICS_CA_MAX_ARRAY_BYTES to at least %lu\n",
+                        timeStamp(),name()?name():"Unknown",
+                              (unsigned long) bytes*totalElements() + sizeof(caHdr) + 2*sizeof(ca_uint32_t));
 					}	
 				}				
 			}
@@ -1114,8 +1115,9 @@ int gatePvData::get(readType read_type)
 					{
                       fprintf(stderr,"%s gatePvData::get: EPICS_CA_MAX_ARRAY_BYTES too small "
 					  	"for %s.\n"
-                        "Set EPICS_CA_MAX_ARRAY_BYTES to at least %zu\n",
-					  	timeStamp(),name()?name():"Unknown",bytes*totalElements()+sizeof(caHdr)+2 * sizeof ( ca_uint32_t ));
+                        "Set EPICS_CA_MAX_ARRAY_BYTES to at least %lu\n",
+                        timeStamp(),name()?name():"Unknown",
+                              (unsigned long) bytes*totalElements() + sizeof(caHdr) + 2*sizeof(ca_uint32_t));
 					}
 				}						
 			}	
