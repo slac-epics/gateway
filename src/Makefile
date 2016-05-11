@@ -5,20 +5,36 @@
 # Strahlung mbH (BESSY).
 # Copyright (c) 2002 The Regents of the University of California, as
 # Operator of Los Alamos National Laboratory.
-# Copyright (c) 2014 ITER Organization.
+# Copyright (c) 2014-2016 ITER Organization.
 # This file is distributed subject to a Software License Agreement found
 # in the file LICENSE that is included with this distribution. 
 #*************************************************************************
 
-# 3.14/3.15 Makefile for Gateway
-
 TOP = ..
 include $(TOP)/configure/CONFIG
 
-# Use Perl compatible regular expressions (instead of standard regex)
-#USE_PCRE=YES
-# Set location for Windows builds (system lib on Linux)
-#PCRE_DIR=C:\Pcre
+# Use Perl compatible regular expressions (PCRE) instead of standard regex
+USE_PCRE=YES
+
+# For PCRE on Linux
+#    requires package pcre-devel (or libpcre3-dev) for compiling the Gateway
+#    requires package pcre (or libpcre3) for running the Gateway
+
+ifeq ($(OS_CLASS),WIN32)
+
+    # For PCRE on Windows
+    #    install libraries and includes from
+    #    https://sourceforge.net/projects/gnuwin32/files/pcre/7.0/pcre-7.0.exe/download
+    #    and set the install location here
+    PCRE_DIR=C:/Pcre
+
+    # For REGEX on Windows
+    #    compile gnuregex inside an EPICS support module from the sources at
+    #    http://www.aps.anl.gov/epics/download/extensions/gnuregex0_13.tar.gz
+    #    and set the module location here
+    REGEX_DIR=C:/epics/modules/regex
+
+endif
 
 # Negative regexp matching: !pattern matches when pattern does not match
 #USE_NEG_REGEXP=YES
@@ -100,30 +116,26 @@ endif
 ifeq ($(USE_PCRE),YES)
   USR_CXXFLAGS += -DUSE_PCRE
   ifeq ($(OS_CLASS),WIN32)
-    USR_INCLUDES += -I$(PCRE_DIR)\inc
+    USR_INCLUDES += -I$(PCRE_DIR)/inc
     PROD_LIBS += pcre3
     ifeq ($(CMPLR_CLASS),msvc)
       ifeq ($(T_A),windows-x64)
-        pcre3_DIR = $(PCRE_DIR)\lib\x64
+        pcre3_DIR = $(PCRE_DIR)/lib/x64
       else
-        pcre3_DIR = $(PCRE_DIR)\lib
+        pcre3_DIR = $(PCRE_DIR)/lib
       endif
     else
-    pcre3_DIR = $(PCRE_DIR)\bin
+      pcre3_DIR = $(PCRE_DIR)/bin
     endif
   else
-  USR_SYS_LIBS += pcre
+    USR_SYS_LIBS += pcre
   endif
 else
-  ifeq ($(OS_CLASS),WIN32)
-    # Use Obj for object libraries and no Obj for import libraries
-    PROD_LIBS += regexObj
-    regexObj_DIR = $(EPICS_EXTENSIONS_LIB)
-  else
-    ifneq ($(OS_CLASS),Linux)
-      PROD_LIBS += regex
-      regex_DIR = $(EPICS_EXTENSIONS_LIB)
-    endif
+  # On Linux regex is part of libc
+  ifneq ($(OS_CLASS),Linux)
+    USR_INCLUDES += -I$(REGEX_DIR)/include
+    PROD_LIBS += regex
+    regex_DIR = $(REGEX_DIR)/lib/$(T_A)
   endif
 endif
 
