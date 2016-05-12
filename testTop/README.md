@@ -55,7 +55,7 @@ There are two main ways to run the tests:
 `VERBOSE_GATEWAY`  - `YES` to run the gateway with default debuglevel 10,
                    `<debuglevel>` for setting a specific debuglevel
 
-### IOC environment overrides
+### IOC Environment Overrides
 To allow control over the IOC that is being used independently from any
 settings for the Gateway under test, you can specify environment variables
 with an `IOC_` prefix that will be set for the IOC (with the prefix removed).
