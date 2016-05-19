@@ -1253,8 +1253,8 @@ void gatePvData::connectCB(CONNECT_ARGS args)
 #endif
 
 	// send message to user concerning connection
-			if(ca_state(args.chid)==cs_conn)
-{
+	if(ca_state(args.chid)==cs_conn)
+	{
 		gateDebug0(9,"gatePvData::connectCB() connection ok\n");
 
 		switch(ca_field_type(args.chid))
