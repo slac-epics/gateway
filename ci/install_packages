@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 set -e
 
 # Enable the NSLS-II EPICS Debian package repo
