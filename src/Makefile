@@ -13,43 +13,6 @@
 TOP = ..
 include $(TOP)/configure/CONFIG
 
-# Use Perl compatible regular expressions (PCRE) instead of standard regex
-#USE_PCRE=YES
-
-# For PCRE on Linux
-#    requires package pcre-devel (or libpcre3-dev) for compiling the Gateway
-#    requires package pcre (or libpcre3) for running the Gateway
-
-ifeq ($(OS_CLASS),WIN32)
-
-    # For PCRE on Windows
-    #    install libraries and includes from
-    #    https://sourceforge.net/projects/gnuwin32/files/pcre/7.0/pcre-7.0.exe/download
-    #    and set the install location here
-    PCRE_DIR=C:/Pcre
-
-    # For REGEX on Windows
-    #    compile gnuregex inside an EPICS support module from the sources at
-    #    http://www.aps.anl.gov/epics/download/extensions/gnuregex0_13.tar.gz
-    #    and set the module location here
-    REGEX_DIR=C:/epics/modules/regex
-
-endif
-
-# Negative regexp matching: !pattern matches when pattern does not match
-#USE_NEG_REGEXP=YES
-
-# Enable DENY FROM
-USE_DENY_FROM=YES
-
-# Optimization
-#HOST_OPT = NO
-
-# Compiler options
-#USR_CXXFLAGS += -xsb
-
-# Purify
-#PURIFY=YES
 ifeq ($(PURIFY),YES)
   ifeq ($(OS_CLASS),solaris)
     PURIFY_FLAGS = -first-only -chain-length=26 -max_threads=256
@@ -59,8 +22,6 @@ ifeq ($(PURIFY),YES)
   endif
 endif
 
-# Quantify
-#QUANTIFY=YES
 ifeq ($(QUANTIFY),YES)
   ifeq ($(OS_CLASS),solaris)
     #QUANTIFY_FLAGS += -measure-timed-calls=user+system
@@ -81,28 +42,11 @@ ifeq ($(QUANTIFY),YES)
   endif
 endif
 
-# Turn on debug mode
-# USR_CXXFLAGS += -DDEBUG_MODE
-# Turn off Gateway debug calls:
-# USR_CXXFLAGS += -DNODEBUG
-# Use stat PV's
-USR_CXXFLAGS += -DSTAT_PVS
-# Use rate statistics
-USR_CXXFLAGS += -DRATE_STATS
-# Use control PV's
-USR_CXXFLAGS += -DCONTROL_PVS
-# Use heartbeat PV
-#USR_CXXFLAGS += -DHEARTBEAT_PV
-# Use CAS diagnostics statistics
-USR_CXXFLAGS += -DCAS_DIAGNOSTICS
-# Install exception handler and print exceptions to log file
-USR_CXXFLAGS += -DHANDLE_EXCEPTIONS
 ifeq ($(USE_DENY_FROM),YES)
-# Use deny from
 USR_CXXFLAGS += -DUSE_DENYFROM
 endif
+
 ifeq ($(USE_NEG_REGEXP),YES)
-# Use deny from
 USR_CXXFLAGS += -DUSE_NEG_REGEXP
 endif
 
@@ -131,7 +75,7 @@ ifeq ($(USE_PCRE),YES)
     USR_SYS_LIBS += pcre
   endif
 else
-  # On Linux regex is part of libc
+  # On Linux basic regex is part of libc
   ifneq ($(OS_CLASS),Linux)
     USR_INCLUDES += -I$(REGEX_DIR)/include
     PROD_LIBS += regex
