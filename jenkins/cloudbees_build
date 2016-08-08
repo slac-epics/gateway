@@ -62,8 +62,8 @@ source DEV/bin/activate
 
 for b in ${TEST_IOC_BASE}; do
   IOC_EPICS_BASE=${STUFF}/${b} IOC_LD_LIBRARY_PATH=${STUFF}/${b}/lib/${EPICS_HOST_ARCH} make tapfiles || true
-  mkdir -p testTop/results/IOC-${b}
-  find testTop -name '*.tap' -exec cp {} testTop/results/IOC-${b} \;
+  mkdir -p results/IOC-${b}
+  find testTop -name '*.tap' -exec cp {} results/IOC-${b} \;
 done
 
 ###########################################
