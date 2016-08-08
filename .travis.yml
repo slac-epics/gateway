@@ -1,0 +1,10 @@
+language: cpp
+
+env:
+  - EPICS_BASE=/usr/lib/epics EPICS_HOST_ARCH=linux-x86_64
+
+before_install:
+  - sh ci/install-packages     # Install EPICS Base
+
+script:
+  - make
