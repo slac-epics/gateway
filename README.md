@@ -1,4 +1,4 @@
-# Channel Access PV Gateway
+# Channel Access PV Gateway [![Build Status](https://travis-ci.org/epics-extensions/ca-gateway.svg?branch=master)](https://travis-ci.org/epics-extensions/ca-gateway)
 
 The Gateway is both a Channel Access server and Channel Access client.
 It provides a means for many clients to access a process variable,
@@ -13,8 +13,9 @@ and the clients and the server may be on different subnets.
 
 ## Continuous Integration
 
-The [CA Gateway CI](https://openepics.ci.cloudbees.com/job/CA_Gateway/)
-is hosted on [CloudBees](https://www.cloudbees.com/).
+The CI jobs for CA Gateway are provided by
+[CloudBees](https://openepics.ci.cloudbees.com/job/CA_Gateway/)
+and [Travis](https://travis-ci.org/epics-extensions/ca-gateway).
 
 ## Links
 
