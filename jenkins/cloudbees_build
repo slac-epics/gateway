@@ -56,7 +56,7 @@ make distclean all
 # Test against different IOCs
 
 virtualenv --distribute DEV
-DEV/bin/pip install tap.py
+DEV/bin/pip install nose-tap
 DEV/bin/pip install pyepics
 source DEV/bin/activate
 

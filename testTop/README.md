@@ -11,7 +11,7 @@ separately. In that case, you will have to set the pointers in
 
 Python and the packages:
 
-tap.py        - Creating TAP output (for 'make tapfiles')<br/>
+nose-tap      - Creating TAP output (for 'make tapfiles')<br/>
 pyepics (v3)  - Python CA client library
 
 The PyEpics module needs the EPICS Base libraries Com and ca as _shared
@@ -41,7 +41,7 @@ There are two main ways to run the tests:
    Test files and scripts are copied to the `O.<arch>` directory,
    then `nosetests` is used to run the tests there.
    The build system sets all necessary environment variables.
-   For `make tapfiles` the nosetests tap plugin from `tap.py` is used
+   For `make tapfiles` the nosetests tap plugin from `nose-tap` is used
    to create TAP output.
 2. Manually:</br>
    Test can be run in the `pyTestApp` directory using the `unittest` or
