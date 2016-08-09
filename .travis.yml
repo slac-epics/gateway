@@ -5,8 +5,11 @@ env:
   - EPICS_BASE=/usr/lib/epics EPICS_HOST_ARCH=linux-x86_64
 
 before_install:
-- sh ci/install-packages     # Install EPICS Base
-- sh ci/configure            # Configure module
+  - sh ci/install-packages     # Install EPICS Base
+  - sh ci/configure            # Configure module
+
+install:
+  - pip install pyepics
 
 script:
   - make
