@@ -1,4 +1,6 @@
-# Channel Access PV Gateway [![Build Status](https://travis-ci.org/epics-extensions/ca-gateway.svg?branch=master)](https://travis-ci.org/epics-extensions/ca-gateway)
+# Channel Access PV Gateway
+[![Build Status](https://openepics.ci.cloudbees.com/buildStatus/icon?job=CA_Gateway)](https://openepics.ci.cloudbees.com/job/CA_Gateway)
+[![Build Status](https://travis-ci.org/epics-extensions/ca-gateway.svg?branch=master)](https://travis-ci.org/epics-extensions/ca-gateway)
 
 The Gateway is both a Channel Access server and Channel Access client.
 It provides a means for many clients to access a process variable,
