@@ -8,6 +8,7 @@ include $(TOP)/configure/CONFIG
 TESTSCRIPTS_HOST += gwtests.py TestDBEValue.py TestDBEAlarm.py TestDBELog.py TestDBEProp.py
 TESTSCRIPTS_HOST += TestPropertyCache.py
 TESTSCRIPTS_HOST += TestEnumPropCache.py
+TESTSCRIPTS_HOST += TestStructures.py
 TESTSCRIPTS_HOST += IOCControl.py GatewayControl.py
 
 TESTFILES += test.db
