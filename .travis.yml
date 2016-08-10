@@ -9,7 +9,7 @@ before_install:
   - sh ci/configure            # Configure module
 
 install:
-  - pip install pyepics
+  - sudo pip install pyepics
 
 script:
   - make
