@@ -14,6 +14,21 @@ class TestPropertyCache(unittest.TestCase):
     Set up a connection through the Gateway - change a property externally - check if Gateway cache was updated
     '''
 
+    def connectGwStats(self):
+        self.gw_vctotal = ca.create_channel("gwtest:vctotal")
+        self.gw_pvtotal = ca.create_channel("gwtest:pvtotal")
+        self.gw_connected = ca.create_channel("gwtest:connected")
+        self.gw_active = ca.create_channel("gwtest:active")
+        self.gw_inactive = ca.create_channel("gwtest:inactive")
+
+    def updateGwStats(self):
+        self.vctotal = ca.get(self.gw_vctotal)
+        self.pvtotal = ca.get(self.gw_pvtotal)
+        self.connected = ca.get(self.gw_connected)
+        self.active = ca.get(self.gw_active)
+        self.inactive = ca.get(self.gw_inactive)
+
+
     def setUp(self):
         gwtests.setup()
         self.iocControl = IOCControl.IOCControl()
@@ -35,6 +50,8 @@ class TestPropertyCache(unittest.TestCase):
         time.sleep(.05)
         if self.eventsReceivedIOC == 2:
             self.propSupported = True
+        ioc.disconnect()
+        self.connectGwStats()
 
     def tearDown(self):
         ca.finalize_libca()
@@ -47,26 +64,14 @@ class TestPropertyCache(unittest.TestCase):
     def onChange(self, pvname=None, **kws):
         a = 1
 
-
     def testPropCache_ValueMonitorCTRLget(self):
         '''Monitor PV (value events) through GW - change HIGH directly - get the DBR_CTRL of the PV through GW'''
-        gw_vctotal = ca.create_channel("gwtest:vctotal")
-        gw_pvtotal = ca.create_channel("gwtest:pvtotal")
-        gw_connected = ca.create_channel("gwtest:connected")
-        gw_active = ca.create_channel("gwtest:active")
-        gw_inactive = ca.create_channel("gwtest:inactive")
-
         # gateway should show no VC (client side connection) and no PV (IOC side connection)
-        count = ca.get(gw_vctotal)
-        self.assertTrue(count == 0, "Expected GW VC total count: 0, actual: " + str(count))
-        count = ca.get(gw_pvtotal)
-        self.assertTrue(count == 0, "Expected GW PV total count: 0, actual: " + str(count))
-        count = ca.get(gw_connected)
-        self.assertTrue(count == 0, "Expected GW connected PV count: 0, actual: " + str(count))
-        count = ca.get(gw_active)
-        self.assertTrue(count == 0, "Expected GW active PV count: 0, actual: " + str(count))
-        count = ca.get(gw_inactive)
-        self.assertTrue(count == 0, "Expected GW inactive PV count: 0, actual: " + str(count))
+        self.updateGwStats()
+        self.assertTrue(self.vctotal == 0, "Expected GW VC total count: 0, actual: " + str(self.vctotal))
+        self.assertTrue(self.connected == 0, "Expected GW connected PV count: 0, actual: " + str(self.connected))
+        self.assertTrue(self.active == 0, "Expected GW active PV count: 0, actual: " + str(self.active))
+        self.assertTrue(self.inactive == 0, "Expected GW inactive PV count: 0, actual: " + str(self.inactive))
 
         # gwcachetest is an ai record with full set of alarm limits: -100 -10 10 100
         gw = ca.create_channel("gateway:gwcachetest")
@@ -79,16 +84,12 @@ class TestPropertyCache(unittest.TestCase):
         (ioc_cbref, ioc_uaref, ioc_eventid) = ca.create_subscription(ioc, mask=dbr.DBE_VALUE, callback=self.onChange)
 
         # gateway should show one VC and one connected active PV
-        count = ca.get(gw_vctotal)
-        self.assertTrue(count == 1, "Expected GW VC total count: 1, actual: " + str(count))
-        count = ca.get(gw_pvtotal)
-        self.assertTrue(count == 1, "Expected GW PV total count: 1, actual: " + str(count))
-        count = ca.get(gw_connected)
-        self.assertTrue(count == 1, "Expected GW connected PV count: 1, actual: " + str(count))
-        count = ca.get(gw_active)
-        self.assertTrue(count == 1, "Expected GW active PV count: 1, actual: " + str(count))
-        count = ca.get(gw_inactive)
-        self.assertTrue(count == 0, "Expected GW inactive PV count: 0, actual: " + str(count))
+        self.updateGwStats()
+        self.assertTrue(self.vctotal == 1, "Expected GW VC total count: 1, actual: " + str(self.vctotal))
+        self.assertTrue(self.pvtotal == 1, "Expected GW PV total count: 1, actual: " + str(self.pvtotal))
+        self.assertTrue(self.connected == 1, "Expected GW connected PV count: 1, actual: " + str(self.connected))
+        self.assertTrue(self.active == 1, "Expected GW active PV count: 1, actual: " + str(self.active))
+        self.assertTrue(self.inactive == 0, "Expected GW inactive PV count: 0, actual: " + str(self.inactive))
 
         # limit should not have been updated
         ioc_ctrl = ca.get_ctrlvars(ioc)
@@ -118,23 +119,12 @@ class TestPropertyCache(unittest.TestCase):
 
     def testPropCache_ValueGetCTRLGet(self):
         '''Get PV (value) through GW - change HIGH directly - get the DBR_CTRL of the PV through GW'''
-        gw_vctotal = ca.create_channel("gwtest:vctotal")
-        gw_pvtotal = ca.create_channel("gwtest:pvtotal")
-        gw_connected = ca.create_channel("gwtest:connected")
-        gw_active = ca.create_channel("gwtest:active")
-        gw_inactive = ca.create_channel("gwtest:inactive")
-
         # gateway should show no VC (client side connection) and no PV (IOC side connection)
-        count = ca.get(gw_vctotal)
-        self.assertTrue(count == 0, "Expected GW VC total count: 0, actual: " + str(count))
-        count = ca.get(gw_pvtotal)
-        self.assertTrue(count == 0, "Expected GW PV total count: 0, actual: " + str(count))
-        count = ca.get(gw_connected)
-        self.assertTrue(count == 0, "Expected GW connected PV count: 0, actual: " + str(count))
-        count = ca.get(gw_active)
-        self.assertTrue(count == 0, "Expected GW active PV count: 0, actual: " + str(count))
-        count = ca.get(gw_inactive)
-        self.assertTrue(count == 0, "Expected GW inactive PV count: 0, actual: " + str(count))
+        self.updateGwStats()
+        self.assertTrue(self.vctotal == 0, "Expected GW VC total count: 0, actual: " + str(self.vctotal))
+        self.assertTrue(self.connected == 0, "Expected GW connected PV count: 0, actual: " + str(self.connected))
+        self.assertTrue(self.active == 0, "Expected GW active PV count: 0, actual: " + str(self.active))
+        self.assertTrue(self.inactive == 0, "Expected GW inactive PV count: 0, actual: " + str(self.inactive))
 
         # gwcachetest is an ai record with full set of alarm limits: -100 -10 10 100
         gw = ca.create_channel("gateway:gwcachetest")
@@ -145,16 +135,11 @@ class TestPropertyCache(unittest.TestCase):
         self.assertTrue(connected, "Could not connect to ioc channel " + ca.name(gw))
 
         # gateway should show one VC and one connected active PV
-        count = ca.get(gw_vctotal)
-        self.assertTrue(count == 1, "Expected GW VC total count: 0, actual: " + str(count))
-        count = ca.get(gw_pvtotal)
-        self.assertTrue(count == 1, "Expected GW PV total count: 1, actual: " + str(count))
-        count = ca.get(gw_connected)
-        self.assertTrue(count == 1, "Expected GW connected PV count: 1, actual: " + str(count))
-        count = ca.get(gw_active)
-        self.assertTrue(count == 1, "Expected GW active PV count: 1, actual: " + str(count))
-        count = ca.get(gw_inactive)
-        self.assertTrue(count == 0, "Expected GW inactive PV count: 0, actual: " + str(count))
+        self.updateGwStats()
+        self.assertTrue(self.vctotal == 1, "Expected GW VC total count: 1, actual: " + str(self.vctotal))
+        self.assertTrue(self.connected == 1, "Expected GW connected PV count: 1, actual: " + str(self.connected))
+        self.assertTrue(self.active == 1, "Expected GW active PV count: 1, actual: " + str(self.active))
+        self.assertTrue(self.inactive == 0, "Expected GW inactive PV count: 0, actual: " + str(self.inactive))
 
         # limit should not have been updated
         ioc_ctrl = ca.get_ctrlvars(ioc)
@@ -183,24 +168,14 @@ class TestPropertyCache(unittest.TestCase):
 
 
     def testPropCache_ValueGetDisconnectCTRLGet(self):
-        '''Get PV (value) through GW - disconnect client - change HIGH directly - get the DBR_CTRL of the PV through GW'''
-        gw_vctotal = ca.create_channel("gwtest:vctotal")
-        gw_pvtotal = ca.create_channel("gwtest:pvtotal")
-        gw_connected = ca.create_channel("gwtest:connected")
-        gw_active = ca.create_channel("gwtest:active")
-        gw_inactive = ca.create_channel("gwtest:inactive")
-
+        '''Get PV (value) through GW - disconnect client - change properties (HIGH, EGU) directly - get the DBR_CTRL of the PV through GW'''
         # gateway should show no VC (client side connection) and no PV (IOC side connection)
-        count = ca.get(gw_vctotal)
-        self.assertTrue(count == 0, "Expected GW VC total count: 0, actual: " + str(count))
-        count = ca.get(gw_pvtotal)
-        self.assertTrue(count == 0, "Expected GW PV total count: 0, actual: " + str(count))
-        count = ca.get(gw_connected)
-        self.assertTrue(count == 0, "Expected GW connected PV count: 0, actual: " + str(count))
-        count = ca.get(gw_active)
-        self.assertTrue(count == 0, "Expected GW active PV count: 0, actual: " + str(count))
-        count = ca.get(gw_inactive)
-        self.assertTrue(count == 0, "Expected GW inactive PV count: 0, actual: " + str(count))
+        self.updateGwStats()
+        self.assertTrue(self.vctotal == 0, "Expected GW VC total count: 0, actual: " + str(self.vctotal))
+        self.assertTrue(self.pvtotal == 0, "Expected GW PV total count: 0, actual: " + str(self.pvtotal))
+        self.assertTrue(self.connected == 0, "Expected GW connected PV count: 0, actual: " + str(self.connected))
+        self.assertTrue(self.active == 0, "Expected GW active PV count: 0, actual: " + str(self.active))
+        self.assertTrue(self.inactive == 0, "Expected GW inactive PV count: 0, actual: " + str(self.inactive))
 
         # gwcachetest is an ai record with full set of alarm limits: -100 -10 10 100
         gw = ca.create_channel("gateway:gwcachetest")
@@ -211,16 +186,12 @@ class TestPropertyCache(unittest.TestCase):
         self.assertTrue(connected, "Could not connect to ioc channel " + ca.name(gw))
 
         # gateway should show one VC and one connected active PV
-        count = ca.get(gw_vctotal)
-        self.assertTrue(count == 1, "Expected GW VC total count: 1, actual: " + str(count))
-        count = ca.get(gw_pvtotal)
-        self.assertTrue(count == 1, "Expected GW PV total count: 1, actual: " + str(count))
-        count = ca.get(gw_connected)
-        self.assertTrue(count == 1, "Expected GW connected PV count: 1, actual: " + str(count))
-        count = ca.get(gw_active)
-        self.assertTrue(count == 1, "Expected GW active PV count: 1, actual: " + str(count))
-        count = ca.get(gw_inactive)
-        self.assertTrue(count == 0, "Expected GW inactive PV count: 0, actual: " + str(count))
+        self.updateGwStats()
+        self.assertTrue(self.vctotal == 1, "Expected GW VC total count: 1, actual: " + str(self.vctotal))
+        self.assertTrue(self.pvtotal == 1, "Expected GW PV total count: 1, actual: " + str(self.pvtotal))
+        self.assertTrue(self.connected == 1, "Expected GW connected PV count: 1, actual: " + str(self.connected))
+        self.assertTrue(self.active == 1, "Expected GW active PV count: 1, actual: " + str(self.active))
+        self.assertTrue(self.inactive == 0, "Expected GW inactive PV count: 0, actual: " + str(self.inactive))
 
         # limit should not have been updated
         ioc_ctrl = ca.get_ctrlvars(ioc)
@@ -233,23 +204,14 @@ class TestPropertyCache(unittest.TestCase):
         # disconnect Channel Access, reconnect Gateway stats
         ca.finalize_libca()
         ca.initialize_libca()
-        gw_vctotal = ca.create_channel("gwtest:vctotal")
-        gw_pvtotal = ca.create_channel("gwtest:pvtotal")
-        gw_connected = ca.create_channel("gwtest:connected")
-        gw_active = ca.create_channel("gwtest:active")
-        gw_inactive = ca.create_channel("gwtest:inactive")
+        self.connectGwStats()
 
         # gateway should show no VC and 1 connected inactive PV
-        count = ca.get(gw_vctotal)
-        self.assertTrue(count == 0, "Expected GW VC total count: 0, actual: " + str(count))
-        count = ca.get(gw_pvtotal)
-        self.assertTrue(count == 1, "Expected GW PV total count: 1, actual: " + str(count))
-        count = ca.get(gw_connected)
-        self.assertTrue(count == 1, "Expected GW connected PV count: 1, actual: " + str(count))
-        count = ca.get(gw_active)
-        self.assertTrue(count == 0, "Expected GW active PV count: 0, actual: " + str(count))
-        count = ca.get(gw_inactive)
-        self.assertTrue(count == 1, "Expected GW inactive PV count: 1, actual: " + str(count))
+        self.updateGwStats()
+        self.assertTrue(self.vctotal == 0, "Expected GW VC total count: 0, actual: " + str(self.vctotal))
+        self.assertTrue(self.connected == 1, "Expected GW connected PV count: 1, actual: " + str(self.connected))
+        self.assertTrue(self.active == 0, "Expected GW active PV count: 0, actual: " + str(self.active))
+        self.assertTrue(self.inactive == 1, "Expected GW inactive PV count: 1, actual: " + str(self.inactive))
 
         # set warning limit on IOC
         ioc_high = ca.create_channel("ioc:gwcachetest.HIGH")
@@ -265,16 +227,12 @@ class TestPropertyCache(unittest.TestCase):
         self.assertTrue(connected, "Could not connect to ioc channel " + ca.name(gw))
 
         # gateway should show one VC and one connected active PV
-        count = ca.get(gw_vctotal)
-        self.assertTrue(count == 1, "Expected GW VC total count: 1, actual: " + str(count))
-        count = ca.get(gw_pvtotal)
-        self.assertTrue(count == 1, "Expected GW PV total count: 1, actual: " + str(count))
-        count = ca.get(gw_connected)
-        self.assertTrue(count == 1, "Expected GW connected PV count: 1, actual: " + str(count))
-        count = ca.get(gw_active)
-        self.assertTrue(count == 1, "Expected GW active PV count: 1, actual: " + str(count))
-        count = ca.get(gw_inactive)
-        self.assertTrue(count == 0, "Expected GW inactive PV count: 0, actual: " + str(count))
+        self.updateGwStats()
+        self.assertTrue(self.vctotal == 1, "Expected GW VC total count: 1, actual: " + str(self.vctotal))
+        self.assertTrue(self.pvtotal == 1, "Expected GW PV total count: 1, actual: " + str(self.pvtotal))
+        self.assertTrue(self.connected == 1, "Expected GW connected PV count: 1, actual: " + str(self.connected))
+        self.assertTrue(self.active == 1, "Expected GW active PV count: 1, actual: " + str(self.active))
+        self.assertTrue(self.inactive == 0, "Expected GW inactive PV count: 0, actual: " + str(self.inactive))
 
         # now the limit should have been updated
         ioc_ctrl = ca.get_ctrlvars(ioc)
