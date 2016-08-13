@@ -50,14 +50,18 @@ class TestStructures(unittest.TestCase):
             sys.stdout.flush()
 
     def compareStructures(self):
-        self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
-        "No of received updates differ: GW {0}, IOC {1}".format(str(self.eventsReceivedGW), str(self.eventsReceivedIOC)))
-        for kkk in self.iocStruct.keys():
-            self.assertTrue(self.iocStruct[kkk] == self.gwStruct[kkk],
-            "Element '{0}' differs: GW has '{1}', IOC has '{2}'".format(kkk, str(self.gwStruct[kkk]), str(self.iocStruct[kkk])))
+        are_diff = False
+        diffs = []
+        for k in self.iocStruct.keys():
+            if k != "chid" and (self.iocStruct[k] != self.gwStruct[k]):
+                are_diff = True
+                diffs.append("Element '{0}' : GW has '{1}', IOC has '{2}'"
+                .format(k, str(self.gwStruct[k]), str(self.iocStruct[k])))
+        return are_diff, diffs
 
     def testCtrlStruct_ValueMonitor(self):
         '''Monitor PV (value events) through GW - change value and properties directly - check CTRL structure consistency'''
+        diffs = []
 
         # gwcachetest is an ai record with full set of alarm limits: -100 -10 10 100
         gw = ca.create_channel("gateway:gwcachetest")
@@ -74,7 +78,13 @@ class TestStructures(unittest.TestCase):
         ca.put(ioc_value, 10.0, wait=True)
         time.sleep(.1)
 
-        self.compareStructures()
+        self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
+        "After setting value, no. of received updates differ: GW {0}, IOC {1}"
+        .format(str(self.eventsReceivedGW), str(self.eventsReceivedIOC)))
+        (are_diff, diffs) = self.compareStructures()
+        self.assertTrue(are_diff == False,
+        "At update {0} (change value), received structure updates differ:\n\t{1}"
+        .format(str(self.eventsReceivedIOC), "\n\t".join(diffs)))
 
         # set property on IOC
         ioc_hihi = ca.create_channel("ioc:gwcachetest.HIHI")
@@ -82,7 +92,13 @@ class TestStructures(unittest.TestCase):
         ca.put(ioc_value, 11.0, wait=True) # trigger update
         time.sleep(.1)
 
-        self.compareStructures()
+        self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
+        "After setting property, no. of received updates differ: GW {0}, IOC {1}"
+        .format(str(self.eventsReceivedGW), str(self.eventsReceivedIOC)))
+        (are_diff, diffs) = self.compareStructures()
+        self.assertTrue(are_diff == False,
+        "At update {0} (change property), received structure updates differ:\n\t{1}"
+        .format(str(self.eventsReceivedIOC), "\n\t".join(diffs)))
 
 
 if __name__ == '__main__':
