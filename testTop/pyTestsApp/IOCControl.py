@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 '''Controls the test IOC'''
-import os
 import subprocess
+import atexit
 import time
+import os
 import gwtests
 
 class IOCControl:
@@ -38,10 +39,13 @@ class IOCControl:
         self.iocProcess = subprocess.Popen(iocCommand, env=childEnviron,
                 stdin=subprocess.PIPE, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
         time.sleep(.5)
+        atexit.register(self.stop)
 
     def stop(self):
         '''Stops the test IOC'''
-        self.iocProcess.stdin.close()
+        if self.iocProcess:
+            self.iocProcess.stdin.close()
+            self.iocProcess = None
         if self.DEVNULL:
             self.DEVNULL.close()
 

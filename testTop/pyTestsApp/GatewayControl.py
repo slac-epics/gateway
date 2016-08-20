@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 '''Controls the CA Gateway'''
 import subprocess
+import atexit
 import time
 import os
 import gwtests
@@ -24,10 +25,13 @@ class GatewayControl:
         if not gwtests.verboseGateway and not gwtests.verbose:
             self.DEVNULL = open(os.devnull, 'wb')
         self.gatewayProcess = subprocess.Popen(gateway_commands, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
+        atexit.register(self.stop)
 
     def stop(self):
         '''Stops the CA Gateway'''
-        self.gatewayProcess.terminate()
+        if self.gatewayProcess:
+            self.gatewayProcess.terminate()
+            self.gatewayProcess = None
         if self.DEVNULL:
             self.DEVNULL.close()
 
