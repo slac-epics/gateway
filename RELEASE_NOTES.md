@@ -6,6 +6,7 @@ CA Gateway Release Notes
 
 * Clean up release notes (that you are reading right now)
 * Improve test readme
+* Improve test cleanup on failure (shut down gateway processes)
 
 ## 2.1.0 (11 May 2016)
 [View diff](https://github.com/epics-extensions/ca-gateway/compare/R2-0-6-0...R2-1-0-0)
