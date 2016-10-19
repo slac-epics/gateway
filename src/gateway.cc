@@ -599,6 +599,7 @@ static int startEverything(char *prefix)
 #else
 	printf("%s PID=%d\n",EPICS_VERSION_STRING,sid);
 #endif
+	printf("CA Protocol version %s\n", ca_version());
 	printEnv(stdout,"EPICS_CA_ADDR_LIST");
 	printEnv(stdout,"EPICS_CA_AUTO_ADDR_LIST");
 	printEnv(stdout,"EPICS_CA_SERVER_PORT");
