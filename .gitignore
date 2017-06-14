@@ -9,6 +9,7 @@ html/
 envPaths
 QtC-*
 *.orig
+*.log
 __pycache__
 
 # Gateway generated scriptlets
