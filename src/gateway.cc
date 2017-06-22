@@ -373,6 +373,7 @@ static int startEverything(char *prefix)
 		if(tempBuff != NULL){
 			if(strcasecmp(tempBuff,"NO")){
                 setEnv("EPICS_CAS_AUTO_BEACON_ADDR_LIST","YES",&gate_beacon_ca_auto_list);
+				gateDebug1(15,"gateway setting <%s>\n",gate_beacon_ca_auto_list);
 			}
 		}
 		gateDebug1(15,"gateway setting <%s>\n",gate_ca_auto_list);
@@ -607,6 +608,8 @@ static int startEverything(char *prefix)
 	printEnv(stdout,"EPICS_CAS_INTF_ADDR_LIST");
 	printEnv(stdout,"EPICS_CAS_SERVER_PORT");
 	printEnv(stdout,"EPICS_CAS_IGNORE_ADDR_LIST");
+	printEnv(stdout,"EPICS_CAS_AUTO_BEACON_ADDR_LIST");
+	printEnv(stdout,"EPICS_CAS_BEACON_ADDR_LIST");
 
 	// Get user name
 	char userName[21];
