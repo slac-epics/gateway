@@ -150,7 +150,8 @@ USR_INCLUDES += -I$(EPICS_BASE)/src/ca/legacy/pcas/generic
 # To compile in caPutLog functionality, define the location of the caPutLog
 # module as 'CAPUTLOG' in the appropriate extensions configure/RELEASE* file
 ifdef CAPUTLOG
-  USR_LIBS += caPutLog dbIoc dbStaticHost asIoc Com
+#  USR_LIBS += caPutLog dbIoc dbStaticHost asIoc Com
+  USR_LIBS += caPutLog $(EPICS_BASE_IOC_LIBS)
   USR_CXXFLAGS += -DWITH_CAPUTLOG
   USR_CFLAGS += -DWITH_CAPUTLOG
 endif
