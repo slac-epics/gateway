@@ -2,6 +2,10 @@
 # SLAC RELEASE_NOTES
 #
 
+R2.0.6.0-1.0.0	2017-06-22	Bruce Hill (bhill)
+	Updated to build w/ base/R3.15.5-2.0 and caPutLog/R3.5-1.0.0
+	Also added more diag msgs for EPICS_CAS_BEACON_ADDR_LIST
+
 R2.0.6.0-0.1.0	2017-06-14	Bruce Hill (bhill)
 	Added local build support and .gitignore
 
