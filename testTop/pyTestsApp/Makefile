@@ -43,7 +43,9 @@ clean::
 	@$(RM) $(CLEANS)
 endif
 
-runtests:
+runtests: nosetests
+
+nosetests:
 	nosetests $(PYTESTS:%=../%)
 
 $(TAPFILES): .runtests.tap ;

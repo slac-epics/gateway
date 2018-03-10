@@ -10,6 +10,8 @@ envPaths
 QtC-*
 *.orig
 .idea/
+*.log
+RELEASE_SITE
 __pycache__
 
 # Gateway generated scriptlets
