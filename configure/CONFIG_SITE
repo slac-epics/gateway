@@ -20,12 +20,12 @@ CHECK_RELEASE = YES
 #   for a subset of the cross-compiled target architectures
 #   that Base is built for.
 #CROSS_COMPILER_TARGET_ARCHS = vxWorks-68040
-CROSS_COMPILER_TARGET_ARCHS =
 
 # To install files into a location other than $(TOP) define
 #   INSTALL_LOCATION here.
 #INSTALL_LOCATION=</path/name/to/install/top>
-INSTALL_LOCATION=$(TOP)/../..
+#INSTALL_LOCATION=$(TOP)/../..
+INSTALL_LOCATION=$(TOP)
 
 # Set this when your IOC and the host use different paths
 #   to access the application. This will be needed to boot

@@ -1,2 +1,4 @@
 O.*
 *.log
+RELEASE_SITE
+bin/

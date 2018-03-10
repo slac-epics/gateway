@@ -25,6 +25,7 @@
 
 GATEWAY = $(TOP)/..
 -include $(TOP)/../../RELEASE.local
+-include $(TOP)/configure/RELEASE.local
 -include $(TOP)/../configure/RELEASE.local
 
 # If you copied these tests from CA Gateway to be built as a
