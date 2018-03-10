@@ -89,7 +89,8 @@ CROSS_COMPILER_TARGET_ARCHS =
 # To install files into a location other than $(TOP) define
 #   INSTALL_LOCATION here.
 #INSTALL_LOCATION=</path/name/to/install/top>
-INSTALL_LOCATION=$(TOP)/../..
+#INSTALL_LOCATION=$(TOP)/../..
+INSTALL_LOCATION=$(TOP)
 
 -include $(TOP)/../CONFIG_SITE.local
 -include $(TOP)/configure/CONFIG_SITE.local
