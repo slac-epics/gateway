@@ -56,6 +56,7 @@
 #include <gdd.h>
 #include <epicsVersion.h>
 #include <caProto.h>
+#include <errSymTbl.h>
 #include "gateResources.h"
 #include "gateServer.h"
 
