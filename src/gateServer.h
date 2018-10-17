@@ -413,7 +413,7 @@ inline int gateServer::pvDelete(const char* name, gatePvData*& pv)
     }
     else
         pv = NULL;
-	return rc;
+    return rc;
 }
 inline int gateServer::conDelete(const char* name, gatePvData*& pv)
 {
@@ -426,7 +426,7 @@ inline int gateServer::conDelete(const char* name, gatePvData*& pv)
     }
     else
         pv = NULL;
-	return rc;
+    return rc;
 }
 
 inline int gateServer::vcAdd(const char* name, gateVcData& pv)
