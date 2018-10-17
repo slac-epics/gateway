@@ -1,12 +1,19 @@
 CA Gateway Release Notes
 ========================
 
-## 2.1.1 (not released yet)
-[View diff](https://github.com/epics-extensions/ca-gateway/compare/R2-1-0-0...master)
+## 2.1.2 (not released yet)
+[View diff](https://github.com/epics-extensions/ca-gateway/compare/R2-1-1-0...master)
+
+* Ehhh...
+
+## 2.1.1 (17 Oct 2018)
+[View diff](https://github.com/epics-extensions/ca-gateway/compare/R2-1-0-0...R2-1-1-0)
 
 * Clean up release notes (that you are reading right now)
 * Improve test readme
 * Improve test cleanup on failure (shut down gateway processes)
+* Lots of changes and fixing for CI setup
+* Build changes necessary for EPICS 7 (unbundled PCAS module)
 
 ## 2.1.0 (11 May 2016)
 [View diff](https://github.com/epics-extensions/ca-gateway/compare/R2-0-6-0...R2-1-0-0)
