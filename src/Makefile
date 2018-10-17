@@ -83,6 +83,7 @@ else
   endif
 endif
 
+PROD_LIBS += cas gdd
 PROD_LIBS += $(EPICS_BASE_HOST_LIBS)
 
 gateway_SRCS += gateway.cc
