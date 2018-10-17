@@ -3,6 +3,8 @@ dist: trusty
 language: cpp
 
 env:
+ - BASE=7.0
+ - BASE=7.0 STATIC=YES
  - BASE=3.16
  - BASE=3.16 STATIC=YES
  - BASE=3.16 STATIC=YES EXTRA=CMD_CXXFLAGS=-std=c++11

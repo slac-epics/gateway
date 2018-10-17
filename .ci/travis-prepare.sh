@@ -4,7 +4,7 @@ set -e -x
 # Build Base for use with https://travis-ci.org
 #
 # Set environment variables
-# BASE= 3.14 3.15 or 3.16  (VCS branch)
+# BASE= 3.14 3.15 3.16 7.0  (VCS branch)
 # STATIC=  YES / default (shared)
 
 die() {
@@ -63,6 +63,10 @@ EOF
 
   make -C "$EPICS_BASE" -j2
 
+  cat << EOF > configure/RELEASE.local
+EPICS_BASE=$EPICS_BASE
+EOF
+
   case "$BASE" in
   *3.14*)
     ( cd "$CDIR" && wget https://www.aps.anl.gov/epics/download/extensions/extensionsTop_20120904.tar.gz && tar -xzf extensionsTop_*.tar.gz)
@@ -80,6 +84,20 @@ EOF
 
     echo 'MSI:=$(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)/msi' >> "$EPICS_BASE/configure/CONFIG_SITE"
     ;;
+
+  *7.*)
+    ( cd "$CDIR" && git clone --depth 10 https://github.com/epics-modules/pcas.git pcas )
+    cat << EOF > "$CDIR/pcas/configure/RELEASE.local"
+EPICS_BASE=$EPICS_BASE
+EOF
+
+    make -C "$CDIR/pcas" -j2
+
+    cat << EOF >> configure/RELEASE.local
+PCAS=$CDIR/pcas
+EOF
+    ;;
+
   *) ;;
   esac
 
@@ -87,7 +105,3 @@ EOF
 fi
 
 EPICS_HOST_ARCH=`sh $EPICS_BASE/startup/EpicsHostArch`
-
-cat << EOF > configure/RELEASE.local
-EPICS_BASE=$EPICS_BASE
-EOF
