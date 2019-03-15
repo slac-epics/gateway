@@ -1,6 +1,8 @@
 #
 # SLAC RELEASE_NOTES
 #
+R2.1.1.0-1.1.0  2019-03-15	Hugo Slepicka (slepicka)
+	Merging the latest from collaboration and applying SLAC patches.
 
 R2.0.6.0-0.1.0	2017-06-14	Bruce Hill (bhill)
 	Added local build support and .gitignore
