@@ -9,7 +9,9 @@ html/
 envPaths
 QtC-*
 *.orig
-
 # Gateway generated scriptlets
 gateway.killer
 gateway.restart
+O.*
+*.log
+RELEASE_SITE
