@@ -1,6 +1,9 @@
 #
 # SLAC RELEASE_NOTES
 #
+R2.1.1.0-1.1.1  2019-03-15	Hugo Slepicka (slepicka)
+	Adding PCAS module needed by EPICS 7 after PCAS got unbundled from Epics Base.
+
 R2.1.1.0-1.1.0  2019-03-15	Hugo Slepicka (slepicka)
 	Merging the latest from collaboration and applying SLAC patches.
 
