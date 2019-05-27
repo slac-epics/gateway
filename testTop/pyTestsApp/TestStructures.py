@@ -37,7 +37,7 @@ class TestStructures(unittest.TestCase):
         self.eventsReceivedIOC += 1
         self.iocStruct = kws
         if gwtests.verbose:
-            fmt = 'New Value for %s value=%s, kw=%s\n'
+            fmt = 'New IOC Value for %s value=%s, kw=%s\n'
             sys.stdout.write(fmt % (pvname, str(kws['value']), repr(kws)))
             sys.stdout.flush()
 
@@ -45,7 +45,7 @@ class TestStructures(unittest.TestCase):
         self.eventsReceivedGW += 1
         self.gwStruct = kws
         if gwtests.verbose:
-            fmt = 'New Value for %s value=%s, kw=%s\n'
+            fmt = 'New GW Value for %s value=%s, kw=%s\n'
             sys.stdout.write(fmt % (pvname, str(kws['value']), repr(kws)))
             sys.stdout.flush()
 
@@ -81,6 +81,7 @@ class TestStructures(unittest.TestCase):
         self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
         "After setting value, no. of received updates differ: GW {0}, IOC {1}"
         .format(str(self.eventsReceivedGW), str(self.eventsReceivedIOC)))
+
         (are_diff, diffs) = self.compareStructures()
         self.assertTrue(are_diff == False,
         "At update {0} (change value), received structure updates differ:\n\t{1}"
@@ -95,6 +96,7 @@ class TestStructures(unittest.TestCase):
         self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
         "After setting property, no. of received updates differ: GW {0}, IOC {1}"
         .format(str(self.eventsReceivedGW), str(self.eventsReceivedIOC)))
+
         (are_diff, diffs) = self.compareStructures()
         self.assertTrue(are_diff == False,
         "At update {0} (change property), received structure updates differ:\n\t{1}"
