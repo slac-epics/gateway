@@ -9,6 +9,7 @@ TESTSCRIPTS_HOST += gwtests.py TestDBEValue.py TestDBEAlarm.py TestDBELog.py Tes
 TESTSCRIPTS_HOST += TestPropertyCache.py
 TESTSCRIPTS_HOST += TestEnumPropCache.py
 TESTSCRIPTS_HOST += TestStructures.py
+TESTSCRIPTS_HOST += TestWaveformWithCAMaxArrayBytes.py
 TESTSCRIPTS_HOST += IOCControl.py GatewayControl.py
 
 TESTFILES += test.db
