@@ -6,7 +6,7 @@
 * Copyright (c) 2002 The Regents of the University of California, as
 * Operator of Los Alamos National Laboratory.
 * This file is distributed subject to a Software License Agreement found
-* in the file LICENSE that is included with this distribution. 
+* in the file LICENSE that is included with this distribution.
 \*************************************************************************/
 
 /*+*********************************************************************
@@ -95,10 +95,10 @@ extern "C" {
 	}
 	extern void logEventCB(EVENT_ARGS args) {        // log event callback
 		gatePvData::logEventCB(args);
-	}	
+	}
 	extern void propEventCB(EVENT_ARGS args) {        // prop event callback
 		gatePvData::propEventCB(args);
-	}	
+	}
 }
 
 // quick access to global_resources
@@ -329,7 +329,7 @@ void gatePvData::init(gateServer* m,gateAsEntry* pase, const char* name)
 #endif
 		status=-1;
 	}
-	
+
 	if(status)
 	{
 		// what do I do here? Nothing for now, let creator fix trouble
@@ -349,7 +349,7 @@ void gatePvData::init(gateServer* m,gateAsEntry* pase, const char* name)
 #endif
 
 	}
-	
+
 #if OMIT_CHECK_EVENT
 #else
 	checkEvent(); // do ca_pend_event
@@ -365,9 +365,9 @@ int gatePvData::activate(gateVcData* vcd)
 {
 	gateDebug2(5,"gatePvData::activate(gateVcData=%p) name=%s\n",
 	  (void *)vcd,name());
-	
+
 	int rc=-1;
-	
+
 #if DEBUG_DELAY
 		if(!strncmp("Xorbit",name(),6)) {
 			printf("%s gatePvData::activate: %s state=%d\n",timeStamp(),name(),
@@ -916,20 +916,20 @@ int gatePvData::get(readType read_type)
 {
 	gateDebug1(5,"gatePvData::get() name=%s\n",name());
 	int rc=ECA_NORMAL;
-	
+
 	// only one active get allowed at once
 	switch(getState())
 	{
 	case gatePvActive:
 		gateDebug1(3,"gatePvData::get() %s PV\n",getStateName());
 
-		
+
 		if(global_resources->getCacheMode()) /* caching enabled */
 		{
 			if(!pendingCtrlGet()) {
                 gateDebug1(3,"gatePvData::get() CACHE doing ca_array_get_callback of type CTRL (%ld)\n",dataType());
 				setTransTime();
-				markCtrlGetPending();				
+				markCtrlGetPending();
 				rc=ca_array_get_callback(dataType(), 1/*totalElements()*/,
 					chID,::getCB,this);
 				if(rc != ECA_NORMAL) {
@@ -950,7 +950,7 @@ int gatePvData::get(readType read_type)
 					if(global_resources->getMaxBytes() >= (unsigned long)(bytes*totalElements()+sizeof(caHdr) + 2 * sizeof ( ca_uint32_t ))){
                         gateDebug1(3,"gatePvData::get() NO_CACHE doing ca_array_get_callback of type CTRL (%ld)\n",dataType());
 						setTransTime();
-						markCtrlGetPending();				
+						markCtrlGetPending();
                         rc = ca_array_get_callback(dataType(), 0, chID, ::getCB, this);
 						if(rc != ECA_NORMAL) {
 							fprintf(stderr,"%s gatePvData::get: ca_array_get_callback "
@@ -965,8 +965,8 @@ int gatePvData::get(readType read_type)
                         "Set EPICS_CA_MAX_ARRAY_BYTES to at least %lu\n",
                         timeStamp(),name()?name():"Unknown",
                               (unsigned long) bytes*totalElements() + sizeof(caHdr) + 2*sizeof(ca_uint32_t));
-					}	
-				}				
+					}
+				}
 			}
 			else
 			{
@@ -975,7 +975,7 @@ int gatePvData::get(readType read_type)
 					if(global_resources->getMaxBytes() >= (unsigned long)(bytes*totalElements()+sizeof(caHdr) + 2 * sizeof ( ca_uint32_t ))){
                         gateDebug1(3,"gatePvData::get() NO_CACHE doing ca_array_get_callback of type TIME (%ld)\n", eventType());
 						setTransTime();
-						markTimeGetPending();	
+						markTimeGetPending();
                         rc = ca_array_get_callback(eventType(), 0, chID, ::getTimeCB, this);
 						if(rc != ECA_NORMAL) {
 							fprintf(stderr,"%s gatePvData::get: ca_array_get_callback for DBR_TIME "
@@ -991,8 +991,8 @@ int gatePvData::get(readType read_type)
                         timeStamp(),name()?name():"Unknown",
                               (unsigned long) bytes*totalElements() + sizeof(caHdr) + 2*sizeof(ca_uint32_t));
 					}
-				}						
-			}	
+				}
+			}
 
 
 #if OMIT_CHECK_EVENT
@@ -1051,7 +1051,7 @@ int gatePvData::put(const gdd & dd, class gateAsyncW * pWIO )
 		   fieldType(),dbr_type_to_text(fieldType()),
 		   ca_name(chID));
 #endif
-	
+
 	switch(getState())
 	{
 	case gatePvActive:
@@ -1110,7 +1110,7 @@ int gatePvData::put(const gdd & dd, class gateAsyncW * pWIO )
 #if DEBUG_PUT
 			printf("gatePvData::put: cbid=%p this=%p dbr=%ld id=%ld pv=%p\n",
 			  cbid,this,cht,cbid->getID(),cbid->getPV());
-#endif		
+#endif
 			if(!cbid) return S_casApp_noMemory;
 			callback_list.add(*cbid);
 #if DEBUG_SLIDER
@@ -1302,7 +1302,7 @@ void gatePvData::connectCB(CONNECT_ARGS args)
 			  "Unhandled field type[%s] for %s\n",
 			  dbr_type_to_text(ca_field_type(args.chid)),
 			  ca_name(args.chid));
-#endif			
+#endif
 			pv->event_type=(chtype)-1;
 			pv->data_type=(chtype)-1;
 			pv->event_func=(gateCallback)NULL;
@@ -1361,12 +1361,12 @@ void gatePvData::putCB(EVENT_ARGS args)
 #if DEBUG_PUT
 	printf("gatePvData::putCB: cbid=%p user=%p id=%ld pv=%p\n",
 	  cbid,ca_puser(args.chid),cbid->getID(),cbid->getPV());
-#endif		
-	
+#endif
+
 	// We are through with the callback id.  Remove it from the
 	// callback_list and delete it.
 	pv->callback_list.remove(*cbid);
-	gateAsyncW * pWIO = reinterpret_cast < gateAsyncW * > 
+	gateAsyncW * pWIO = reinterpret_cast < gateAsyncW * >
 				( cbid->getPrivatePtr () );
 	delete cbid;
 
@@ -1439,7 +1439,7 @@ void gatePvData::eventCB(EVENT_ARGS args)
 				}
 				else
 				{
-					
+
 					if(global_resources->getArchiveMode()){
 						// Post the event
 						if(stat_sevr_changed)
@@ -1452,7 +1452,7 @@ void gatePvData::eventCB(EVENT_ARGS args)
 						if(stat_sevr_changed)
 							pv->vc->vcPostEvent(pv->select_mask);
 						else
-							pv->vc->vcPostEvent(pv->value_log_mask);						
+							pv->vc->vcPostEvent(pv->value_log_mask);
 					}
 				}
 			}
@@ -1555,7 +1555,7 @@ void gatePvData::propEventCB(EVENT_ARGS args)
         if(pv->active())
         {
             gateDebug2(5,"gatePvData::propEventCB() %s PV %d\n",pv->getStateName(), pv->propGetPending());
-            if(pv->propGetPending()) { 
+            if(pv->propGetPending()) {
                 gateDebug1(5,"gatePvData::propEventCB() Ignore first event %s PV\n",pv->getStateName());
                 pv->markPropNoGetPending();
                 return;
@@ -1758,15 +1758,15 @@ void gatePvData::getTimeCB(EVENT_ARGS args)
 	pv->markNoTimeGetPending();
 	if(args.status==ECA_NORMAL)
 	{
-		
-		
+
+
 		if(pv->active())
 		{
 			gateDebug1(5,"gatePvData::getTimeCB() %s PV\n",pv->getStateName());
             dd = pv->runEventCB(&args);
             if (dd)
                 pv->vc->setEventData(dd);
-			
+
 			/* flush async get request */
 			if(pv->needAddRemove() && !pv->vc->needPosting())
 			{
@@ -1775,26 +1775,26 @@ void gatePvData::getTimeCB(EVENT_ARGS args)
 				pv->vc->vcAdd(read_type);
 			}
 			else
-				pv->vc->vcData(read_type);			
-			
+				pv->vc->vcData(read_type);
+
 			if(pv->vc->needPosting() && !pv->monitored()) // do monitor only if requested
 			{
 				pv->monitor();
 			}
-			
+
 			if(pv->vc->needPosting() &&  // do archive monitor only if requested
 			   global_resources->getArchiveMode() &&
 			   !pv->logMonitored() &&
-			    (pv->vc->client_mask == DBE_LOG)) { 
+			    (pv->vc->client_mask == DBE_LOG)) {
 			        gateDebug0(5,"gatePvData::getCB() Starting log monitor timecb\n");
-                    pv->logMonitor();			
+                    pv->logMonitor();
                 }
 
 			if(pv->vc->needPosting() &&  // do property monitor only if requested
 			   !pv->propMonitored() &&
-			    (pv->vc->client_mask == DBE_PROPERTY)) { 
+			    (pv->vc->client_mask == DBE_PROPERTY)) {
 			        gateDebug0(5,"gatePvData::getCB() Starting prop monitor timecb\n");
-                    pv->propMonitor();			
+                    pv->propMonitor();
                 }
 
 		}
@@ -2234,9 +2234,9 @@ gdd* gatePvData::eventSTSAckStringCB(dbr_stsack_string *ts)
 
 	// DBR_STSACK_STRING response
 	// (the value gdd carries the severity and status information)
-	
-	// change type of value gdd to native type of pv 	
-	dd[gddAppTypeIndex_dbr_stsack_string_value].setPrimType(nativeType()); 
+
+	// change type of value gdd to native type of pv
+	dd[gddAppTypeIndex_dbr_stsack_string_value].setPrimType(nativeType());
 
 	dd[gddAppTypeIndex_dbr_stsack_string_ackt] = ts->ackt;
 	dd[gddAppTypeIndex_dbr_stsack_string_acks] = ts->acks;

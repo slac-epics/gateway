@@ -6,7 +6,7 @@
 * Copyright (c) 2002 The Regents of the University of California, as
 * Operator of Los Alamos National Laboratory.
 * This file is distributed subject to a Software License Agreement found
-* in the file LICENSE that is included with this distribution. 
+* in the file LICENSE that is included with this distribution.
 \*************************************************************************/
 /* Author: Jim Kowalkowski
  * Date: 2/96 */
@@ -112,15 +112,15 @@ public:
 
 	void setServerMode(bool mode)        { serverMode=mode; }
 	bool getServerMode(void) const       { return serverMode; }
-	
+
 	void setCacheMode(bool mode)		 { cacheMode=mode; }
 	bool getCacheMode(void) const	     { return cacheMode; }
-	
+
 	void setArchiveMode(bool mode)		 { archiveMode=mode; }
-	bool getArchiveMode(void) const	     { return archiveMode; }	
-	
+	bool getArchiveMode(void) const	     { return archiveMode; }
+
 	void setMaxBytes(unsigned long bytes){ maxBytes=bytes; }
-	unsigned long getMaxBytes() const	 { return maxBytes; }	
+	unsigned long getMaxBytes() const	 { return maxBytes; }
 
 	gateAs* getAs(void);
 	bool isAsSetUp(void) const { return as?true:false; }

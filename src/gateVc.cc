@@ -6,7 +6,7 @@
 * Copyright (c) 2002 The Regents of the University of California, as
 * Operator of Los Alamos National Laboratory.
 * This file is distributed subject to a Software License Agreement found
-* in the file LICENSE that is included with this distribution. 
+* in the file LICENSE that is included with this distribution.
 \*************************************************************************/
 
 /*+*********************************************************************
@@ -119,7 +119,7 @@ gateChan::gateChan(const casCtx &ctx, casPV *casPvIn, gateAsEntry *asentry,
 	user(userIn),
 	host(hostIn)
 {
-	
+
 	asclient=new gateAsClient(asentry,user,host);
 	if(asclient) asclient->setUserFunction(post_rights,this);
 }
@@ -183,7 +183,7 @@ void gateChan::resetAsClient(gateAsEntry *asentry)
     // Don't do anything else if the casPv is NULL, indicating it is
 	// being destroyed or if the asentry is NULL
 	if(!casPv || !asentry) return;
-	
+
 	asclient=new gateAsClient(asentry,user,host);
 	if(asclient) {
 		asclient->setUserFunction(post_rights,this);
@@ -254,7 +254,7 @@ caStatus gateVcChan::write(const casCtx &ctx, const gdd &value)
         }
 #endif
 	}
-	
+
 	// Call the non-virtual-function write() in the gateVcData
 	if(vc) return vc->write(ctx,value,*this);
 	else return S_casApp_noSupport;
@@ -290,7 +290,7 @@ caStatus gateVcChan::writeNotify(const casCtx &ctx, const gdd &value)
         }
 #endif
 	}
-	
+
 	// Call the non-virtual-function write() in the gateVcData
 	if(vc) return vc->writeNotify(ctx,value,*this);
 	else return S_casApp_noSupport;
@@ -447,7 +447,7 @@ gateVcData::~gateVcData(void)
 	}
 	while((asyncr=time_rio.first()))	{
 		asyncr->removeFromQueue();
-	}	
+	}
 	while((asyncr=alhRio.first()))	{
 		asyncr->removeFromQueue();
 	}
@@ -579,7 +579,7 @@ int gateVcData::setEventData(gdd* dd)
 		dbr_short_t newSevr;
 		dbr_short_t oldStat;
 		dbr_short_t newStat;
-	
+
 		// Containers get special treatment (for performance reasons)
 		if(event_data->isContainer())
 		{
@@ -592,9 +592,9 @@ int gateVcData::setEventData(gdd* dd)
 			}
 
 			ndd[gddAppTypeIndex_dbr_stsack_string_value].getStatSevr(oldStat,oldSevr);
-			dd->getStatSevr(newStat,newSevr);		
+			dd->getStatSevr(newStat,newSevr);
 			if(oldSevr == newSevr && oldStat == newStat) stat_sevr_changed=0;
-						
+
 			// Fill in the new value
 			app_table.smartCopy(ndd,dd);
 			event_data = ndd;
@@ -604,9 +604,9 @@ int gateVcData::setEventData(gdd* dd)
 		else
 		{
 			event_data->getStatSevr(oldStat,oldSevr);
-			dd->getStatSevr(newStat,newSevr);		
-			if(oldSevr == newSevr && oldStat == newStat) stat_sevr_changed=0;			
-			
+			dd->getStatSevr(newStat,newSevr);
+			if(oldSevr == newSevr && oldStat == newStat) stat_sevr_changed=0;
+
 			event_data = dd;
 			ndd->unreference();
 		}
@@ -645,7 +645,7 @@ int gateVcData::setEventData(gdd* dd)
 		heading("*** gateVcData::setEventData: end",name());
 	}
 #endif
-		
+
 	return stat_sevr_changed;
 }
 
@@ -668,7 +668,7 @@ void gateVcData::setAlhData(gdd* dd)
 
 	if(event_data)
 	{
-	
+
 		// If the event_data is already an ALH Container, ackt/acks are adjusted
 		if(event_data->applicationType() == gddAppType_dbr_stsack_string)
 		{
@@ -716,7 +716,7 @@ void gateVcData::setAlhData(gdd* dd)
 	{
 		event_data = dd;
 	}
-	
+
 #if DEBUG_GDD
 	dumpdd(4,"event_data(after)",name(),event_data);
 #endif
@@ -811,7 +811,7 @@ void gateVcData::copyState(gdd &dd)
 	// routines.  If the pv is alh monitored, the event_data is a
 	// container type (gddAppType_dbr_stsack_string)
 	if(event_data) table.smartCopy(&dd,event_data);
-	
+
 #if DEBUG_GDD || DEBUG_ENUM
 	if(event_data) dumpdd(4,"event_data",name(),event_data);
 	dumpdd(5,"dd(after event_data)",name(),&dd);
@@ -874,7 +874,7 @@ void gateVcData::flushAsyncWriteQueue()
 	    assert ( ready() );
 	    smartConstGDDPointer pDD = pWIO->extractDD ();
 	    assert ( pDD.valid () );
-	    caStatus stat = 
+	    caStatus stat =
 		pv->put( *pDD, pWIO->isPutNotify() ? pWIO : 0 );
 	    pDD.set ( 0 );
 	    if ( pWIO->isPutNotify() ) {
@@ -909,7 +909,7 @@ void gateVcData::flushAsyncReadQueue(readType read_type)
 			  "posting asyncr %p (DD at %p)\n",
 			  (void *)asyncr,(void *)&asyncr->DD());
 			asyncr->removeFromQueue();
-			
+
 #if DEBUG_GDD
 			heading("gateVcData::flushAsyncReadQueue",name());
 			dumpdd(1,"asyncr->DD()(before)",name(),&asyncr->DD());
@@ -932,7 +932,7 @@ void gateVcData::flushAsyncReadQueue(readType read_type)
 			  "posting asyncr %p (DD at %p)\n",
 			  (void *)asyncr,(void *)&asyncr->DD());
 			asyncr->removeFromQueue();
-			
+
 #if DEBUG_GDD
 			heading("gateVcData::flushAsyncReadQueue",name());
 			dumpdd(1,"asyncr->DD()(before)",name(),&asyncr->DD());
@@ -947,7 +947,7 @@ void gateVcData::flushAsyncReadQueue(readType read_type)
 			}
 #endif
 			asyncr->postIOCompletion(S_casApp_success,asyncr->DD());
-		}		
+		}
 	}
 }
 
@@ -963,7 +963,7 @@ void gateVcData::flushAsyncAlhReadQueue(void)
 		gateDebug2(5,"gateVcData::flushAsyncAlhReadQueue() posting asyncr %p (DD at %p)\n",
 		  (void *)asyncr,(void *)&asyncr->DD());
 		asyncr->removeFromQueue();
-		
+
 #if DEBUG_GDD
 		heading("gateVcData::flushAsyncAlhReadQueue",name());
 		dumpdd(1,"asyncr->DD()(before)",name(),&asyncr->DD());
@@ -1000,7 +1000,7 @@ void gateVcData::vcPostEvent(casEventMask event_mask)
 	{
 		gateDebug1(2,"gateVcData::vcPostEvent() posting event (event_data at %p)\n",
 			(void *)event_data);
-			
+
 		if(event_data->isAtomic())
 		{
 #if DEBUG_EVENT_DATA
@@ -1014,7 +1014,7 @@ void gateVcData::vcPostEvent(casEventMask event_mask)
 #endif
 
 				postEvent(event_mask,*event_data);
-				
+
 #ifdef RATE_STATS
 			mrg->post_event_count++;
 #endif
@@ -1035,7 +1035,7 @@ void gateVcData::vcPostEvent(casEventMask event_mask)
 #endif
 
 				postEvent(event_mask,*event_data);
-		
+
 #ifdef RATE_STATS
 				mrg->post_event_count++;
 #endif
@@ -1047,9 +1047,9 @@ void gateVcData::vcData(readType read_type)
 {
 	// pv_data just appeared - don't really care
 	gateDebug1(10,"gateVcData::vcData() name=%s\n",name());
-	
+
 	//flush any accumulated reads if caching disabled
-	if(!global_resources->getCacheMode()){		
+	if(!global_resources->getCacheMode()){
 		if(ctrl_rio.count() || time_rio.count()) flushAsyncReadQueue(read_type);
 	}
 }
@@ -1078,12 +1078,12 @@ caStatus gateVcData::read(const casCtx& ctx, gdd& dd)
 	gateDebug1(10,"gateVcData::read() name=%s\n",name());
 	static const aitString str = "Not Supported by Gateway";
 	readType read_type = ctrlType;
-	
-	
+
+
 	/* This is to obtain mask from client */
 	if(ctx.getMsg()->m_cmmd == CA_PROTO_EVENT_ADD){
 		struct mon_info *pMonInfo = (struct mon_info *) ctx.getData();
-	//If build with R3.14.9 next two lines must be switched	
+	//If build with R3.14.9 next two lines must be switched
      	ca_uint16_t caProtoMask = AlignedWireRef < epicsUInt16 >(pMonInfo->m_mask);
 		//ca_uint16_t caProtoMask = epicsNTOH16 (pMonInfo->m_mask);
 
@@ -1154,7 +1154,7 @@ caStatus gateVcData::read(const casCtx& ctx, gdd& dd)
 //		return S_casApp_noSupport;
 		return S_casApp_success;
 	case gddAppType_dbr_stsack_string:
-		if((event_data && 
+		if((event_data &&
 		  !(event_data->applicationType()==gddAppType_dbr_stsack_string))
 		  || !pv->alhMonitored())
 		{
@@ -1170,7 +1170,7 @@ caStatus gateVcData::read(const casCtx& ctx, gdd& dd)
 			if(!global_resources->getCacheMode())
 			{
 				pv->get(timeType);
-			}			
+			}
 			return S_casApp_asyncCompletion;
 		} else if(pendWio.count()||nrWio.count()) {
 			// Pending write in progress, don't read now
@@ -1191,7 +1191,7 @@ caStatus gateVcData::read(const casCtx& ctx, gdd& dd)
 				ctrl_rio.add(*(new gateAsyncR(ctx,dd,&ctrl_rio)));
 			else
 				time_rio.add(*(new gateAsyncR(ctx,dd,&time_rio)));
-			if(!global_resources->getCacheMode()) 
+			if(!global_resources->getCacheMode())
 			{
 				pv->get(read_type);
 			}
@@ -1226,7 +1226,7 @@ caStatus gateVcData::read(const casCtx& ctx, gdd& dd)
 			if(read_type == ctrlType)
 				ctrl_rio.add(*(new gateAsyncR(ctx,dd,&ctrl_rio)));
 			else
-				time_rio.add(*(new gateAsyncR(ctx,dd,&time_rio)));			
+				time_rio.add(*(new gateAsyncR(ctx,dd,&time_rio)));
 
 			pv->get(read_type);
 			return S_casApp_asyncCompletion;
@@ -1305,7 +1305,7 @@ caStatus gateVcData::writeSpecifyingCBMechanism(
 	heading("gateVcData::write",name());
 	dumpdd(1,"dd(incoming)",name(),&dd);
 #endif
-	
+
 	// Branch on application type
 	unsigned at=dd.applicationType();
 	switch(at) {
@@ -1330,7 +1330,7 @@ caStatus gateVcData::writeSpecifyingCBMechanism(
 			if ( nrWio.count () > maxSimlWriteIO ) {
 			    return S_casApp_postponeAsyncIO;
 			}
-			gateAsyncW * pGateAsyncW = 
+			gateAsyncW * pGateAsyncW =
 			    new ( std :: nothrow )
 				gateAsyncW ( ctx,dd,isPutNotify );
 			if ( ! pGateAsyncW ) {
@@ -1352,7 +1352,7 @@ caStatus gateVcData::writeSpecifyingCBMechanism(
 #endif
 			return S_casApp_postponeAsyncIO;
 		} else {
-			gateAsyncW * pGateAsyncW = 0; 
+			gateAsyncW * pGateAsyncW = 0;
 			if ( isPutNotify ) {
 #if DEBUG_GDD || DEBUG_SLIDER
 			    fflush(stderr);

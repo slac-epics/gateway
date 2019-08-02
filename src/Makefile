@@ -7,7 +7,7 @@
 # Operator of Los Alamos National Laboratory.
 # Copyright (c) 2014-2016 ITER Organization.
 # This file is distributed subject to a Software License Agreement found
-# in the file LICENSE that is included with this distribution. 
+# in the file LICENSE that is included with this distribution.
 #*************************************************************************
 
 TOP = ..

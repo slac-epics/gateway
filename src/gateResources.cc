@@ -6,7 +6,7 @@
 * Copyright (c) 2002 The Regents of the University of California, as
 * Operator of Los Alamos National Laboratory.
 * This file is distributed subject to a Software License Agreement found
-* in the file LICENSE that is included with this distribution. 
+* in the file LICENSE that is included with this distribution.
 \*************************************************************************/
 // Author: Jim Kowalkowski
 // Date: 2/96
@@ -60,11 +60,11 @@ char *timeStamp(void)
 	static char timeStampStr[20];
 	time_t now;
 	struct tm *tblock;
-	
+
 	time(&now);
 	tblock=localtime(&now);
 	strftime(timeStampStr,sizeof(timeStampStr),"%b %d %H:%M:%S",tblock);
-	
+
 	return timeStampStr;
 }
 
@@ -274,19 +274,19 @@ gateResources::gateResources(void)
       access_file=strDup(GATE_PV_ACCESS_FILE);
     else
       access_file=NULL;
-    
+
     if(access(GATE_PV_LIST_FILE,F_OK)==0)
       pvlist_file=strDup(GATE_PV_LIST_FILE);
     else
       pvlist_file=NULL;
-    
+
     if(access(GATE_COMMAND_FILE,F_OK)==0)
       command_file=strDup(GATE_COMMAND_FILE);
     else
       command_file=NULL;
-      
-      
-    
+
+
+
 	// Miscellaneous initializations
 	putlog_file=NULL;
 #ifdef WITH_CAPUTLOG
@@ -297,18 +297,18 @@ gateResources::gateResources(void)
     debug_level=0;
     ro=0;
 	serverMode=false;
-    
+
     setEventMask(DBE_VALUE | DBE_ALARM);
     setConnectTimeout(GATE_CONNECT_TIMEOUT);
     setInactiveTimeout(GATE_INACTIVE_TIMEOUT);
     setDeadTimeout(GATE_DEAD_TIMEOUT);
     setDisconnectTimeout(GATE_DISCONNECT_TIMEOUT);
     setReconnectInhibit(GATE_RECONNECT_INHIBIT);
-    
+
     gddApplicationTypeTable& tt = gddApplicationTypeTable::AppTable();
-    
+
 	gddMakeMapDBR(tt);
-	
+
 	appValue=tt.getApplicationType("value");
 	appUnits=tt.getApplicationType("units");
 	appEnum=tt.getApplicationType("enums");

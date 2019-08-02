@@ -6,7 +6,7 @@
 * Copyright (c) 2002 The Regents of the University of California, as
 * Operator of Los Alamos National Laboratory.
 * This file is distributed subject to a Software License Agreement found
-* in the file LICENSE that is included with this distribution. 
+* in the file LICENSE that is included with this distribution.
 \*************************************************************************/
 
 /*+*********************************************************************
@@ -187,14 +187,14 @@ aitBool gateAsEntry::init(gateAsList& n, int line) {
 	}
 	return aitTrue;
 }
-	
+
 #ifdef USE_DENYFROM
 aitBool gateAsEntry::init(const char* host,	// Host name to deny
   tsHash<gateAsList>& h,                // Where this entry is added to
   gateHostList& hl,				        // Where a new key should be added
   int line) {					        // Line number
 	gateAsList* l;
-	
+
 	if(compilePattern(line)==aitFalse) return aitFalse;
 	if(h.find(host,l)==0) {
 		l->add(*this);
@@ -210,12 +210,12 @@ aitBool gateAsEntry::init(const char* host,	// Host name to deny
 
 aitBool gateAsEntry::compilePattern(int line) {
 	const char *err;
-        
+
 #ifdef USE_NEG_REGEXP
         negate_pattern = (pattern[0] == '!');
         if (negate_pattern) pattern++;
 #endif
-        
+
 #ifdef USE_PCRE
 	int erroffset;
         pat_buff = pcre_compile(pattern, 0, &err, &erroffset, NULL);
@@ -324,7 +324,7 @@ gateAs::gateAs(const char* lfile, const char* afile)
 		if(initialize(afile))
 		  fprintf(stderr,"Failed to install access security file %s\n",afile);
 	}
-	
+
 	readPvList(lfile);
 }
 
@@ -335,7 +335,7 @@ gateAs::~gateAs(void)
 // security including the pvlist.
 	tsSLIter<gateAsHost> pi = host_list.firstIter();
     gateAsList * l = NULL;
-	
+
 	gateAsHost *pNode;
 	while(pi.pointer())	{
 		pNode=pi.pointer();
@@ -345,7 +345,7 @@ gateAs::~gateAs(void)
 	}
 	clearHostList(host_list);
 #endif
-	
+
 	clearAsList(deny_list);
 	clearAsList(allow_list);
 	clearAsList(line_list);
@@ -386,20 +386,20 @@ void gateAs::clearHostList(gateHostList& list)
 gateAsEntry* gateAs::findEntryInList(const char* pv, gateAsList& list) const
 {
 	tsSLIter<gateAsEntry> pi = list.firstIter();
-	
+
 	while(pi.pointer()) {
         int len = (int) strlen(pv);
 #ifdef USE_PCRE
 		pi->substrings=pcre_exec(pi->pat_buff, NULL,
                     pv, len, 0, PCRE_ANCHORED, pi->ovector, 30);
 		if((pi->substrings>=0 && pi->ovector[1] == len)
-#ifdef USE_NEG_REGEXP                
+#ifdef USE_NEG_REGEXP
 		    ^ pi->negate_pattern
 #endif
 		) break;
 #else
         if((re_match(&pi->pat_buff, pv, len, 0, &pi->regs) == len)
-#ifdef USE_NEG_REGEXP                
+#ifdef USE_NEG_REGEXP
 		    ^ pi->negate_pattern
 #endif
 		) break;
@@ -415,8 +415,8 @@ int gateAs::readPvList(const char* lfile)
 	int line=0;
 	FILE* fd;
 	char inbuf[GATE_MAX_PVLIST_LINE_LENGTH];
-#ifdef USE_DENYFROM		
-	char inbufWithIPs[GATE_MAX_PVLIST_LINE_LENGTH];	
+#ifdef USE_DENYFROM
+	char inbufWithIPs[GATE_MAX_PVLIST_LINE_LENGTH];
 	char tempInbuf[GATE_MAX_PVLIST_LINE_LENGTH];
 #endif
 	const char *pattern,*rname,*hname;
@@ -442,51 +442,51 @@ int gateAs::readPvList(const char* lfile)
 		// Create a ".* allow" rule if no file is specified
 		pe = new gateAsEntry(".*",NULL,default_group,1);
 		if(pe->init(allow_list,line)==aitFalse) delete pe;
-		
+
 		return 0;
 	}
-	
+
 	// Read all PV file lines
 	while(fgets(inbuf,sizeof(inbuf),fd)) {
-				
-		
+
+
 		++line;
-		pattern=rname=hname=NULL;		
-		
-#ifdef USE_DENYFROM		
-		//All deny from rules with host names will be conveted to ip addresses		
+		pattern=rname=hname=NULL;
+
+#ifdef USE_DENYFROM
+		//All deny from rules with host names will be conveted to ip addresses
 		strncpy(tempInbuf,inbuf,strlen(inbuf));
 		tempInbuf[strlen(inbuf)-1]='\0';
-		
-		if((ptr=strchr(inbuf,'#'))) *ptr='\0'; // Take care of comments		
-			
+
+		if((ptr=strchr(inbuf,'#'))) *ptr='\0'; // Take care of comments
+
 		if(!(pattern=strtok(inbuf," \t\n"))) continue;
-		
+
 		if(!(cmd=strtok(NULL," \t\n")))	{
 			fprintf(stderr,"Error in PV list file (line %d): "
 			  "missing command\n",line);
 			continue;
 		}
-		if(strcasecmp(cmd,"DENY")==0) {              
+		if(strcasecmp(cmd,"DENY")==0) {
 			// Arbitrary number of arguments: [from] host names
 			if((hname=strtok(NULL,", \t\n")) && strcasecmp(hname,"FROM")==0)
 			  hname=strtok(NULL,", \t\n");
 			if(hname) {           // host pattern(s) present
 				struct sockaddr_in sockAdd;
-				struct sockaddr_in* pSockAdd;				
-				char hostname[GATE_MAX_HOSTNAME_LENGTH];			
-				int status;				
+				struct sockaddr_in* pSockAdd;
+				char hostname[GATE_MAX_HOSTNAME_LENGTH];
+				int status;
 				char *ch;
 				char *pIPInput;
-				
+
 				pSockAdd = &sockAdd;
-				
+
 				strncpy(inbufWithIPs,tempInbuf,hname - inbuf);
-				
+
 				pIPInput = inbufWithIPs + (hname - inbuf);
 
-				do {										
-					/*convert all host names to ip addresses*/										
+				do {
+					/*convert all host names to ip addresses*/
 					status = aToIPAddr(hname,0,pSockAdd);
 
 					if(status != -1)
@@ -494,7 +494,7 @@ int gateAs::readPvList(const char* lfile)
 						ipAddrToDottedIP(pSockAdd,hostname,sizeof(hostname));
 						ch=strchr(hostname,':');
 						if(ch != NULL) hostname[ch-hostname]=0;
-						
+
 						strncpy(pIPInput,hostname,strlen(hostname));
 						*(pIPInput+strlen(hostname)) = ' ';
 						pIPInput = pIPInput + strlen(hostname) + 1;
@@ -502,37 +502,37 @@ int gateAs::readPvList(const char* lfile)
 					else{
 						fprintf(stderr,"Error in PV list file (line %d): "
 			  				"cannot resolve host name >%s<\n",line,hname);
-					}					
+					}
 
 				} while((hname=strtok(NULL,", \t\n")));
-				
+
 				*(pIPInput)='\0';
-				
+
 			}else
 			{
 				strncpy(inbufWithIPs,tempInbuf,strlen(tempInbuf));
 				inbufWithIPs[strlen(tempInbuf)]='\0';
 			}
-				
+
 		}else
 		{
 			strncpy(inbufWithIPs,tempInbuf,strlen(tempInbuf));
 			inbufWithIPs[strlen(tempInbuf)]='\0';
 		}
 
-		pl=new gateAsLine(inbufWithIPs,strlen(inbufWithIPs),line_list);				
+		pl=new gateAsLine(inbufWithIPs,strlen(inbufWithIPs),line_list);
 #else
-		if((ptr=strchr(inbuf,'#'))) *ptr='\0'; // Take care of comments	
+		if((ptr=strchr(inbuf,'#'))) *ptr='\0'; // Take care of comments
 		pl=new gateAsLine(inbuf,strlen(inbuf),line_list);
 #endif
 		if(!(pattern=strtok(pl->buf," \t\n"))) continue;
-		
+
 		if(!(cmd=strtok(NULL," \t\n")))	{
 			fprintf(stderr,"Error in PV list file (line %d): "
 			  "missing command\n",line);
 			continue;
-		}	
-		
+		}
+
 
 #ifdef USE_DENYFROM
 		if(strcasecmp(cmd,"DENY")==0) {                          // DENY [FROM]
@@ -573,7 +573,7 @@ int gateAs::readPvList(const char* lfile)
 			continue;
 		}
 #endif
-		
+
 		if(strcasecmp(cmd,"ORDER")==0) {                               // ORDER
 			// Arguments: "allow, deny" or "deny, allow"
 			if(!(hname=strtok(NULL,", \t\n")) ||
@@ -594,7 +594,7 @@ int gateAs::readPvList(const char* lfile)
 			}
 			continue;
 		}
-		
+
 		if(strcasecmp(cmd,"ALIAS")==0) {                     // ALIAS extra arg
 			// Additional (first) argument: real PV name
 			if(!(rname=strtok(NULL," \t\n"))) {
@@ -603,7 +603,7 @@ int gateAs::readPvList(const char* lfile)
 				continue;
 			}
 		}
-		
+
 		if((asg=strtok(NULL," \t\n"))) {                           // ASG / ASL
 			if((asl=strtok(NULL," \t\n")) &&
 			  (sscanf(asl,"%d",&lev)!=1)) lev=1;
@@ -611,7 +611,7 @@ int gateAs::readPvList(const char* lfile)
 			asg=(char*)default_group;
 			lev=1;
 		}
-		
+
 		if(strcasecmp(cmd,"ALLOW")==0   ||                           // ALLOW / ALIAS
 		  strcasecmp(cmd,"ALIAS")==0   ||
 		  strcasecmp(cmd,"PATTERN")==0 ||
@@ -625,7 +625,7 @@ int gateAs::readPvList(const char* lfile)
 			  "invalid command '%s'\n",line,cmd);
 		}
 	}
-	
+
 	fclose(fd);
 	return 0;
 }
@@ -638,7 +638,7 @@ long gateAs::initialize(const char* afile)
 		fprintf(stderr,"Access security rules already installed\n");
 		return -1;
 	}
-	
+
 	if(afile) {
 		errno=0;
 		rules_fd=fopen(afile,"r");
@@ -668,7 +668,7 @@ long gateAs::initialize(const char* afile)
 		rc=asInitialize(::readFunc);
 		if(rc) fprintf(stderr,"Failed to set default security rules\n");
 	}
-	
+
 	if(rc==0) rules_installed=aitTrue;
 	return rc;
 }
@@ -709,7 +709,7 @@ long gateAs::reInitialize(const char* afile, const char* lfile)
 		if(initialize(afile))
 		  fprintf(stderr,"Failed to install access security file %s\n",afile);
 	}
-	
+
 	// Restart INP PV clients
 	gateAsCa();
 
@@ -729,7 +729,7 @@ int gateAs::readFunc(char* buf, size_t max)
 	if(rptr==NULL) {
 		rbuf[0]='\0';
 		rptr=rbuf;
-		
+
 		if(use_default_rules==aitTrue) {
 			if(one_pass==aitFalse) {
 				strcpy(rbuf,"ASG(DEFAULT) { RULE(1,READ) }");
@@ -741,17 +741,17 @@ int gateAs::readFunc(char* buf, size_t max)
 			n=0;
 		}
     }
-	
+
 	l=strlen(rptr);
     n = (l <= max) ? l : max;
 	if(n) {
 		memcpy(buf,rptr,n);
 		rptr+=n;
 	}
-	
+
 	if(rptr[0]=='\0')
 	  rptr=NULL;
-	
+
     return (int) n;
 }
 
@@ -759,7 +759,7 @@ void gateAs::report(FILE* fd)
 {
 	time_t t;
 	time(&t);
-	
+
 	fprintf(fd,"---------------------------------------------------------------------------\n"
 	  "Configuration Report: %s",ctime(&t));
 	fprintf(fd,"\n============================ Allowed PV Report ============================\n");
@@ -773,7 +773,7 @@ void gateAs::report(FILE* fd)
 		else fprintf(fd,"\n");
 		pi1++;
 	}
-	
+
 	fprintf(fd,"\n============================ Denied PV Report  ============================\n");
 	tsSLIter<gateAsEntry> pi2 = deny_list.firstIter();
 	gateAsEntry *pEntry2;
@@ -785,7 +785,7 @@ void gateAs::report(FILE* fd)
 			pi2++;
 		}
 	}
-	
+
 #ifdef USE_DENYFROM
 	tsSLIter<gateAsHost> pi3 = host_list.firstIter();
 	gateAsHost *pEntry3;
@@ -805,15 +805,15 @@ void gateAs::report(FILE* fd)
 		pi3++;
 	}
 #endif
-	
+
 	if(eval_order==GATE_DENY_FIRST)
 	  fprintf(fd,"\nEvaluation order: deny, allow\n");
 	else
 	  fprintf(fd,"\nEvaluation order: allow, deny\n");
-	
+
 	if(rules_installed==aitTrue) fprintf(fd,"Access Rules are installed.\n");
 	if(use_default_rules==aitTrue) fprintf(fd,"Using default access rules.\n");
-	
+
 #if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 6) || EPICS_REVISION > 14
 	// Dumping to a file pointer became available sometime during 3.14.5.
 	fprintf(fd,"\n============================ Access Security Dump =========================\n");
