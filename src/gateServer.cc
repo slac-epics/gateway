@@ -1072,19 +1072,11 @@ gateServer::gateServer(char *prefix ) :
 	gateDebug0(5,"gateServer()\n");
 
 	// Initialize channel access
-#ifdef USE_313
-	int status=ca_task_initialize();
-	if(status != ECA_NORMAL) {
-	    fprintf(stderr,"%s gateServer::gateServer: ca_task_initialize failed:\n"
-		  " %s\n",timeStamp(),ca_message(status));
-	}
-#else
 	int status=ca_context_create(ca_disable_preemptive_callback);
 	if(status != ECA_NORMAL) {
 	    fprintf(stderr,"%s gateServer::gateServer: ca_context_create failed:\n"
 		  " %s\n",timeStamp(),ca_message(status));
 	}
-#endif
 #ifdef USE_FDS
 	status=ca_add_fd_registration(::fdCB,this);
 	if(status != ECA_NORMAL) {
@@ -1169,15 +1161,7 @@ gateServer::~gateServer(void)
 	    fprintf(stderr,"%s gateServer::~gateServer: ca_flush_io failed:\n"
 		  " %s\n",timeStamp(),ca_message(status));
 	}
-#ifdef USE_313
-	status=ca_task_exit();
-	if(status != ECA_NORMAL) {
-	    fprintf(stderr,"%s gateServer::~gateServer: ca_task_exit failed:\n"
-		  " %s\n",timeStamp(),ca_message(status));
-	}
-#else
 	ca_context_destroy();
-#endif
 }
 
 void gateServer::checkEvent(void)
