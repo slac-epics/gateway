@@ -22,9 +22,6 @@
 #define GATE_COMMAND_FILE   "gateway.command"
 #define GATE_PUTLOG_FILE    "gateway.putlog"
 #define GATE_REPORT_FILE    "gateway.report"
-#ifdef RESERVE_FOPEN_FD
-# define GATE_RESERVE_FILE  "gateway.reserve"
-#endif
 
 #define GATE_CONNECT_TIMEOUT      1
 #define GATE_INACTIVE_TIMEOUT   (60*60*2)
@@ -104,12 +101,6 @@ public:
 	time_t disconnectTimeout(void) const	{ return disconnect_timeout; }
 	time_t reconnectInhibit(void) const	{ return reconnect_inhibit; }
 
-#ifdef RESERVE_FOPEN_FD
-	FILE *openReserveFile(void);
-	FILE *fopen(const char *filename, const char *mode);
-	int fclose(FILE *stream);
-#endif
-	
 	const char* listFile(void) const	{ return pvlist_file?pvlist_file:"NULL"; }
 	const char* accessFile(void) const	{ return access_file?access_file:"NULL"; }
 	const char* commandFile(void) const	{ return command_file?command_file:"NULL"; }
@@ -173,9 +164,6 @@ private:
 	time_t disconnect_timeout,reconnect_inhibit;
 	gateAs* as;
 	FILE *putlogFp;
-#ifdef RESERVE_FOPEN_FD
-	FILE *reserveFp;
-#endif
 };
 
 #ifndef GATE_RESOURCE_FILE

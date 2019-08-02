@@ -90,11 +90,6 @@
 #include <fcntl.h>
 
 
-#ifdef SOLARIS
-// Is in stdlib.h elsewhere, not available on WIN32
-#include <sys/loadavg.h>
-#endif
-
 #ifdef _WIN32
 #else
 # include <unistd.h>
@@ -427,11 +422,7 @@ void gateServer::gateCommands(const char* cfile)
 		printf("%s Reading command file: %s\n",timeStamp(),cfile);
 
 		errno=0;
-#ifdef RESERVE_FOPEN_FD
-		fp=global_resources->fopen(cfile,"r");
-#else
 		fp=fopen(cfile,"r");
-#endif
 		if(fp == NULL)	{
 			fprintf(stderr,"%s Failed to open command file: %s\n",
 			  timeStamp(),cfile);
@@ -459,14 +450,7 @@ void gateServer::gateCommands(const char* cfile)
 			cmd=strtok(NULL," \t\n");
 		}
 	}
-
-	// Free the reserved file descriptor before we read access
-	// security or write reports
-#ifdef RESERVE_FOPEN_FD
-	global_resources->fclose(fp);
-#else
 	fclose(fp);
-#endif
 
 	// Now do the commands
 	if(r1Flag) {
@@ -698,11 +682,7 @@ void gateServer::report1(void)
 		printf("  Report1: Bad report filename\n");
 		return;
 	}
-#ifdef RESERVE_FOPEN_FD
-	fp=global_resources->fopen(filename,"a");
-#else
 	fp=fopen(filename,"a");
-#endif
 	if(!fp) {
 		printf("  Report1: Cannot open %s for appending\n",filename);
 		return;
@@ -728,12 +708,8 @@ void gateServer::report1(void)
 	}
 	fprintf(fp,"---------------------------------------"
 	  "------------------------------------\n");
-#ifdef RESERVE_FOPEN_FD
-	global_resources->fclose(fp);
-#else
 	fclose(fp);
-#endif
-	
+
 	printf("  Report1 written to %s\n",filename);
 }
 
@@ -761,11 +737,7 @@ void gateServer::report2(void)
 		printf("  Report2: Bad report filename\n");
 		return;
 	}
-#ifdef RESERVE_FOPEN_FD
-	fp=global_resources->fopen(filename,"a");
-#else
 	fp=fopen(filename,"a");
-#endif
 	if(!fp) {
 		printf("  Report2: Cannot open %s for appending\n",filename);
 		return;
@@ -955,12 +927,8 @@ void gateServer::report2(void)
 
 	fprintf(fp,"---------------------------------------"
 	  "------------------------------------\n");
-#ifdef RESERVE_FOPEN_FD
-	global_resources->fclose(fp);
-#else
 	fclose(fp);
-#endif
-	
+
 	printf("  Report2 written to %s\n",filename);
 }
 
@@ -977,11 +945,7 @@ void gateServer::report3(void)
 		printf("  Report3: Bad report filename\n");
 		return;
 	}
-#ifdef RESERVE_FOPEN_FD
-	fp=global_resources->fopen(filename,"a");
-#else
 	fp=fopen(filename,"a");
-#endif
 	if(!fp) {
 		printf("  Report3: Cannot open %s for appending\n",filename);
 		return;
@@ -989,12 +953,8 @@ void gateServer::report3(void)
 
 	as->report(fp);
 
-#ifdef RESERVE_FOPEN_FD
-	global_resources->fclose(fp);
-#else
 	fclose(fp);
-#endif
-	
+
 	printf("  Report3 written to %s\n",filename);
 }
 

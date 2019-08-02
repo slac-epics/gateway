@@ -47,12 +47,6 @@ USE_DENY_FROM=YES
 # Compiler options
 #USR_CXXFLAGS += -xsb
 
-# Use Purify
-#PURIFY=YES
-
-# Use Quantify
-#QUANTIFY=YES
-
 # Turn on debug mode
 #USR_CXXFLAGS += -DDEBUG_MODE
 

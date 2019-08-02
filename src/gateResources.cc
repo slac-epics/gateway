@@ -297,9 +297,6 @@ gateResources::gateResources(void)
     debug_level=0;
     ro=0;
 	serverMode=false;
-#ifdef RESERVE_FOPEN_FD
-	reserveFp = NULL;
-#endif
     
     setEventMask(DBE_VALUE | DBE_ALARM);
     setConnectTimeout(GATE_CONNECT_TIMEOUT);
@@ -447,46 +444,6 @@ int gateResources::setUpAccessSecurity(void)
 	as=new gateAs(pvlist_file,access_file);
 	return 0;
 }
-
-#ifdef RESERVE_FOPEN_FD
-// Functions to try to reserve a file descriptor to use for fopen.  On
-// Solaris, at least, fopen is limited to FDs < 256.  These could all
-// be used by CA and CAS sockets if there are connections to enough
-// IOCs  These functions try to reserve a FD < 256.
-FILE *gateResources::fopen(const char *filename, const char *mode)
-{
-	// Close the dummy file holding the FD open
-    if(reserveFp) ::fclose(reserveFp);
-    reserveFp=NULL;
-	
-	// Open the file.  It should use the lowest available FD, that is,
-	// the one we just made available.
-    FILE *fp=::fopen(filename,mode);
-    if(!fp) {
-		// Try to get the reserved one back
-		reserveFp=::fopen(GATE_RESERVE_FILE,"w");
-    }
-	
-    return fp;
-}
-
-int gateResources::fclose(FILE *stream)
-{
-	// Close the file
-    int ret=::fclose(stream);
-	
-	// Open the dummy file to reserve the FD just made available
-    reserveFp=::fopen(GATE_RESERVE_FILE,"w");
-	
-    return ret;
-}
-
-FILE *gateResources::openReserveFile(void)
-{
-    reserveFp=::fopen(GATE_RESERVE_FILE,"w");
-    return reserveFp;
-}
-#endif
 
 gateAs* gateResources::getAs(void)
 {

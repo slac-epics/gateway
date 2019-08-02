@@ -326,11 +326,7 @@ static void sig_end(int sig)
 #ifndef _WIN32
 static void sig_chld(int /*sig*/)
 {
-#ifdef SOLARIS
-	while(waitpid(-1,NULL,WNOHANG)>0);
-#else
 	while(wait3(NULL,WNOHANG,NULL)>0);
-#endif
 	signal(SIGCHLD,sig_chld);
 }
 #endif //#ifndef _WIN32
@@ -406,15 +402,6 @@ static int startEverything(char *prefix)
 
 	sid=getpid();
 
-#ifdef RESERVE_FOPEN_FD
-	// Open a dummy file to keep a file descriptor open to use for
-	// fopen to avoid its limit of 256 on Solaris
-	if(!global_resources->openReserveFile()) {
-		fprintf(stderr,"Opening reserve file failed: %s\n",
-		  GATE_RESERVE_FILE);
-	}
-#endif
-	
 #ifndef _WIN32
 	// Make script file ("gateway.killer" by default)
 	errno=0;

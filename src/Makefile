@@ -13,35 +13,6 @@
 TOP = ..
 include $(TOP)/configure/CONFIG
 
-ifeq ($(PURIFY),YES)
-  ifeq ($(OS_CLASS),solaris)
-    PURIFY_FLAGS = -first-only -chain-length=26 -max_threads=256
-    # Put the cache files in the appropriate bin directory
-    PURIFY_FLAGS += -always-use-cache-dir -cache-dir=$(shell $(PERL) $(TOOLS)/fullPathName.pl .)
-    DEBUGCMD = purify $(PURIFY_FLAGS)
-  endif
-endif
-
-ifeq ($(QUANTIFY),YES)
-  ifeq ($(OS_CLASS),solaris)
-    #QUANTIFY_FLAGS += -measure-timed-calls=user+system
-    QUANTIFY_FLAGS += -collection-granularity=function
-    QUANTIFY_FLAGS += -use-machine=UltraSparcIII:1002MHz
-    QUANTIFY_FLAGS += -max_threads=160
-
-    #QUANTIFY_FLAGS += -record-system-calls=no
-
-    # -measure-timed-calls=elapsed-time (default) gives wall clock time
-    #   for system calls
-    # -measure-timed-calls=user+system gives user+system time
-    # -record-system-calls=no gives 0 time for system calls
-    # -collection-granularity=function runs faster than default=line
-    # -use-machine=UltraSparc:168MHz timing for Nike
-    # -use-machine=UltraSparcIII:1002MHz timing for Ctlapps1
-    DEBUGCMD = quantify $(QUANTIFY_FLAGS)
-  endif
-endif
-
 ifeq ($(USE_DENY_FROM),YES)
 USR_CXXFLAGS += -DUSE_DENYFROM
 endif
@@ -49,9 +20,6 @@ endif
 ifeq ($(USE_NEG_REGEXP),YES)
 USR_CXXFLAGS += -DUSE_NEG_REGEXP
 endif
-
-# Reserve file descriptor for fopen to avoid fd limit of 256 on Solaris
-USR_CXXFLAGS_solaris += -DRESERVE_FOPEN_FD
 
 ifeq ($(CMPLR_CLASS),msvc)
   USR_LDFLAGS_WIN32 += /SUBSYSTEM:CONSOLE
@@ -114,11 +82,6 @@ include $(TOP)/configure/RULES
 
 xxxx:
 	@echo HOST_OPT: $(HOST_OPT)
-	@echo PURIFY: $(PURIFY)
-	@echo PURIFY_FLAGS: $(PURIFY_FLAGS)
-	@echo PURIFYCMD: $(PURIFYCMD)
-	@echo QUANTIFY: $(QUANTIFY)
-	@echo QUANTIFYCMD: $(QUANTIFYCMD)
 	@echo CXX $(CXX)
 	@echo CXXFLAGS $(CXXFLAGS)
 	@echo LINK.cc: $(LINK.cc)

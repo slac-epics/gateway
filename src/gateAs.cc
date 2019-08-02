@@ -430,11 +430,7 @@ int gateAs::readPvList(const char* lfile)
 
 	if(lfile) {
 		errno=0;
-#ifdef RESERVE_FOPEN_FD
-		fd=global_resources->fopen(lfile,"r");
-#else
 		fd=fopen(lfile,"r");
-#endif
 		if(fd == NULL) {
 			fprintf(stderr,"Failed to open PV list file %s\n",lfile);
 			fflush(stderr);
@@ -630,11 +626,7 @@ int gateAs::readPvList(const char* lfile)
 		}
 	}
 	
-#ifdef RESERVE_FOPEN_FD
-	global_resources->fclose(fd);
-#else
 	fclose(fd);
-#endif
 	return 0;
 }
 
@@ -649,11 +641,7 @@ long gateAs::initialize(const char* afile)
 	
 	if(afile) {
 		errno=0;
-#ifdef RESERVE_FOPEN_FD
-		rules_fd=global_resources->fopen(afile,"r");
-#else
 		rules_fd=fopen(afile,"r");
-#endif
 		if(rules_fd == NULL) {
 			// Open failed
 			fprintf(stderr,"Failed to open security file: %s\n",afile);
@@ -672,11 +660,7 @@ long gateAs::initialize(const char* afile)
 			// Open succeeded
 			rc=asInitialize(::readFunc);
 			if(rc) fprintf(stderr,"Failed to read security file: %s\n",afile);
-#ifdef RESERVE_FOPEN_FD
-			global_resources->fclose(rules_fd);
-#else
 			fclose(rules_fd);
-#endif
 		}
 	} else {
 		// afile is NULL
