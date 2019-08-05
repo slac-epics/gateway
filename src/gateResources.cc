@@ -6,7 +6,7 @@
 * Copyright (c) 2002 The Regents of the University of California, as
 * Operator of Los Alamos National Laboratory.
 * This file is distributed subject to a Software License Agreement found
-* in the file LICENSE that is included with this distribution. 
+* in the file LICENSE that is included with this distribution.
 \*************************************************************************/
 // Author: Jim Kowalkowski
 // Date: 2/96
@@ -60,11 +60,11 @@ char *timeStamp(void)
 	static char timeStampStr[20];
 	time_t now;
 	struct tm *tblock;
-	
+
 	time(&now);
 	tblock=localtime(&now);
 	strftime(timeStampStr,sizeof(timeStampStr),"%b %d %H:%M:%S",tblock);
-	
+
 	return timeStampStr;
 }
 
@@ -274,19 +274,19 @@ gateResources::gateResources(void)
       access_file=strDup(GATE_PV_ACCESS_FILE);
     else
       access_file=NULL;
-    
+
     if(access(GATE_PV_LIST_FILE,F_OK)==0)
       pvlist_file=strDup(GATE_PV_LIST_FILE);
     else
       pvlist_file=NULL;
-    
+
     if(access(GATE_COMMAND_FILE,F_OK)==0)
       command_file=strDup(GATE_COMMAND_FILE);
     else
       command_file=NULL;
-      
-      
-    
+
+
+
 	// Miscellaneous initializations
 	putlog_file=NULL;
 #ifdef WITH_CAPUTLOG
@@ -297,21 +297,18 @@ gateResources::gateResources(void)
     debug_level=0;
     ro=0;
 	serverMode=false;
-#ifdef RESERVE_FOPEN_FD
-	reserveFp = NULL;
-#endif
-    
+
     setEventMask(DBE_VALUE | DBE_ALARM);
     setConnectTimeout(GATE_CONNECT_TIMEOUT);
     setInactiveTimeout(GATE_INACTIVE_TIMEOUT);
     setDeadTimeout(GATE_DEAD_TIMEOUT);
     setDisconnectTimeout(GATE_DISCONNECT_TIMEOUT);
     setReconnectInhibit(GATE_RECONNECT_INHIBIT);
-    
+
     gddApplicationTypeTable& tt = gddApplicationTypeTable::AppTable();
-    
+
 	gddMakeMapDBR(tt);
-	
+
 	appValue=tt.getApplicationType("value");
 	appUnits=tt.getApplicationType("units");
 	appEnum=tt.getApplicationType("enums");
@@ -447,46 +444,6 @@ int gateResources::setUpAccessSecurity(void)
 	as=new gateAs(pvlist_file,access_file);
 	return 0;
 }
-
-#ifdef RESERVE_FOPEN_FD
-// Functions to try to reserve a file descriptor to use for fopen.  On
-// Solaris, at least, fopen is limited to FDs < 256.  These could all
-// be used by CA and CAS sockets if there are connections to enough
-// IOCs  These functions try to reserve a FD < 256.
-FILE *gateResources::fopen(const char *filename, const char *mode)
-{
-	// Close the dummy file holding the FD open
-    if(reserveFp) ::fclose(reserveFp);
-    reserveFp=NULL;
-	
-	// Open the file.  It should use the lowest available FD, that is,
-	// the one we just made available.
-    FILE *fp=::fopen(filename,mode);
-    if(!fp) {
-		// Try to get the reserved one back
-		reserveFp=::fopen(GATE_RESERVE_FILE,"w");
-    }
-	
-    return fp;
-}
-
-int gateResources::fclose(FILE *stream)
-{
-	// Close the file
-    int ret=::fclose(stream);
-	
-	// Open the dummy file to reserve the FD just made available
-    reserveFp=::fopen(GATE_RESERVE_FILE,"w");
-	
-    return ret;
-}
-
-FILE *gateResources::openReserveFile(void)
-{
-    reserveFp=::fopen(GATE_RESERVE_FILE,"w");
-    return reserveFp;
-}
-#endif
 
 gateAs* gateResources::getAs(void)
 {
