@@ -31,7 +31,7 @@ class TestDBELog(unittest.TestCase):
     def onChange(self, pvname=None, **kws):
         self.eventsReceived += 1
         if gwtests.verbose:
-            print pvname, " changed to ", kws['value'], kws['severity']
+            print(pvname, " changed to ", kws['value'], kws['severity'])
         if (kws['value'] != 0.0) and (abs(self.lastValue - kws['value']) <= 10.0):
             self.diffInsideDeadband += 1
         self.lastValue = kws['value']

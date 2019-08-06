@@ -30,12 +30,12 @@ class TestDBEProp(unittest.TestCase):
     def onChangeGW(self, pvname=None, **kws):
         self.eventsReceivedGW += 1
         if gwtests.verbose:
-            print " GW update: ", pvname, " changed to ", kws['value']
+            print(" GW update: ", pvname, " changed to ", kws['value'])
         
     def onChangeIOC(self, pvname=None, **kws):
         self.eventsReceivedIOC += 1
         if gwtests.verbose:
-            print "IOC update: ", pvname, " changed to ", kws['value']
+            print("IOC update: ", pvname, " changed to ", kws['value'])
 
     def testPropAlarmLevels(self):
         '''DBE_PROPERTY monitor on an ai - value changes generate no events; property changes generate events.'''

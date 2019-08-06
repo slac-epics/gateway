@@ -52,7 +52,7 @@ class TestStructures(unittest.TestCase):
     def compareStructures(self):
         are_diff = False
         diffs = []
-        for k in self.iocStruct.keys():
+        for k in list(self.iocStruct.keys()):
             if k != "chid" and (self.iocStruct[k] != self.gwStruct[k]):
                 are_diff = True
                 diffs.append("Element '{0}' : GW has '{1}', IOC has '{2}'"

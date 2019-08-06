@@ -28,8 +28,8 @@ class TestWaveformWithCAMaxArrayBytes(unittest.TestCase):
         # and fail the second case
         max_array_bytes_cases = ["6000000", "16384"]
         for max_array_bytes in max_array_bytes_cases:
-            print("\n\n\n>>>>>{}={}\n\n\n"
-                  .format(MAX_ARRAY_BYTES_KEY, max_array_bytes))
+            print(("\n\n\n>>>>>{}={}\n\n\n"
+                  .format(MAX_ARRAY_BYTES_KEY, max_array_bytes)))
 
             # The bug crashes the gateway when EPICS_CA_MAX_ARRAY_BYTES
             # on the IOC is too small. Set it here
@@ -74,7 +74,7 @@ class TestWaveformWithCAMaxArrayBytes(unittest.TestCase):
             else:
                 waveform_from_gateway = w
                 print(waveform_from_gateway)
-                print "waveform_from_gateway"
+                print("waveform_from_gateway")
             finally:
                 self.gatewayControl.stop()
                 self.iocControl.stop()
