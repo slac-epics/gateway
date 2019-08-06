@@ -5,12 +5,17 @@ include $(TOP)/configure/CONFIG
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 #=============================
 
-TESTSCRIPTS_HOST += gwtests.py TestDBEValue.py TestDBEAlarm.py TestDBELog.py TestDBEProp.py
-TESTSCRIPTS_HOST += TestPropertyCache.py
-TESTSCRIPTS_HOST += TestEnumPropCache.py
-TESTSCRIPTS_HOST += TestStructures.py
-TESTSCRIPTS_HOST += TestWaveformWithCAMaxArrayBytes.py
-TESTSCRIPTS_HOST += IOCControl.py GatewayControl.py
+# Test programs
+PYTESTS += TestDBEAlarm.py
+PYTESTS += TestDBELog.py
+PYTESTS += TestDBEProp.py
+PYTESTS += TestDBEValue.py
+PYTESTS += TestEnumPropertyCache.py
+PYTESTS += TestPropertyCache.py
+PYTESTS += TestStructures.py
+PYTESTS += TestWaveformWithCAMaxArrayBytes.py
+
+TAPFILES = $(PYTESTS:.py=.tap)
 
 TESTFILES += test.db
 TESTFILES += access.txt
@@ -20,8 +25,7 @@ USE_PCRE ?= NO
 PVLIST_YES = pvlist_pcre.txt
 PVLIST_NO = pvlist_bre.txt
 
-
-CLEANS += *.pyc $(TESTFILES) pvlist.txt gateway.*
+CLEANS += *.pyc $(TESTFILES) pvlist.txt gateway.* *.tap
 
 include $(TOP)/configure/RULES
 #----------------------------------------
@@ -29,23 +33,23 @@ include $(TOP)/configure/RULES
 
 ifeq ($(T_A),$(EPICS_HOST_ARCH))
 
+# Environment required by some test programs
+export BASE ?= $(EPICS_VERSION).$(EPICS_REVISION)
+export EPICS_BASE
+
 ifeq ($(BASE_3_14),YES)
 clean::
 	@$(RM) $(CLEANS)
 endif
 
 runtests:
-	nosetests
+	nosetests $(PYTESTS:%=../%)
 
-tapfiles:
-	nosetests --with-tap
-
-%.py: ../%.py
-	$(ECHO) "Copying test script $@"
-	@$(INSTALL) -m $(INSTALL_PERMISSIONS) $< .
+$(TAPFILES): Test%.tap: ../Test%.py
+	nosetests --with-tap $<
 
 # Workaround for 3.14 make rules: special target to avoid circular dependencies
-build runtests: testfiles pvlist.txt
+build runtests tapfiles: testfiles pvlist.txt
 testfiles: $(TESTFILES:%=../%)
 	$(ECHO) "Copying test files $(TESTFILES)"
 	@$(CP) $^ .
