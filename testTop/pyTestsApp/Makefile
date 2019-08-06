@@ -14,7 +14,12 @@ TESTSCRIPTS_HOST += IOCControl.py GatewayControl.py
 
 TESTFILES += test.db
 TESTFILES += access.txt
-#TESTFILES += pvlist.txt   # Done in an explicit recipe line below
+
+# Which pvlist.txt file depends on USE_PCRE
+USE_PCRE ?= NO
+PVLIST_YES = pvlist_pcre.txt
+PVLIST_NO = pvlist_bre.txt
+
 
 CLEANS += *.pyc $(TESTFILES) pvlist.txt gateway.*
 
@@ -40,16 +45,13 @@ tapfiles:
 	@$(INSTALL) -m $(INSTALL_PERMISSIONS) $< .
 
 # Workaround for 3.14 make rules: special target to avoid circular dependencies
-build runtests: testfiles
+build runtests: testfiles pvlist.txt
 testfiles: $(TESTFILES:%=../%)
 	$(ECHO) "Copying test files $(TESTFILES)"
 	@$(CP) $^ .
-ifeq ($(USE_PCRE),YES)
-	$(ECHO) "Using pvlist.txt for PCRE"
-	@$(CP) ../pvlist_pcre.txt pvlist.txt
-else
-	$(ECHO) "Using pvlist.txt for BRE"
-	@$(CP) ../pvlist_bre.txt  pvlist.txt
-endif
+
+pvlist.txt: ../$(PVLIST_$(USE_PCRE))
+	$(ECHO) "Copying $< to $@ (USE_PCRE: $(USE_PCRE))"
+	@$(CP) $< $@
 
 endif
