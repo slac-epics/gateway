@@ -29,7 +29,7 @@ class GatewayControl:
         if gwtests.verboseGateway:
             gateway_commands.extend(["-debug", str(gwtests.gwDebug)]);
         if gwtests.verbose:
-            print "Starting the CA Gateway using\n", " ".join(gateway_commands)
+            print("Starting the CA Gateway using\n", " ".join(gateway_commands))
         if not gwtests.verboseGateway and not gwtests.verbose:
             self.DEVNULL = open(os.devnull, 'wb')
         self.gatewayProcess = subprocess.Popen(gateway_commands, stdout=self.DEVNULL, stderr=subprocess.STDOUT)
@@ -49,7 +49,7 @@ class GatewayControl:
 
 if __name__ == "__main__":
     gwtests.setup()
-    print "Running the test CA Gateway in verbose mode for {0} seconds".format(gwtests.gwRunDuration)
+    print("Running the test CA Gateway in verbose mode for {0} seconds".format(gwtests.gwRunDuration))
     gwtests.verbose = True
     gwtests.verboseGateway = True
     gatewayControl = GatewayControl()

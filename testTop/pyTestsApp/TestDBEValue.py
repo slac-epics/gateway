@@ -29,7 +29,7 @@ class TestDBEValue(unittest.TestCase):
     def onChange(self, pvname=None, **kws):
         self.eventsReceived += 1
         if gwtests.verbose:
-            print pvname, " changed to ", kws['value']
+            print(pvname, " changed to ", kws['value'])
         
     def testValueNoDeadband(self):
         '''DBE_VALUE monitor on an ai - value changes generate events.'''

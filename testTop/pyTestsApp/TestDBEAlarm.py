@@ -31,7 +31,7 @@ class TestDBEAlarm(unittest.TestCase):
     def onChange(self, pvname=None, **kws):
         self.eventsReceived += 1
         if gwtests.verbose:
-            print pvname, " changed to ", kws['value'], kws['severity']
+            print(pvname, " changed to ", kws['value'], kws['severity'])
         if self.lastSeverity == kws['severity']:
             self.severityUnchanged += 1
         self.lastSeverity = kws['severity']

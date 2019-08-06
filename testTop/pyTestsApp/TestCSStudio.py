@@ -54,7 +54,7 @@ class TestCSStudio(unittest.TestCase):
     def compareStructures(self):
         are_diff = False
         diffs = []
-        for k in self.iocStruct.keys():
+        for k in list(self.iocStruct.keys()):
             if k != "chid" and (self.iocStruct[k] != self.gwStruct[k]):
                 are_diff = True
                 diffs.append("Element '{0}' : GW has '{1}', IOC has '{2}'"
@@ -66,7 +66,7 @@ class TestCSStudio(unittest.TestCase):
         diffs = []
 
         if gwtests.verbose:
-            print
+            print()
         # gwcachetest is an ai record with full set of alarm limits: -100 -10 10 100
         gw = ca.create_channel("gateway:gwcachetest")
         connected = ca.connect_channel(gw, timeout=.5)
@@ -86,7 +86,7 @@ class TestCSStudio(unittest.TestCase):
         ca.put(ioc_value, 10.0, wait=True)
         time.sleep(.1)
         if gwtests.verbose:
-            print
+            print()
 
         self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
         "After setting value, no. of received updates differ: GW {0}, IOC {1}"
@@ -102,11 +102,11 @@ class TestCSStudio(unittest.TestCase):
         ca.put(ioc_hihi, 123.0, wait=True)
         time.sleep(.1)
         if gwtests.verbose:
-            print
+            print()
         ca.put(ioc_value, 11.0, wait=True)
         time.sleep(.1)
         if gwtests.verbose:
-            print
+            print()
 
         self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
         "After setting property, no. of received updates differ: GW {0}, IOC {1}"
