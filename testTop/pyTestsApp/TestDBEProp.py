@@ -53,7 +53,7 @@ class TestDBEProp(unittest.TestCase):
 
         for val in range(10):
             ioc.put(val, wait=True)
-        time.sleep(.05)
+        time.sleep(.1)
         # We get 1 event: at connection
         self.assertTrue(self.eventsReceivedGW == 1, 'GW events expected: 1; received: ' + str(self.eventsReceivedGW))
         self.assertTrue(self.eventsReceivedIOC == 1, 'IOC events expected: 1; received: ' + str(self.eventsReceivedIOC))
@@ -63,7 +63,7 @@ class TestDBEProp(unittest.TestCase):
         pvhigh.put(18.0, wait=True)
         pvlolo.put(10.0, wait=True)
         pvlow.put(12.0, wait=True)
-        time.sleep(.05)
+        time.sleep(.1)
 
         # Depending on the IOC (supporting PROPERTY changes on limits or not) we get 0 or 4 events.
         # Pass test if updates from IOC act the same as updates from GW
