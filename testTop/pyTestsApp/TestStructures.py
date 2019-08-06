@@ -59,6 +59,7 @@ class TestStructures(unittest.TestCase):
                 .format(k, str(self.gwStruct[k]), str(self.iocStruct[k])))
         return are_diff, diffs
 
+    @unittest.skipIf(os.environ['BASE'] == "3.14", "updates of CTRL structures are buggy in 3.14 PCAS")
     def testCtrlStruct_ValueMonitor(self):
         '''Monitor PV (value events) through GW - change value and properties directly - check CTRL structure consistency'''
         diffs = []
