@@ -813,8 +813,8 @@ void gateAs::report(FILE* fd)
 
 	if(rules_installed==aitTrue) fprintf(fd,"Access Rules are installed.\n");
 	if(use_default_rules==aitTrue) fprintf(fd,"Using default access rules.\n");
-
-#if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 6) || EPICS_REVISION > 14
+	
+#if (EPICS_VERSION > 3 || (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 6) || EPICS_REVISION > 14)
 	// Dumping to a file pointer became available sometime during 3.14.5.
 	fprintf(fd,"\n============================ Access Security Dump =========================\n");
 	asDumpFP(fd,NULL,NULL,TRUE);
