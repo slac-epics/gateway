@@ -1,5 +1,7 @@
+<a target="_blank" href="http://semver.org">![Version][badge.version]</a>
+<a target="_blank" href="https://travis-ci.org/epics-extensions/ca-gateway">![Travis status][badge.travis]</a>
+
 # Channel Access PV Gateway
-[![Build Status](https://travis-ci.org/epics-extensions/ca-gateway.svg?branch=master)](https://travis-ci.org/epics-extensions/ca-gateway)
 
 The [EPICS](https://epics-controls.org) Channel Access PV Gateway is both a 
 Channel Access server and Channel Access client.
@@ -15,9 +17,11 @@ and the clients and the server may be on different subnets.
 
 ## Dependencies
 
-The CA Gateway is using the PCAS server library and needs the PCAS module (https://github.com/epics-modules/pcas) that was unbundled from Base back in 3.16.
+The CA Gateway is using the PCAS server library and needs the PCAS module
+(https://github.com/epics-modules/pcas) when compiled against EPICS 7 (>= 3.16).
 
-If you use caPutLog (https://github.com/epics-modules/caPutLog), CA Gateway now requires it to be greater or equal R3.5.
+If you compile the CA Gateway with caPutLog support
+(https://github.com/epics-modules/caPutLog), a caPutLog version >= 3.5 is required.
 
 ## Continuous Integration
 
@@ -28,3 +32,7 @@ The CI jobs for CA Gateway are provided by
 
 More details are available on the
 [CA Gateway main web page](http://www.aps.anl.gov/epics/extensions/gateway/).
+
+<!-- Links -->
+[badge.version]: https://badge.fury.io/gh/epics-extensions%2Fca-gateway.svg
+[badge.travis]: https://travis-ci.org/epics-extensions/ca-gateway.svg?branch=master
