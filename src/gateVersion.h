@@ -25,9 +25,9 @@
  *********************************************************************-*/
 
 #define GATEWAY_VERSION       2
-#define GATEWAY_REVISION      1
-#define GATEWAY_MODIFICATION  2
-#define GATEWAY_DEV_SNAPSHOT  ""
+#define GATEWAY_REVISION      2
+#define GATEWAY_MODIFICATION  0
+#define GATEWAY_DEV_SNAPSHOT  "-DEV"
 
 #define stringOf(TOKEN) #TOKEN
 #define GATEWAY_VERSION_STRING "PV Gateway Version " \
