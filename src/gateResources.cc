@@ -183,14 +183,9 @@ static int gddToVALUE(const gdd *gddVal, short dbfld_dbrtype, VALUE *valueStruct
    } else { // DBFLD::D_STRING and unknown
           aitString x;
           gddVal->get(x);
-          size_t len = strlen(x);
           size_t siz = sizeof(valueStruct->v_string);
-          if (len >= siz) {
-            strncpy(valueStruct->v_string,x,siz-1);
-            valueStruct->v_string[siz-1] = 0;
-          } else {
-            strcpy(valueStruct->v_string,x);
-          }
+          strncpy(valueStruct->v_string,x,siz);
+          valueStruct->v_string[siz-1] = 0;
    }
    return(0);
 }
