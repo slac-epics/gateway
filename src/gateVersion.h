@@ -31,6 +31,7 @@
 
 #define stringOfMacro(TOKEN) stringOf(TOKEN)
 #define stringOf(TOKEN) #TOKEN
+#define xstringOf(TOKEN) stringOf(TOKEN)
 #define GATEWAY_VERSION_STRING "PV Gateway Version " \
     stringOfMacro(GATEWAY_VERSION) "." stringOfMacro(GATEWAY_REVISION) "." \
     stringOfMacro(GATEWAY_MODIFICATION) GATEWAY_DEV_SNAPSHOT
