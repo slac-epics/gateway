@@ -30,9 +30,10 @@
 #define GATEWAY_DEV_SNAPSHOT  "-DEV"
 
 #define stringOf(TOKEN) #TOKEN
+#define xstringOf(TOKEN) stringOf(TOKEN)
 #define GATEWAY_VERSION_STRING "PV Gateway Version " \
-    stringOf(GATEWAY_VERSION) "." stringOf(GATEWAY_REVISION) "." \
-    stringOf(GATEWAY_MODIFICATION) GATEWAY_DEV_SNAPSHOT
+    xstringOf(GATEWAY_VERSION) "." xstringOf(GATEWAY_REVISION) "." \
+    xstringOf(GATEWAY_MODIFICATION) GATEWAY_DEV_SNAPSHOT
 
 #define GATEWAY_CREDITS_STRING  \
           "Originally developed at Argonne National Laboratory and BESSY\n\n" \
