@@ -63,6 +63,7 @@ gateway_SRCS += gateVc.cc
 gateway_SRCS += gateAsyncIO.cc
 gateway_SRCS += gateAsCa.cc
 gateway_SRCS += gateStat.cc
+gateway_SRCS += gateDbFld.cc
 
 # HACK: Needs access to private CAS header casCtx.h
 USR_INCLUDES += -I$(EPICS_BASE)/src/cas/generic
