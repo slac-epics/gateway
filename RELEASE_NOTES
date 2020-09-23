@@ -1,6 +1,10 @@
 #
 # SLAC RELEASE_NOTES
 #
+R2.1.2.0-1.2.0  2020-09-22 Hugo Slepicka and Bruce Hill
+	FIX: Apply check before copyState to ensure that DD is Container
+	and event_data isContainer or isScalar.
+
 R2.1.2.0-1.1.0  2020-09-22 Bruce Hill
 	Build against base/R3.15.5-2.0
 
