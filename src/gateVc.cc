@@ -1013,9 +1013,15 @@ void gateVcData::vcPostEvent(casEventMask event_mask)
 	gdd *local_event_data = event_data;
 
 	if (highestGddAppType) {
-		gateDebug1(10, "gateVcData::vcPostEvent() creating new %s DD\n", gddApplicationTypeTable::AppTable().getName(highestGddAppType));
-		local_event_data = gddApplicationTypeTable::AppTable().getDD(highestGddAppType);
-		copyState(*local_event_data);
+		gateDebug2(10, "gateVcData::vcPostEvent() creating new %d -> %s DD\n", highestGddAppType, gddApplicationTypeTable::AppTable().getName(highestGddAppType));
+		gdd *temp_event_data = gddApplicationTypeTable::AppTable().getDD(highestGddAppType);
+                if ( (temp_event_data->isContainer() && event_data->isContainer()) ||
+                     (temp_event_data->isContainer() && event_data->isScalar()) ){
+			local_event_data = temp_event_data;
+			copyState(*local_event_data);
+		}else{
+			temp_event_data->unreference();
+		}
 	}
 
 //	time_t t;
