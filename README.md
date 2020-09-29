@@ -17,11 +17,13 @@ and the clients and the server may be on different subnets.
 
 ## Dependencies
 
-The CA Gateway is using the PCAS server library and needs the PCAS module
-(https://github.com/epics-modules/pcas) when compiled against EPICS 7 (>= 3.16).
+The CA Gateway is using the PCAS server library and needs the
+[PCAS module](https://github.com/epics-modules/pcas) when compiled against
+EPICS 7 (>= 3.16).
 
-If you compile the CA Gateway with caPutLog support
-(https://github.com/epics-modules/caPutLog), a caPutLog version >= 3.5 is required.
+If you compile the CA Gateway with
+[caPutLog](https://github.com/epics-modules/caPutLog) support,
+a caPutLog version >= 3.5 is required.
 
 ## Continuous Integration
 
