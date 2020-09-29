@@ -443,6 +443,7 @@ int gateResources::setDebugLevel(int level)
 
 int gateResources::setUpAccessSecurity(void)
 {
+    if (as) delete as;
 	as=new gateAs(pvlist_file,access_file);
 	return 0;
 }
