@@ -29,10 +29,11 @@
 #define GATEWAY_MODIFICATION  2
 #define GATEWAY_DEV_SNAPSHOT  ""
 
+#define stringOfMacro(TOKEN) stringOf(TOKEN)
 #define stringOf(TOKEN) #TOKEN
 #define GATEWAY_VERSION_STRING "PV Gateway Version " \
-    stringOf(GATEWAY_VERSION) "." stringOf(GATEWAY_REVISION) "." \
-    stringOf(GATEWAY_MODIFICATION) GATEWAY_DEV_SNAPSHOT
+    stringOfMacro(GATEWAY_VERSION) "." stringOfMacro(GATEWAY_REVISION) "." \
+    stringOfMacro(GATEWAY_MODIFICATION) GATEWAY_DEV_SNAPSHOT
 
 #define GATEWAY_CREDITS_STRING  \
           "Originally developed at Argonne National Laboratory and BESSY\n\n" \
