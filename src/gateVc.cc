@@ -1206,7 +1206,7 @@ caStatus gateVcData::read( const casCtx& ctx, gdd& dd )
 
 		unsigned at=dd.applicationType();
 		if (highestGddAppType < at) {
-			if (at >= gddDbrToAit[DBR_CTRL_SHORT].app && at <= gddDbrToAit[DBR_CTRL_DOUBLE].app) {
+			if (at >= gddAppType_dbr_gr_short && at <= gddAppType_dbr_ctrl_double) {
 				highestGddAppType = at;
 				gateDebug1(10, "gateVcData::read() increasing highestGddAppType to %u\n", highestGddAppType);
 			}
