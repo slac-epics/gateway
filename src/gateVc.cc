@@ -868,6 +868,14 @@ void gateVcData::copyState(gdd &dd)
 	// enums, and is the list of strings.  See the dataXxxCB
 	// gatePvData routines.
 	if ( pv_data ) {
+		// If the target gdd stores enum labels, we have to ensure that
+		// there is enough space for these labels. The code in
+		// casStrmClient.cc does the same thing.
+		unsigned at = dd.applicationType();
+		if (at == gddAppType_dbr_gr_enum || at == gddAppType_dbr_ctrl_enum) {
+			convertContainerMemberToAtomic(
+				dd, gddAppType_enums, MAX_ENUM_STATES);
+		}
 		table.smartCopy(&dd,pv_data);
 #if DEBUG_GDD || DEBUG_ENUM
 		dumpdd(2,"pv_data",name(),pv_data);
