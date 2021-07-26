@@ -1373,7 +1373,7 @@ caStatus gateVcData::read( const casCtx& ctx, gdd& dd )
 #endif
 #if DEBUG_TIMESTAMP
 			{
-				TS_STAMP ts;
+				epicsTimeStamp ts;
 				dd.getTimeStamp(&ts);
 				fprintf(stderr,"gateVcData::read %s %u %u\n",
 				  name(),ts.secPastEpoch,ts.nsec);
