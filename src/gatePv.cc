@@ -175,6 +175,45 @@ public:
 // ------------------------- pv data methods ------------------------
 
 gatePvData::gatePvData(gateServer* m,gateAsEntry* pase,const char* name)
+    :
+        mrg(                NULL),
+        vc(                 NULL),
+        asentry(            NULL),
+        max_elements(       0   ),
+        status(             0   ),
+        pv_name(            NULL),
+        chID(               0   ),
+        evID(               0   ),
+        logID(              0   ),
+        propID(             0   ),
+        alhID(              0   ),
+        event_type(         0   ),
+        data_type(          0   ),
+        pv_state( gatePvInactive),
+        event_count(        0   ),
+        event_func(             ),
+        data_func(              ),
+        value_data_func(        ),
+        mon_state(          0   ),
+        log_mon_state(      0   ),
+        prop_mon_state(     0   ),
+        ctrl_get_state(     0   ),
+        time_get_state(     0   ),
+        alh_mon_state(      0   ),
+        alh_get_state(      0   ),
+        prop_get_state(     0   ),
+        log_get_state(      0   ),
+        abort_flag(         0   ),
+        complete_flag(      0   ),
+        no_connect_time(    0   ),
+        dead_alive_time(    0   ),
+        last_trans_time(    0   ),
+        bytes(              0   ),
+        select_mask(            ),
+        alh_mask(               ),
+        value_mask(             ),
+        value_alarm_mask(       ),
+        value_log_mask(         )
 {
 	gateDebug2(5,"gatePvData(gateServer=%p,name=%s)\n",(void *)m,name);
 	initClear();
