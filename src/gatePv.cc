@@ -1463,6 +1463,7 @@ void gatePvData::eventCB(EVENT_ARGS args)
 					   dd,
 					   pv->needAddRemove());
 #endif
+                dumpdd(1, "gatePvData::eventCB setEventData", pv->name(), dd);
 				stat_sevr_changed = pv->vc->setEventData(dd);
 
 				if(pv->needAddRemove())
@@ -1540,6 +1541,7 @@ void gatePvData::logEventCB(EVENT_ARGS args)
 					   dd,
 					   pv->needAddRemove());
 #endif
+                dumpdd(1, "gatePvData::logEventCB setEventData", pv->name(), dd);
 				pv->vc->setEventData(dd);
 
 				if(pv->needAddRemove())
@@ -1608,6 +1610,9 @@ void gatePvData::propEventCB(EVENT_ARGS args)
 #endif
                 // Update attribute cache
                 gateDebug2(3,"gatePvData::propEventCB() %s PV %s setPvData\n",pv->getStateName(),pv->name());
+#if DEBUG_ENUM
+                dumpdd(1, "gatePvData::propEventCB setPvData", pv->name(), dd);
+#endif
                 pv->vc->setPvData(dd);
             }
 
@@ -1618,7 +1623,10 @@ void gatePvData::propEventCB(EVENT_ARGS args)
                 printf("  dd=%p needAddRemove=%d\n", dd, pv->needAddRemove());
 #endif
                 gateDebug2(3,"gatePvData::propEventCB() %s PV %s setEventData\n",pv->getStateName(),pv->name());
-                pv->vc->setEventData(dd);
+#if DEBUG_ENUM
+                dumpdd(1, "gatePvData::propEventCB setEventData", pv->name(), dd);
+#endif
+                pv->vc->setEventData(dd);	// Create new setPropData()???
 
                 if (pv->needAddRemove())
                 {
@@ -1744,8 +1752,10 @@ void gatePvData::getCB(EVENT_ARGS args)
                 // Update value cache with received data
                 gateDebug2(3,"gatePvData::getCB() %s PV %s runValueDataCB\n",pv->getStateName(),pv->name());
                 dd = pv->runValueDataCB(&args);
-                if (dd)
+                if (dd) {
+                    dumpdd(1, "gatePvData::getCB setEventData", pv->name(), dd);
                     pv->vc->setEventData(dd);
+				}
 
                 if (pv->needAddRemove() && !pv->vc->needPosting()) {
                     gateDebug0(5, "gatePvData::getCB() need add/remove\n");
@@ -1808,8 +1818,10 @@ void gatePvData::getTimeCB(EVENT_ARGS args)
 		{
 			gateDebug1(5,"gatePvData::getTimeCB() %s PV\n",pv->getStateName());
             dd = pv->runEventCB(&args);
-            if (dd)
+            if (dd) {
+                dumpdd(1, "gatePvData::getTimeCB setEventData", pv->name(), dd);
                 pv->vc->setEventData(dd);
+            }
 
 			/* flush async get request */
 			if(pv->needAddRemove() && !pv->vc->needPosting())
@@ -2112,8 +2124,8 @@ gdd* gatePvData::eventEnumCB(EVENT_ARGS * pArgs)
 		value->putConvert(ts->value);
 	}
 #if DEBUG_ENUM
-	printf("gatePvData::eventEnumCB\n");
-	value->dump();
+    printf("gatePvData::eventEnumCB\n");
+    dumpdd(1, "gatePvData::eventEnumCB", name(), value);
 #endif
 	value->setStatSevr(ts->status,ts->severity);
 	value->setTimeStamp(&ts->stamp);
@@ -2330,8 +2342,8 @@ gdd* gatePvData::valueDataEnumCB(EVENT_ARGS * pArgs)
 		value->putConvert(ts->value);
 	}
 #if DEBUG_ENUM
-	printf("gatePvData::valueDataEnumCB\n");
-	value->dump();
+    printf("gatePvData::valueDataEnumCB\n");
+    dumpdd(1, "gatePvData::valueDataEnumCB", name(), value);
 #endif
 	value->setStatSevr(ts->status,ts->severity);
 	return value;
