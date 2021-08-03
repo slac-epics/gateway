@@ -624,8 +624,17 @@ int gateVcData::setEventData(gdd* dd)
 			dd->getStatSevr(newStat,newSevr);
 			if(oldSevr == newSevr && oldStat == newStat) stat_sevr_changed=0;
 
+			struct epicsTimeStamp	tsOld;
+			struct epicsTimeStamp	tsNew;
+			event_data->getTimeStamp( &tsOld );
+			dd->getTimeStamp( &tsNew );
 			event_data = dd;
 			ndd->unreference();
+
+			// Guard against clearing valid timeStamps
+			if (	(tsNew.secPastEpoch == 0 && tsNew.nsec == 0)
+				&&	(tsOld.secPastEpoch != 0 || tsOld.nsec != 0)	)
+				event_data->setTimeStamp( &tsOld );
 		}
 	}
 	// No event_data present: just set it to the incoming gdd
