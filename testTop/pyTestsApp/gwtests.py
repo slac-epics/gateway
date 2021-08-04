@@ -4,6 +4,10 @@
 import os
 import sys
 
+os.environ['PYEPICS_LIBCA'] = os.path.join(
+    os.environ['EPICS_BASE'], 'lib',
+    os.environ['EPICS_HOST_ARCH'], 'libca.so' )
+
 # Do we want verbose logging
 verbose = False
 # Do we want debug logging from the gateway
