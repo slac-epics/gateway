@@ -3,6 +3,7 @@
 
 import os
 import sys
+import epics
 
 os.environ['PYEPICS_LIBCA'] = os.path.join(
     os.environ['EPICS_BASE'], 'lib',
@@ -69,3 +70,8 @@ def setup():
         iocExecutable = os.path.join(os.environ['EPICS_BASE'], 'bin', hostArch, 'softIoc')
     else:
         print("Warning: IOC_EPICS_BASE or EPICS_BASE not set. Running 'softIoc' executable in PATH")
+
+    if verbose:
+        print("\ngwExecutable:  '{0}'".format(gwExecutable))
+        print("iocExecutable: '{0}'".format(iocExecutable))
+        print("libca: '{0}'".format(epics.ca.find_libca()))
