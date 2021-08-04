@@ -4,6 +4,7 @@
 import os
 import sys
 import time
+import epics
 
 os.environ['PYEPICS_LIBCA'] = os.path.join(
     os.environ['EPICS_BASE'], 'lib',
@@ -75,6 +76,11 @@ def setup():
         os.environ['PATH'] += os.pathsep + os.path.join(os.environ['EPICS_BASE'], 'bin', hostArch)
     else:
         print("Warning: EPICS_BASE not set. Will look for 'caRepeater' executable in PATH")
+
+    if verbose:
+        print("\ngwExecutable:  '{0}'".format(gwExecutable))
+        print("iocExecutable: '{0}'".format(iocExecutable))
+        print("libca: '{0}'".format(epics.ca.find_libca()))
 
 def wait_until(predicate, timeout, period=0.1, *args, **kwargs):
     mustend = time.time() + timeout
