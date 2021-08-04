@@ -632,6 +632,7 @@ int gateVcData::setEventData(gdd* dd)
 			ndd->unreference();
 
 			// Guard against clearing valid timeStamps
+			// Calls to setEventData from runValueDataCB() have 0 in timeStamp fields
 			if (	(tsNew.secPastEpoch == 0 && tsNew.nsec == 0)
 				&&	(tsOld.secPastEpoch != 0 || tsOld.nsec != 0)	)
 				event_data->setTimeStamp( &tsOld );
@@ -780,6 +781,7 @@ void gateVcData::setPvData(gdd* dd)
 
 #if DEBUG_GDD
     heading("gateVcData::setPvData",name());
+    dumpdd(1,"pv_data (old property data)",name(),pv_data);
     dumpdd(1,"dd (new property data)",name(),dd);
 #endif
 
@@ -838,9 +840,12 @@ void gateVcData::copyState(gdd &dd)
 	// routines.  If the pv is alh monitored, the event_data is a
 	// container type (gddAppType_dbr_stsack_string)
 	if ( event_data ) {
+#if DEBUG_GDD || DEBUG_ENUM
+		dumpdd(5,"dd(before event_data)",name(),&dd);
+		dumpdd(4,"copyState (new event_data)",name(),event_data);
+#endif
 		table.smartCopy(&dd,event_data);
 #if DEBUG_GDD || DEBUG_ENUM
-		dumpdd(4,"event_data",name(),event_data);
 		dumpdd(5,"dd(after event_data)",name(),&dd);
 #endif
 #if DEBUG_EVENT_DATA
