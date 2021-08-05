@@ -45,10 +45,10 @@ endif
 runtests: nosetests
 
 nosetests:
-	nosetests $(PYTESTS:%=../%)
+	nosetests -v $(PYTESTS:%=../%)
 
 $(TAPFILES): Test%.tap: ../Test%.py
-	nosetests --with-tap $<
+	nosetests -v --with-tap $<
 
 # Workaround for 3.14 make rules: special target to avoid circular dependencies
 build runtests tapfiles: testfiles pvlist.txt
