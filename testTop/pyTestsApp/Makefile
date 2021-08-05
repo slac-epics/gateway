@@ -46,7 +46,7 @@ endif
 runtests: nosetests
 
 nosetests:
-	nosetests $(PYTESTS:%=../%)
+	nosetests -v $(PYTESTS:%=../%)
 
 $(TAPFILES): .runtests.tap ;
 .INTERMEDIATE: .runtests.tap
