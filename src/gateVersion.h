@@ -27,7 +27,7 @@
 #define GATEWAY_VERSION       2
 #define GATEWAY_REVISION      1
 #define GATEWAY_MODIFICATION  2
-#define GATEWAY_DEV_SNAPSHOT  ""
+#define GATEWAY_DEV_SNAPSHOT  ".0-1.4.0"
 
 #define stringOf(TOKEN) #TOKEN
 #define xstringOf(TOKEN) stringOf(TOKEN)
