@@ -96,6 +96,7 @@
 #endif
 
 #include <gdd.h>
+#include <epicsVersion.h>
 
 #if DEBUG_EXCEPTION
 #include <epicsThrowTrace.h>
@@ -185,6 +186,9 @@ void gateServer::mainLoop(void)
 	double delay=.010; // (10 ms)
 
 	printf("Statistics PV prefix is %s\n",stat_prefix);
+#if EPICS_VERSION_INT >= VERSION_INT(7,0,3,1)
+	printf("asCheckClientIP is %d\n",asCheckClientIP);
+#endif
 
 	// Print if too many have been started recently
 	printRecentHistory();
