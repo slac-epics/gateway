@@ -1,6 +1,9 @@
 #
 # SLAC RELEASE_NOTES
 #
+R2.1.2.0-1.4.1  2021-09-03 Bruce Hill
+	Revert to base/R7.0.2-2.0 to fix access rights.
+
 R2.1.2.0-1.4.0  2021-08-04 Bruce Hill
 	Guard against clearing valid timeStamps in setEventData()
 	Added test case for undefined timestamps in enum records
