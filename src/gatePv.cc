@@ -1601,9 +1601,11 @@ void gatePvData::propEventCB(EVENT_ARGS args)
         {
             gateDebug3(5,"gatePvData::propEventCB() %s PV %s propGetPending %d\n",pv->getStateName(),pv->name(),pv->propGetPending());
             if(pv->propGetPending()) {
-                gateDebug1(5,"gatePvData::propEventCB() Ignore first propEvent %s PV\n",pv->getStateName());
                 pv->markPropNoGetPending();
+#if 0
+                gateDebug1(5,"gatePvData::propEventCB() Ignore first propEvent %s PV\n",pv->getStateName());
                 return;
+#endif
             }
 
             gateDebug1(3,"gatePvData::propEventCB() %s PV runDataCB\n",pv->getStateName());
