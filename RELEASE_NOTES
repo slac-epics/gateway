@@ -1,6 +1,9 @@
 #
 # SLAC RELEASE_NOTES
 #
+R2.1.2.0-1.4.2  2021-11-30 Bruce Hill
+	Build for LCLS DEV base/R7.0.2-1.1
+
 R2.1.2.0-1.4.1  2021-09-03 Bruce Hill
 	Revert to base/R7.0.2-2.0 to fix access rights.
 
