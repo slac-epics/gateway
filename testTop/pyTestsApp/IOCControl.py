@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''Controls the test IOC'''
 import subprocess
 import atexit
