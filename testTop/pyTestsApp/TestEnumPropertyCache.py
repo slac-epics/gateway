@@ -17,10 +17,15 @@ class TestEnumPropertyCache(unittest.TestCase):
 
     def connectGwStats(self):
         self.gw_vctotal = ca.create_channel("gwtest:vctotal")
+        ca.connect_channel(self.gw_vctotal, timeout=.5)
         self.gw_pvtotal = ca.create_channel("gwtest:pvtotal")
+        ca.connect_channel(self.gw_pvtotal, timeout=.5)
         self.gw_connected = ca.create_channel("gwtest:connected")
+        ca.connect_channel(self.gw_connected, timeout=.5)
         self.gw_active = ca.create_channel("gwtest:active")
+        ca.connect_channel(self.gw_active, timeout=.5)
         self.gw_inactive = ca.create_channel("gwtest:inactive")
+        ca.connect_channel(self.gw_inactive, timeout=.5)
 
     def updateGwStats(self):
         self.vctotal = ca.get(self.gw_vctotal)
@@ -28,7 +33,6 @@ class TestEnumPropertyCache(unittest.TestCase):
         self.connected = ca.get(self.gw_connected)
         self.active = ca.get(self.gw_active)
         self.inactive = ca.get(self.gw_inactive)
-
 
     def setUp(self):
         gwtests.setup()
@@ -48,7 +52,7 @@ class TestEnumPropertyCache(unittest.TestCase):
         ioc.get()
         pvhigh = epics.PV("ioc:passive0.HIGH", auto_monitor=None)
         pvhigh.put(18.0, wait=True)
-        time.sleep(.05)
+        gwtests.wait_until(lambda: self.eventsReceivedIOC == 2, 2.0)
         if self.eventsReceivedIOC == 2:
             self.propSupported = True
         ioc.disconnect()
@@ -63,8 +67,7 @@ class TestEnumPropertyCache(unittest.TestCase):
         self.eventsReceivedIOC += 1
 
     def onChange(self, pvname=None, **kws):
-        a = 1
-
+        pass
 
     @unittest.skip("detects CAS bug lp:1510955 which is not fixed yet")
     def testEnumPropCache_ValueMonitorCTRLget(self):
@@ -83,7 +86,7 @@ class TestEnumPropertyCache(unittest.TestCase):
         self.assertTrue(connected, "Could not connect to gateway channel " + ca.name(gw))
         (gw_cbref, gw_uaref, gw_eventid) = ca.create_subscription(gw, mask=dbr.DBE_VALUE, callback=self.onChange)
         ioc = ca.create_channel("ioc:enumtest")
-        connected = ca.connect_channel(ioc, timeout=.5)
+        connected = ca.connect_channel(ioc)
         self.assertTrue(connected, "Could not connect to ioc channel " + ca.name(gw))
         (ioc_cbref, ioc_uaref, ioc_eventid) = ca.create_subscription(ioc, mask=dbr.DBE_VALUE, callback=self.onChange)
 

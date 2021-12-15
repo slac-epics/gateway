@@ -77,7 +77,7 @@ class TestStructures(unittest.TestCase):
         # set value on IOC
         ioc_value = ca.create_channel("ioc:gwcachetest")
         ca.put(ioc_value, 10.0, wait=True)
-        time.sleep(.1)
+        gwtests.wait_until(lambda: self.eventsReceivedIOC == self.eventsReceivedGW, 5.0)
 
         self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
         "After setting value, no. of received updates differ: GW {0}, IOC {1}"
@@ -92,7 +92,7 @@ class TestStructures(unittest.TestCase):
         ioc_hihi = ca.create_channel("ioc:gwcachetest.HIHI")
         ca.put(ioc_hihi, 123.0, wait=True)
         ca.put(ioc_value, 11.0, wait=True) # trigger update
-        time.sleep(.1)
+        gwtests.wait_until(lambda: self.eventsReceivedIOC == self.eventsReceivedGW, 5.0)
 
         self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
         "After setting property, no. of received updates differ: GW {0}, IOC {1}"

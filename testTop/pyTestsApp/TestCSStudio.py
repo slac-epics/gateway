@@ -2,13 +2,10 @@
 import sys
 import os
 import unittest
-import epics
 from epics import ca, dbr
 import IOCControl
 import GatewayControl
 import gwtests
-import time
-import subprocess
 
 class TestCSStudio(unittest.TestCase):
     '''Test CS-Studio workflow through the Gateway
@@ -65,8 +62,6 @@ class TestCSStudio(unittest.TestCase):
         '''Monitor PV (imitating CS-Studio) through GW - change value and properties directly - check CTRL structure consistency'''
         diffs = []
 
-        if gwtests.verbose:
-            print()
         # gwcachetest is an ai record with full set of alarm limits: -100 -10 10 100
         gw = ca.create_channel("gateway:gwcachetest")
         connected = ca.connect_channel(gw, timeout=.5)
@@ -79,15 +74,15 @@ class TestCSStudio(unittest.TestCase):
         (ioc_cbref, ioc_uaref, ioc_eventid) = ca.create_subscription(ioc, mask=dbr.DBE_VALUE | dbr.DBE_ALARM, use_time=True, callback=self.onChangeIOC)
         (ioc_cbref2, ioc_uaref2, ioc_eventid2) = ca.create_subscription(ioc, mask=dbr.DBE_PROPERTY, use_ctrl=True, callback=self.onChangeIOC)
 
-        time.sleep(.1)
+        gwtests.wait_until(lambda: self.eventsReceivedIOC == 2 and self.eventsReceivedGW == 2, 5.0)
 
         # set value on IOC
         ioc_value = ca.create_channel("ioc:gwcachetest")
         ca.put(ioc_value, 10.0, wait=True)
-        time.sleep(.1)
         if gwtests.verbose:
-            print()
+            print("Wrote value 10.0 to ioc:gwcachetest")
 
+        gwtests.wait_until(lambda: self.eventsReceivedIOC == self.eventsReceivedGW, 5.0)
         self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
         "After setting value, no. of received updates differ: GW {0}, IOC {1}"
         .format(str(self.eventsReceivedGW), str(self.eventsReceivedIOC)))
@@ -100,14 +95,13 @@ class TestCSStudio(unittest.TestCase):
         # set property on IOC
         ioc_hihi = ca.create_channel("ioc:gwcachetest.HIHI")
         ca.put(ioc_hihi, 123.0, wait=True)
-        time.sleep(.1)
         if gwtests.verbose:
-            print()
+            print("Wrote value 123.0 to ioc:gwcachetest.HIHI")
         ca.put(ioc_value, 11.0, wait=True)
-        time.sleep(.1)
         if gwtests.verbose:
-            print()
+            print("Wrote value 11.0 to ioc:gwcachetest")
 
+        gwtests.wait_until(lambda: self.eventsReceivedIOC == self.eventsReceivedGW, 5.0)
         self.assertTrue(self.eventsReceivedIOC == self.eventsReceivedGW,
         "After setting property, no. of received updates differ: GW {0}, IOC {1}"
         .format(str(self.eventsReceivedGW), str(self.eventsReceivedIOC)))

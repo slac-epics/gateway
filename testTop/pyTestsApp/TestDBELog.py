@@ -46,7 +46,7 @@ class TestDBELog(unittest.TestCase):
         gw.get()
         for val in range(35):
             ioc.put(val, wait=True)
-        time.sleep(.1)
+        gwtests.wait_until(lambda: self.eventsReceived == 5, 5.0)
         # We get 5 events: at connection, first put, then at 11 22 33
         self.assertTrue(self.eventsReceived == 5, 'events expected: 5; events received: ' + str(self.eventsReceived))
         # Any updates inside deadband are an error
