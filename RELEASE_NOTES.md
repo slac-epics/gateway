@@ -1,10 +1,21 @@
 CA Gateway Release Notes
 ========================
 
-## 2.1.3 (not released yet)
-[View diff](https://github.com/epics-extensions/ca-gateway/compare/R2-1-2-0...master)
+## 2.1.4 (not released yet)
+[View diff](https://github.com/epics-extensions/ca-gateway/compare/R2-1-3-0...master)
 
 * Ehhh...
+
+## 2.1.3 (15 Dec 2021)
+[View diff](https://github.com/epics-extensions/ca-gateway/compare/R2-1-2-0...R2-1-3-0)
+
+* Small fixes in caPutLog support
+* Fix a bug (#33) where array values were lost (except the first element)
+  on subscriptions after a read request for a container type
+* Fix update of enum labels on active subscriptions using a container type
+* Move CI from Travis-CI to GitHub Actions
+* A bug that interprets doubles (written as strings) as hex numbers (#37)
+  is fixed when the Gateway is linked against PCAS >= 4.13.3 or Base 3.15 >= 3.15.10
 
 ## 2.1.2 (25 Oct 2019)
 [View diff](https://github.com/epics-extensions/ca-gateway/compare/R2-1-1-0...R2-1-2-0)
