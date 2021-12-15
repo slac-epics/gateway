@@ -158,7 +158,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get -y install qemu-system-x86 g++-mingw-w64-x86-64 gdb
-        sudo pip install pyepics nose-tap
+        sudo pip install pyepics nose nose-tap
       if: runner.os == 'Linux'
     - name: "apt-get install ${{ matrix.cmp }}"
       run: |
