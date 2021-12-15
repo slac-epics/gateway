@@ -6,6 +6,7 @@ include $(TOP)/configure/CONFIG
 #=============================
 
 # Test programs
+PYTESTS += TestCSStudio.py
 PYTESTS += TestDBEAlarm.py
 PYTESTS += TestDBELog.py
 PYTESTS += TestDBEProp.py
@@ -45,8 +46,10 @@ endif
 runtests:
 	nosetests $(PYTESTS:%=../%)
 
-$(TAPFILES): Test%.tap: ../Test%.py
-	nosetests --with-tap $<
+$(TAPFILES): .runtests.tap ;
+.INTERMEDIATE: .runtests.tap
+.runtests.tap:
+	nosetests --with-tap $(PYTESTS:%=../%)
 
 # Workaround for 3.14 make rules: special target to avoid circular dependencies
 build runtests tapfiles: testfiles pvlist.txt
