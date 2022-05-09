@@ -1,6 +1,12 @@
 #
 # SLAC RELEASE_NOTES
 #
+R2.1.3.0-1.0.0  2022-05-09 Bruce Hill
+	Guard against clearing valid timeStamps in setEventData()
+	Show status of asCheckClientIP
+	Misc unittest updates
+	Hugo FIX: Apply check before copyState to ensure that DD is Container and event_data isContainer or isScalar.
+
 R2.1.2.0-1.4.2  2021-11-30 Bruce Hill
 	Build for LCLS DEV base/R7.0.2-1.1
 
