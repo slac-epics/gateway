@@ -37,23 +37,19 @@ class TestEnumUndefinedTimestamp(unittest.TestCase):
         self.gatewayControl.stop()
         self.iocControl.stop()
 
-    def onChangeGW(self, pvname=None, **kws):
+    def onChangeGW(self, pvname=None, timestamp=None, **kws):
         self.eventsReceivedGW += 1
         if gwtests.verbose:
-            strTs = "<undefined>"
-            timestamp = kws.get('timestamp')
-            if timestamp != epics.dbr.EPICS2UNIX_EPOCH:
-                strTs = time.ctime(timestamp)
-            print(" GW update: ", pvname, " changed to ", kws['value'], " at ", strTs)
+            print(	" GW update: ", pvname, " changed to ", kws['value'],
+                    " at ", timestamp_to_string(timestamp) )
+            print(	" GW CA Context: ", epics.ca.current_context() )
 
-    def onChangeIOC(self, pvname=None, **kws):
+    def onChangeIOC(self, pvname=None, timestamp=None, **kws):
         self.eventsReceivedIOC += 1
         if gwtests.verbose:
-            strTs = "<undefined>"
-            timestamp = kws.get('timestamp')
-            if timestamp != epics.dbr.EPICS2UNIX_EPOCH:
-                strTs = time.ctime(timestamp)
-            print("IOC update: ", pvname, " changed to ", kws['value'], " at ", strTs)
+            print(	"IOC update: ", pvname, " changed to ", kws['value'],
+                    " at ", timestamp_to_string(timestamp) )
+            print(	" IOC CA Context: ", epics.ca.current_context() )
 
     def testUndefTimestamp(self):
         '''Two caget on an mbbi - both timestamps should be defined.'''
