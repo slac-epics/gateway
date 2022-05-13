@@ -7,6 +7,16 @@ import GatewayControl
 import gwtests
 import time
 
+UNDEFINED_TIMESTAMP = epics.dbr.EPICS2UNIX_EPOCH
+
+def timestamp_is_undefined(timestamp):
+    return timestamp is None or timestamp == UNDEFINED_TIMESTAMP
+
+def timestamp_to_string(timestamp: float) -> str:
+    if timestamp_is_undefined(timestamp):
+        return "<undefined>"
+    return time.ctime(timestamp)
+
 class TestEnumUndefinedTimestamp(unittest.TestCase):
     '''Test multiple caget of enum have valid timestamps through the Gateway'''
 
